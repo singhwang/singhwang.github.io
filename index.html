@@ -102,7 +102,7 @@
 				
 				<section class="switch-part switch-part2">
 					<div class="widget tagcloud" id="js-tagcloud">
-						<a href="/tags/Docker/" style="font-size: 20px;">Docker</a> <a href="/tags/Kubernetes/" style="font-size: 15px;">Kubernetes</a> <a href="/tags/Logging/" style="font-size: 15px;">Logging</a> <a href="/tags/Network/" style="font-size: 10px;">Network</a> <a href="/tags/TimeZone/" style="font-size: 10px;">TimeZone</a>
+						<a href="/tags/Docker/" style="font-size: 20px;">Docker</a> <a href="/tags/Kubernetes/" style="font-size: 16.67px;">Kubernetes</a> <a href="/tags/Logging/" style="font-size: 13.33px;">Logging</a> <a href="/tags/Network/" style="font-size: 10px;">Network</a> <a href="/tags/TimeZone/" style="font-size: 10px;">TimeZone</a> <a href="/tags/Trouble-Shooting/" style="font-size: 13.33px;">Trouble Shooting</a>
 					</div>
 				</section>
 				
@@ -151,6 +151,148 @@
 	</div>
 </nav>
       <div class="body-wrap">
+  
+    <article id="post-kubernetes_trouble_shooting_000" class="article article-type-post" itemscope="" itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2018/11/16/kubernetes_trouble_shooting_000/" class="article-date">
+  	<time datetime="2018-11-16T06:09:56.144Z" itemprop="datePublished">2018-11-16</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/11/16/kubernetes_trouble_shooting_000/">
+        Kubernetes批量删除资源对象的注意事项：删除顺序和监测删除状态的重要性
+        
+      </a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="一、问题描述"><a href="#一、问题描述" class="headerlink" title="一、问题描述"></a>一、问题描述</h1><p>公司内部的某平台，底层基于Kubernetes实现（Kubernetes的存储部分采用动态存储供应对接NFS）。平台内部有一个逻辑单元，可以调用接口创建。该逻辑单元对应到Kubernetes层面，是一系列紧密相关的namespace、deployment、statefulset、job、persistentvolumeclaim和persistentvolume等资源对象的集合体，我们可以把这个逻辑单元理解为一个复杂的Kubernetes上的应用，该应用还是跨namespace的。</p>
+<p>同事们平时开发、调试和运维该逻辑单元的时候，通常会这么做：</p>
+<ol>
+<li>开发和调试该逻辑单元的清理接口，直接调用Kubernetes API删除该逻辑单元对应的各种资源对象，删除过程就是直接删除，不控制顺序，不监测各个资源对象的删除状态；</li>
+<li>运维该逻辑单元的清理操作，为了省事，直接使用kubectl清理该逻辑单元相关的namespace。</li>
+</ol>
+<p>近期发现线上环境，频繁发生Pod无法删除，一直处于Terminating状态。关于这个问题，我自己偶尔见到，也频繁有同事和我反应这个问题。于是，我定位了一下，到无法删除的Pod所在的宿主机节点上，查看kubelet日志，发现报错信息如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">。。。。。。</span><br><span class="line">11月 16 14:11:34 node06 kubelet[5505]: E1116 14:11:34.324703    5505 nestedpendingoperations.go:267] Operation for &quot;\&quot;kubernetes.io/nfs/9c7bb592-e883-11e8-aae0-0050568a2af3-pvc-9c75962b-e883-11e8-aae0-0050568a2af3\&quot; (\&quot;9c7bb592-e883-11e8-aae0-0050568a2af3\&quot;)&quot; failed. No retries permitted until 2018-11-16 14:13:36.324623633 +0800 CST m=+15413.721922139 (durationBeforeRetry 2m2s). Error: &quot;error cleaning subPath mounts for volume \&quot;pvc-9c75962b-e883-11e8-aae0-0050568a2af3\&quot; (UniqueName: \&quot;kubernetes.io/nfs/9c7bb592-e883-11e8-aae0-0050568a2af3-pvc-9c75962b-e883-11e8-aae0-0050568a2af3\&quot;) pod \&quot;9c7bb592-e883-11e8-aae0-0050568a2af3\&quot; (UID: \&quot;9c7bb592-e883-11e8-aae0-0050568a2af3\&quot;) : error reading /var/lib/kubelet/pods/9c7bb592-e883-11e8-aae0-0050568a2af3/volume-subpaths/pvc-9c75962b-e883-11e8-aae0-0050568a2af3/orderer1: lstat /var/lib/kubelet/pods/9c7bb592-e883-11e8-aae0-0050568a2af3/volume-subpaths/pvc-9c75962b-e883-11e8-aae0-0050568a2af3/orderer1/0: stale NFS file handle&quot;</span><br><span class="line">11月 16 14:11:34 node06 kubelet[5505]: E1116 14:11:34.324809    5505 nestedpendingoperations.go:267] Operation for &quot;\&quot;kubernetes.io/nfs/b46aa346-e71d-11e8-b49a-0050568a2af3-pvc-5f5024f7-e6ed-11e8-989d-0050568a2af3\&quot; (\&quot;b46aa346-e71d-11e8-b49a-0050568a2af3\&quot;)&quot; failed. No retries permitted until 2018-11-16 14:13:36.324727477 +0800 CST m=+15413.722025987 (durationBeforeRetry 2m2s). Error: &quot;error cleaning subPath mounts for volume \&quot;pvc-5f5024f7-e6ed-11e8-989d-0050568a2af3\&quot; (UniqueName: \&quot;kubernetes.io/nfs/b46aa346-e71d-11e8-b49a-0050568a2af3-pvc-5f5024f7-e6ed-11e8-989d-0050568a2af3\&quot;) pod \&quot;b46aa346-e71d-11e8-b49a-0050568a2af3\&quot; (UID: \&quot;b46aa346-e71d-11e8-b49a-0050568a2af3\&quot;) : error reading /var/lib/kubelet/pods/b46aa346-e71d-11e8-b49a-0050568a2af3/volume-subpaths/pvc-5f5024f7-e6ed-11e8-989d-0050568a2af3/orderer1: lstat /var/lib/kubelet/pods/b46aa346-e71d-11e8-b49a-0050568a2af3/volume-subpaths/pvc-5f5024f7-e6ed-11e8-989d-0050568a2af3/orderer1/0: stale NFS file handle&quot;</span><br><span class="line">11月 16 14:11:34 node06 kubelet[5505]: E1116 14:11:34.325743    5505 nestedpendingoperations.go:267] Operation for &quot;\&quot;kubernetes.io/nfs/9b2a49c7-e726-11e8-a7a5-0050568a2af3-pvc-9b07268f-e726-11e8-a7a5-0050568a2af3\&quot; (\&quot;9b2a49c7-e726-11e8-a7a5-0050568a2af3\&quot;)&quot; failed. No retries permitted until 2018-11-16 14:13:36.325669009 +0800 CST m=+15413.722967535 (durationBeforeRetry 2m2s). Error: &quot;error cleaning subPath mounts for volume \&quot;pvc-9b07268f-e726-11e8-a7a5-0050568a2af3\&quot; (UniqueName: \&quot;kubernetes.io/nfs/9b2a49c7-e726-11e8-a7a5-0050568a2af3-pvc-9b07268f-e726-11e8-a7a5-0050568a2af3\&quot;) pod \&quot;9b2a49c7-e726-11e8-a7a5-0050568a2af3\&quot; (UID: \&quot;9b2a49c7-e726-11e8-a7a5-0050568a2af3\&quot;) : error reading /var/lib/kubelet/pods/9b2a49c7-e726-11e8-a7a5-0050568a2af3/volume-subpaths/pvc-9b07268f-e726-11e8-a7a5-0050568a2af3/cli: lstat /var/lib/kubelet/pods/9b2a49c7-e726-11e8-a7a5-0050568a2af3/volume-subpaths/pvc-9b07268f-e726-11e8-a7a5-0050568a2af3/cli/1: stale NFS file handle&quot;</span><br><span class="line">11月 16 14:11:34 node06 kubelet[5505]: E1116 14:11:34.325843    5505 nestedpendingoperations.go:267] Operation for &quot;\&quot;kubernetes.io/nfs/dc5262e0-e710-11e8-989d-0050568a2af3-pvc-66a1068f-e22d-11e8-a331-0050568a2af3\&quot; (\&quot;dc5262e0-e710-11e8-989d-0050568a2af3\&quot;)&quot; failed. No retries permitted until 2018-11-16 14:13:36.325772394 +0800 CST m=+15413.723070969 (durationBeforeRetry 2m2s). Error: &quot;error cleaning subPath mounts for volume \&quot;pvc-66a1068f-e22d-11e8-a331-0050568a2af3\&quot; (UniqueName: \&quot;kubernetes.io/nfs/dc5262e0-e710-11e8-989d-0050568a2af3-pvc-66a1068f-e22d-11e8-a331-0050568a2af3\&quot;) pod \&quot;dc5262e0-e710-11e8-989d-0050568a2af3\&quot; (UID: \&quot;dc5262e0-e710-11e8-989d-0050568a2af3\&quot;) : error reading /var/lib/kubelet/pods/dc5262e0-e710-11e8-989d-0050568a2af3/volume-subpaths/pvc-66a1068f-e22d-11e8-a331-0050568a2af3/org1-1000: lstat /var/lib/kubelet/pods/dc5262e0-e710-11e8-989d-0050568a2af3/volume-subpaths/pvc-66a1068f-e22d-11e8-a331-0050568a2af3/org1-1000/1: stale NFS file handle&quot;</span><br><span class="line">。。。。。。</span><br></pre></td></tr></table></figure></p>
+<h1 id="二、问题定位"><a href="#二、问题定位" class="headerlink" title="二、问题定位"></a>二、问题定位</h1><p>起初看到这段日志有点不知所云，Google了一下，看社区描述，有人说是Kuberentes的一个bug。尽管查阅到的资料如此显示，我还始终有个想法一致在脑海中游荡。那便是资源对象本身而言，有一种潜在的依赖关系存在。这种潜在的依赖关系可以简单描述为：对于某种具体的容器应用而言，某个deployment创建的pod是依赖于某个persistentvolumeclaim的。如果我删除这个容器应用，要是先把那个persistentvolumeclaim删除干净了，再去删除那个依赖它的deployment，Kuberentes回收资源就可能会发生上述问题，毕竟依赖的资源已经不存在了。后来经过一段时间的排查和定位，问题的本质原因正是如此。<br>因此该问题的本质原因可以用一句话简单概括：Kuberentes底层在真正做某个资源对象的删除操作时，发现该资源对象依赖另一个资源对象，需要解除二者的绑定关系，但是很可惜它依赖的那个资源对象已经先它一步被删除了，绑定关系解除还可能要做资源回收操作，资源不存在了，回收操作一直无法成功，目标资源对象也就一直无法成功删除。</p>
+<p>为了便于理解我所述的这种依赖关系，给出相应的YAML，假设nginx的终止比较耗时，删除时如果不控制顺序，就可以模拟出相同的情况：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line">apiVersion: extensions/v1beta1</span><br><span class="line">kind: Deployment</span><br><span class="line">metadata:</span><br><span class="line">  name: nginx</span><br><span class="line">  namespace: default</span><br><span class="line">  labels:</span><br><span class="line">    app: nginx</span><br><span class="line">spec:</span><br><span class="line">  replicas: 1</span><br><span class="line">  selector:</span><br><span class="line">    matchLabels:</span><br><span class="line">      app: nginx</span><br><span class="line">  template:</span><br><span class="line">    metadata:</span><br><span class="line">      labels:</span><br><span class="line">        app: nginx</span><br><span class="line">    spec:</span><br><span class="line">      containers:</span><br><span class="line">        image: nginx:1.15.3</span><br><span class="line">        imagePullPolicy: IfNotPresent</span><br><span class="line">        name: nginx</span><br><span class="line">        ports:</span><br><span class="line">        - containerPort: 80</span><br><span class="line">          protocol: TCP</span><br><span class="line">        volumeMounts:</span><br><span class="line">        - mountPath: /data/</span><br><span class="line">          name: data</span><br><span class="line">      restartPolicy: Always</span><br><span class="line">      volumes:</span><br><span class="line">      - name: data</span><br><span class="line">        persistentVolumeClaim:</span><br><span class="line">          claimName: nginx-pvc</span><br><span class="line">---</span><br><span class="line">apiVersion: v1</span><br><span class="line">kind: PersistentVolumeClaim</span><br><span class="line">metadata:</span><br><span class="line">  name: nginx-pvc</span><br><span class="line">  namespace: default</span><br><span class="line">spec:</span><br><span class="line">  accessModes:</span><br><span class="line">  - ReadWriteMany</span><br><span class="line">  resources:</span><br><span class="line">    requests:</span><br><span class="line">      storage: 1G</span><br><span class="line">  storageClassName: managed-nfs-storage</span><br></pre></td></tr></table></figure></p>
+<h1 id="三、总结"><a href="#三、总结" class="headerlink" title="三、总结"></a>三、总结</h1><ol>
+<li>以第二点中的YAML为例，就是说删除时，一定要先删除deployment，然后监测该deployment和其对应的pod副本都删除干净后，再去删除persistentvolumeclaim。否则一同提交给Kubernetes，如果该deployment和其对应的pod副本终止比较耗时，persistentvolumeclaim就会优先于deployment先完成删除，那么该问题就出现了。</li>
+<li>对于deployment和job两种资源对象，检测其自身的删除状态应该就可以，实测发现自身删除了，对应的pod副本也就删除干净了；但是对于statefulset这种资源对象就不行，一定要检测对应pod副本的删除状态，实测自身删除了，对应的pod副本并没有删除干净，还要等待一会儿，才能删除干净。因此必须单独检测pod副本的删除状态，这点在写程序时，一定要格外注意。</li>
+</ol>
+<h1 id="四、代码示例：删除资源对象（Deployment）的同时，监测其删除情况"><a href="#四、代码示例：删除资源对象（Deployment）的同时，监测其删除情况" class="headerlink" title="四、代码示例：删除资源对象（Deployment）的同时，监测其删除情况"></a>四、代码示例：删除资源对象（Deployment）的同时，监测其删除情况</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br></pre></td><td class="code"><pre><span class="line">type Metadata struct &#123;</span><br><span class="line">	Kind      string `json:&quot;kind&quot;`</span><br><span class="line">	Name      string `json:&quot;name&quot;`</span><br><span class="line">	Namespace string `json:&quot;namespace&quot;`</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">metadataDepList := make([]module.Metadata, 0)</span><br><span class="line"></span><br><span class="line">for i := 0; i &lt; len(metadataList); i++ &#123;</span><br><span class="line">	metadata := metadataList[i]</span><br><span class="line">	glog.Info(&quot;metadata: &quot;, metadata)</span><br><span class="line">	if metadata.Kind == ResourceKindDeployment &#123;</span><br><span class="line">		metadataDepList = append(metadataDepList, metadata)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">for i := 0; i &lt; len(metadataDepList); i++ &#123;</span><br><span class="line">	metadataDep := metadataDepList[i]</span><br><span class="line">	dep, err := clientset.AppsV1beta1().Deployments(metadataDep.Namespace).Get(metadataDep.Name, v1.GetOptions&#123;&#125;)</span><br><span class="line">	if err != nil &#123;</span><br><span class="line">		return err</span><br><span class="line">	&#125;</span><br><span class="line">	labels := dep.Labels</span><br><span class="line"></span><br><span class="line">	sign := make(chan error, 1)</span><br><span class="line">	go func() &#123;</span><br><span class="line">		selector := pkglabels.FormatLabels(labels)</span><br><span class="line">		opts := v1.ListOptions&#123;</span><br><span class="line">			LabelSelector: selector,</span><br><span class="line">		&#125;</span><br><span class="line">		depWatch, err := clientset.AppsV1beta1().Deployments(metadataDep.Namespace).Watch(opts)</span><br><span class="line">		if err != nil &#123;</span><br><span class="line">			sign &lt;- err</span><br><span class="line">			return</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		deleteDepLoop:</span><br><span class="line">		for &#123;</span><br><span class="line">			select &#123;</span><br><span class="line">			case data := &lt;-depWatch.ResultChan():</span><br><span class="line">				glog.Infof(&quot;Deleted deployment.Name: %s. deployment.Namespace: %s. data.Type: %s&quot;, dep.Name, dep.Namespace, data.Type)</span><br><span class="line">				sign &lt;- nil</span><br><span class="line">				if data.Type == watch.Deleted &#123;</span><br><span class="line">					glog.Infof(&quot;Deleted deployment.Name: %s. deployment.Namespace: %s.&quot;, dep.Name, dep.Namespace)</span><br><span class="line">					break deleteDepLoop</span><br><span class="line">				&#125;</span><br><span class="line">			case &lt;-time.After(time.Duration(30) * time.Second):</span><br><span class="line">				sign &lt;- errors.New(&quot;delete deployment timeout. &quot;)</span><br><span class="line">				depWatch.Stop()</span><br><span class="line">				return</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;()</span><br><span class="line">	err = &lt;- sign</span><br><span class="line">	if err != nil &#123;</span><br><span class="line">		return err</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	err = clientset.AppsV1beta1().Deployments(metadataDep.Namespace).Delete(metadataDep.Name, &amp;v1.DeleteOptions&#123;</span><br><span class="line">		PropagationPolicy: &amp;deletePropagationBackground,</span><br><span class="line">	&#125;)</span><br><span class="line">	if err != nil &#123;</span><br><span class="line">		return err</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Docker/">Docker</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Kubernetes/">Kubernetes</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Trouble-Shooting/">Trouble Shooting</a></li></ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/容器云技术/">容器云技术</a>
+	</div>
+
+
+      
+      <div class="clearfix"></div>
+    </div>
+      
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+  
+    <article id="post-docker_trouble_shooting_000" class="article article-type-post" itemscope="" itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2018/11/16/docker_trouble_shooting_000/" class="article-date">
+  	<time datetime="2018-11-16T06:00:55.199Z" itemprop="datePublished">2018-11-16</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/11/16/docker_trouble_shooting_000/">
+        删除Docker容器或者重启Docker Daemon时，遇到device or resource busy，该怎么办？
+        
+      </a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>前段时间，在内部的线上环境修复Kubernetes集群时，需要重启Docker Daemon，可以悲剧发生了，一重启就报错：device or resource busy。Google了好久，终于找到了类似的案例和解决方法。此时才知道，原来删除Docker容器，也可能会出现这个问题。这里简单记录一下，原创详见“参考资料”。</p>
+<p>原文给出的脚本：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">#!/bin/bash</span><br><span class="line"></span><br><span class="line">for i in $(curl -s --unix /var/run/docker.sock http://localhost/info | jq -r .DockerRootDir) /var/lib/docker /run /var/run; do</span><br><span class="line">    for m in $(tac /proc/mounts | awk &apos;&#123;print $2&#125;&apos; | grep ^$&#123;i&#125;/); do</span><br><span class="line">        umount $m || true</span><br><span class="line">    done</span><br><span class="line">done</span><br></pre></td></tr></table></figure></p>
+<p>在我们内部的环境中，DockerRootDir是固定的，就在/var/lib/docker，为了避免安装jq依赖，调整为下面的脚本：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">#!/bin/bash</span><br><span class="line"></span><br><span class="line">for i in /var/lib/docker /run /var/run; do</span><br><span class="line">    for m in $(tac /proc/mounts | awk &apos;&#123;print $2&#125;&apos; | grep ^$&#123;i&#125;/); do</span><br><span class="line">        umount $m || true</span><br><span class="line">    done</span><br><span class="line">done</span><br></pre></td></tr></table></figure></p>
+<p>参考资料：<br><a href="http://niusmallnan.com/2016/12/27/docker-device-resource-busy/" target="_blank" rel="noopener">http://niusmallnan.com/2016/12/27/docker-device-resource-busy/</a></p>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Docker/">Docker</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Trouble-Shooting/">Trouble Shooting</a></li></ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/容器云技术/">容器云技术</a>
+	</div>
+
+
+      
+      <div class="clearfix"></div>
+    </div>
+      
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
   
     <article id="post-manual_clean_logging" class="article article-type-post" itemscope="" itemprop="blogPost">
   
