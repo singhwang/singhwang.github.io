@@ -17,7 +17,7 @@
 <meta property="og:site_name" content="Singh Wang">
 <meta property="og:description" content="一、问题描述公司内部的某平台，底层基于Kubernetes实现（Kubernetes的存储部分采用动态存储供应对接NFS）。平台内部有一个逻辑单元，可以调用接口创建。该逻辑单元对应到Kubernetes层面，是一系列紧密相关的namespace、deployment、statefulset、job、persistentvolumeclaim和persistentvolume等资源对象的集合体，我们">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2018-11-16T07:50:38.908Z">
+<meta property="og:updated_time" content="2018-11-16T07:53:15.022Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Kubernetes批量删除资源对象的注意事项：删除顺序和监测删除状态的重要性">
 <meta name="twitter:description" content="一、问题描述公司内部的某平台，底层基于Kubernetes实现（Kubernetes的存储部分采用动态存储供应对接NFS）。平台内部有一个逻辑单元，可以调用接口创建。该逻辑单元对应到Kubernetes层面，是一系列紧密相关的namespace、deployment、statefulset、job、persistentvolumeclaim和persistentvolume等资源对象的集合体，我们">
@@ -107,7 +107,7 @@
 				
 				<section class="switch-part switch-part2">
 					<div class="widget tagcloud" id="js-tagcloud">
-						<a href="/tags/Docker/" style="font-size: 20px;">Docker</a> <a href="/tags/Kubernetes/" style="font-size: 16.67px;">Kubernetes</a> <a href="/tags/Logging/" style="font-size: 13.33px;">Logging</a> <a href="/tags/Network/" style="font-size: 10px;">Network</a> <a href="/tags/TimeZone/" style="font-size: 10px;">TimeZone</a> <a href="/tags/Trouble-Shooting/" style="font-size: 13.33px;">Trouble Shooting</a>
+						<a href="/tags/Docker/" style="font-size: 20px;">Docker</a> <a href="/tags/Kubernetes/" style="font-size: 17.5px;">Kubernetes</a> <a href="/tags/Logging/" style="font-size: 12.5px;">Logging</a> <a href="/tags/Network/" style="font-size: 10px;">Network</a> <a href="/tags/TimeZone/" style="font-size: 10px;">TimeZone</a> <a href="/tags/Trouble-Shooting/" style="font-size: 15px;">Trouble Shooting</a>
 					</div>
 				</section>
 				
@@ -220,6 +220,15 @@
   
     
 <nav id="article-nav">
+  
+    <a href="/2018/11/16/kubernetes_trouble_shooting_001/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">&lt;</strong>
+      <div class="article-nav-title">
+        
+          如何清理kubelet产生的挂载点？
+        
+      </div>
+    </a>
   
   
     <a href="/2018/11/16/docker_trouble_shooting_000/" id="article-nav-older" class="article-nav-link-wrap">

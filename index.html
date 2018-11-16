@@ -102,7 +102,7 @@
 				
 				<section class="switch-part switch-part2">
 					<div class="widget tagcloud" id="js-tagcloud">
-						<a href="/tags/Docker/" style="font-size: 20px;">Docker</a> <a href="/tags/Kubernetes/" style="font-size: 16.67px;">Kubernetes</a> <a href="/tags/Logging/" style="font-size: 13.33px;">Logging</a> <a href="/tags/Network/" style="font-size: 10px;">Network</a> <a href="/tags/TimeZone/" style="font-size: 10px;">TimeZone</a> <a href="/tags/Trouble-Shooting/" style="font-size: 13.33px;">Trouble Shooting</a>
+						<a href="/tags/Docker/" style="font-size: 20px;">Docker</a> <a href="/tags/Kubernetes/" style="font-size: 17.5px;">Kubernetes</a> <a href="/tags/Logging/" style="font-size: 12.5px;">Logging</a> <a href="/tags/Network/" style="font-size: 10px;">Network</a> <a href="/tags/TimeZone/" style="font-size: 10px;">TimeZone</a> <a href="/tags/Trouble-Shooting/" style="font-size: 15px;">Trouble Shooting</a>
 					</div>
 				</section>
 				
@@ -151,6 +151,72 @@
 	</div>
 </nav>
       <div class="body-wrap">
+  
+    <article id="post-kubernetes_trouble_shooting_001" class="article article-type-post" itemscope="" itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2018/11/16/kubernetes_trouble_shooting_001/" class="article-date">
+  	<time datetime="2018-11-16T08:03:14.285Z" itemprop="datePublished">2018-11-16</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/11/16/kubernetes_trouble_shooting_001/">
+        如何清理kubelet产生的挂载点？
+        
+      </a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>有时Kubernetes节点故障，需要从集群中移除，修复后再加入集群。在这个修复过程中，清理kubelet相关挂载点是个非常重要的操作。在实际使用过程中，我发现kubeadm工具的reset子命令中有这个操作，因此特意查阅了kubeadm的源码，找到了源码里的实现方法，在这里做个简单的记录。</p>
+<p>清理kubelet相关挂载点的命令如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">systemctl stop kubelet.service</span><br><span class="line"></span><br><span class="line">awk &apos;$2 ~ path &#123;print $2&#125;&apos; path=/var/lib/kubelet /proc/mounts | xargs -r umount</span><br></pre></td></tr></table></figure>
+<p>参考资料：<br><a href="https://github.com/kubernetes/kubernetes/blob/v1.11.0/cmd/kubeadm/app/cmd/reset.go" target="_blank" rel="noopener">https://github.com/kubernetes/kubernetes/blob/v1.11.0/cmd/kubeadm/app/cmd/reset.go</a></p>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Docker/">Docker</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Kubernetes/">Kubernetes</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Trouble-Shooting/">Trouble Shooting</a></li></ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/容器云技术/">容器云技术</a>
+	</div>
+
+
+      
+      <div class="clearfix"></div>
+    </div>
+      
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
   
     <article id="post-kubernetes_trouble_shooting_000" class="article article-type-post" itemscope="" itemprop="blogPost">
   
