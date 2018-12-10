@@ -102,7 +102,7 @@
 				
 				<section class="switch-part switch-part2">
 					<div class="widget tagcloud" id="js-tagcloud">
-						<a href="/tags/Docker/" style="font-size: 20px;">Docker</a> <a href="/tags/Kubernetes/" style="font-size: 17.5px;">Kubernetes</a> <a href="/tags/Logging/" style="font-size: 12.5px;">Logging</a> <a href="/tags/Network/" style="font-size: 10px;">Network</a> <a href="/tags/TimeZone/" style="font-size: 10px;">TimeZone</a> <a href="/tags/Trouble-Shooting/" style="font-size: 15px;">Trouble Shooting</a>
+						<a href="/tags/Common/" style="font-size: 10px;">Common</a> <a href="/tags/Docker/" style="font-size: 20px;">Docker</a> <a href="/tags/Kubernetes/" style="font-size: 17.5px;">Kubernetes</a> <a href="/tags/Label/" style="font-size: 10px;">Label</a> <a href="/tags/Logging/" style="font-size: 12.5px;">Logging</a> <a href="/tags/Network/" style="font-size: 10px;">Network</a> <a href="/tags/Setup/" style="font-size: 10px;">Setup</a> <a href="/tags/TimeZone/" style="font-size: 10px;">TimeZone</a> <a href="/tags/Trouble-Shooting/" style="font-size: 15px;">Trouble Shooting</a>
 					</div>
 				</section>
 				
@@ -151,6 +151,145 @@
 	</div>
 </nav>
       <div class="body-wrap">
+  
+    <article id="post-common-label" class="article article-type-post" itemscope="" itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2018/12/10/common-label/" class="article-date">
+  	<time datetime="2018-12-10T03:20:49.595Z" itemprop="datePublished">2018-12-10</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/12/10/common-label/">
+        容器标签使用小记
+        
+      </a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="docker-cli使用举例"><a href="#docker-cli使用举例" class="headerlink" title="docker cli使用举例"></a>docker cli使用举例</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">docker ps --filter &quot;label=org.hyperledger.fabric.chaincode.id.name=test-chaincode&quot; --filter &quot;label=org.hyperledger.fabric.chaincode.id.version=v0.0.1&quot;</span><br><span class="line"></span><br><span class="line">或者</span><br><span class="line"></span><br><span class="line">docker ps -f &quot;label=org.hyperledger.fabric.chaincode.id.name=test-chaincode&quot; -f &quot;label=org.hyperledger.fabric.chaincode.id.version=v0.0.1&quot;</span><br></pre></td></tr></table></figure>
+<p>如下图所示：</p>
+<p><img src="/2018/12/10/common-label/docker_label.png" alt="docker_label"></p>
+<h1 id="docker-client-go编码示例"><a href="#docker-client-go编码示例" class="headerlink" title="docker client go编码示例"></a>docker client go编码示例</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line">import (</span><br><span class="line">	&quot;github.com/docker/docker/api/types&quot;</span><br><span class="line"></span><br><span class="line">	&quot;github.com/docker/docker/api/types/filters&quot;</span><br><span class="line">)</span><br><span class="line">...</span><br><span class="line">...</span><br><span class="line">		flagArgs := []string&#123;</span><br><span class="line">			fmt.Sprintf(&quot;label=%s=%s&quot;, ChainCodeNameLabelKey, contractName), // &quot;label=org.hyperledger.fabric.chaincode.id.name=wx-hy001&quot;</span><br><span class="line">			fmt.Sprintf(&quot;label=%s=%s&quot;, ChainCodeVersionLabelKey, contractVersion), // &quot;label=org.hyperledger.fabric.chaincode.id.version=1.2.0&quot;</span><br><span class="line">		&#125;</span><br><span class="line">		args := filters.NewArgs()</span><br><span class="line">		for i := range flagArgs &#123;</span><br><span class="line">			args, err = filters.ParseFlag(flagArgs[i], args)</span><br><span class="line">			if err != nil &#123;</span><br><span class="line">				glog.Error(err)</span><br><span class="line">				return contractChainCodes, err</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		containerList, err := cli.ContainerList(types.ContainerListOptions&#123;</span><br><span class="line">			Filters: args,</span><br><span class="line">		&#125;)</span><br><span class="line">		if err != nil &#123;</span><br><span class="line">			glog.Error(err)</span><br><span class="line">			return contractChainCodes, err</span><br><span class="line">		&#125;</span><br><span class="line">		for j := 0; j &lt; len(containerList); j++ &#123;</span><br><span class="line">			container := containerList[j]</span><br><span class="line">			containerId := container.ID</span><br><span class="line">			containerName := container.Names[0][1 : ]</span><br><span class="line">			contractChainCode := module.ContractChainCode&#123;</span><br><span class="line">				ContainerId: containerId,</span><br><span class="line">				ContainerName: containerName,</span><br><span class="line">				ContainerHost: hostIP,</span><br><span class="line">			&#125;</span><br><span class="line">			contractChainCodes = append(contractChainCodes, contractChainCode)</span><br><span class="line">		&#125;</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<p>如下图所示：</p>
+<p><img src="/2018/12/10/common-label/docker_label_go.png" alt="docker_label"></p>
+<h1 id="kubernetes-cli使用举例"><a href="#kubernetes-cli使用举例" class="headerlink" title="kubernetes cli使用举例"></a>kubernetes cli使用举例</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">kubectl get pod --all-namespaces -o wide -l baas.yonghui.cn/network-name=test-network</span><br><span class="line"></span><br><span class="line">或者</span><br><span class="line"></span><br><span class="line">kubectl get pod --all-namespaces -o wide -l baas.yonghui.cn/network-name=test-network,baas.yonghui.cn/network-component=peer</span><br></pre></td></tr></table></figure>
+<p>如下图所示：</p>
+<p><img src="/2018/12/10/common-label/kubernetes_label.png" alt="kubernetes_label"></p>
+<h1 id="kubernetes-client-go编码示例"><a href="#kubernetes-client-go编码示例" class="headerlink" title="kubernetes client go编码示例"></a>kubernetes client go编码示例</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line">import (</span><br><span class="line">	module &quot;yonghui.cn/blockchain/yhbkas/module/network&quot;</span><br><span class="line">	pkglabels &quot;k8s.io/apimachinery/pkg/labels&quot;</span><br><span class="line">)</span><br><span class="line">...</span><br><span class="line">...</span><br><span class="line">	networkNameKey := string(sc.NetworkNameKey)</span><br><span class="line">	labels := map[string]string&#123;</span><br><span class="line">		networkNameKey: networkName,</span><br><span class="line">	&#125;</span><br><span class="line">	selector := pkglabels.FormatLabels(labels)</span><br><span class="line">	opts := metav1.ListOptions&#123;</span><br><span class="line">		LabelSelector: selector,</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	podList, err := clientSet.CoreV1().Pods(metav1.NamespaceAll).List(opts)</span><br><span class="line">	if err != nil &#123;</span><br><span class="line">		return module.GetNetworkComponentsResponse&#123;</span><br><span class="line">			CommonResponse: module.CommonResponse&#123;</span><br><span class="line">				Status:  http.StatusInternalServerError,</span><br><span class="line">				Message: &quot;GetNetworkComponents unsuccessfully.&quot;,</span><br><span class="line">			&#125;,</span><br><span class="line">			NetworkComponents: networkComponents,</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	for i := 0; i &lt; len(podList.Items); i++  &#123;</span><br><span class="line">		pod := podList.Items[i]</span><br><span class="line">		podContainers := make([]module.PodContainer, 0)</span><br><span class="line">		containers := pod.Spec.Containers</span><br><span class="line">		for j := 0; j &lt; len(containers); j++ &#123;</span><br><span class="line">			container := containers[j]</span><br><span class="line">			podContainer := module.PodContainer&#123;</span><br><span class="line">				Name: container.Name,</span><br><span class="line">			&#125;</span><br><span class="line">			podContainers = append(podContainers, podContainer)</span><br><span class="line">		&#125;</span><br><span class="line">		labels := pod.Labels</span><br><span class="line">		componentTypeKey := string(sc.NetworkComponentTypeKey)</span><br><span class="line">		componentTypeValue := labels[componentTypeKey]</span><br><span class="line">		networkComponent := module.NetworkComponent&#123;</span><br><span class="line">			Id: string(pod.UID),</span><br><span class="line">			Name: pod.Name,</span><br><span class="line">			Namespace: pod.Namespace,</span><br><span class="line">			Containers: podContainers,</span><br><span class="line">			Role: componentTypeValue,</span><br><span class="line">		&#125;</span><br><span class="line">		networkComponents = append(networkComponents, networkComponent)</span><br><span class="line">	&#125;</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<p>如下图所示：</p>
+<p><img src="/2018/12/10/common-label/kubernetes_label_go.png" alt="kubernetes_label"></p>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Common/">Common</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Docker/">Docker</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Kubernetes/">Kubernetes</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Label/">Label</a></li></ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/容器云技术/">容器云技术</a>
+	</div>
+
+
+      
+      <div class="clearfix"></div>
+    </div>
+      
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+  
+    <article id="post-kubeadm_node_param" class="article article-type-post" itemscope="" itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2018/11/20/kubeadm_node_param/" class="article-date">
+  	<time datetime="2018-11-20T11:15:40.296Z" itemprop="datePublished">2018-11-20</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/11/20/kubeadm_node_param/">
+        Kubeadm安装Kubernetes之宿主机的相关参数修改
+        
+      </a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="Kubeadm安装Kubernetes之宿主机的相关参数修改"><a href="#Kubeadm安装Kubernetes之宿主机的相关参数修改" class="headerlink" title="Kubeadm安装Kubernetes之宿主机的相关参数修改"></a>Kubeadm安装Kubernetes之宿主机的相关参数修改</h1><h2 id="1-ulimit-n-参数修改永久生效"><a href="#1-ulimit-n-参数修改永久生效" class="headerlink" title="1. ulimit -n 参数修改永久生效"></a>1. ulimit -n 参数修改永久生效</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">cat &lt;&lt;EOF &gt;  /etc/security/limits.d/k8s.conf</span><br><span class="line">* hard nofile 65536</span><br><span class="line">* soft nofile 65536</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+<p>参考资料：<br><a href="https://www.aliyun.com/jiaocheng/208647.html" target="_blank" rel="noopener">https://www.aliyun.com/jiaocheng/208647.html</a><br><a href="https://www.aliyun.com/jiaocheng/124954.html" target="_blank" rel="noopener">https://www.aliyun.com/jiaocheng/124954.html</a><br><a href="https://www.cnblogs.com/xuexiaohun/articles/6233430.html" target="_blank" rel="noopener">https://www.cnblogs.com/xuexiaohun/articles/6233430.html</a><br><a href="https://my.oschina.net/jxcdwangtao/blog/1621106" target="_blank" rel="noopener">https://my.oschina.net/jxcdwangtao/blog/1621106</a></p>
+<h2 id="2-通过sysctl修改的相关内核参数："><a href="#2-通过sysctl修改的相关内核参数：" class="headerlink" title="2. 通过sysctl修改的相关内核参数："></a>2. 通过sysctl修改的相关内核参数：</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">cat &lt;&lt;EOF &gt;  /etc/sysctl.d/k8s.conf</span><br><span class="line">net.bridge.bridge-nf-call-ip6tables = 1</span><br><span class="line">net.bridge.bridge-nf-call-iptables = 1</span><br><span class="line"></span><br><span class="line">vm.swappiness = 0</span><br><span class="line">net.ipv4.ip_forward = 1</span><br><span class="line"></span><br><span class="line">net.ipv4.tcp_timestamps = 1</span><br><span class="line">net.ipv4.tcp_tw_recycle = 1 </span><br><span class="line"></span><br><span class="line">net.ipv4.tcp_fin_timeout = 30</span><br><span class="line">net.ipv4.tcp_tw_resue = 1</span><br><span class="line">EOF</span><br><span class="line"></span><br><span class="line">sysctl --system</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Docker/">Docker</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Kubernetes/">Kubernetes</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Setup/">Setup</a></li></ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/容器云技术/">容器云技术</a>
+	</div>
+
+
+      
+      <div class="clearfix"></div>
+    </div>
+      
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
   
     <article id="post-kubernetes_trouble_shooting_001" class="article article-type-post" itemscope="" itemprop="blogPost">
   
