@@ -3,24 +3,24 @@
 <head><meta name="generator" content="Hexo 3.8.0">
   <meta charset="utf-8">
   
-  <title>Kubeadm安装Kubernetes之宿主机的相关参数修改 | Singh Wang</title>
+  <title>Prometheus 经典资料汇总 | Singh Wang</title>
 
   <!-- keywords -->
   
 
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="Kubeadm安装Kubernetes之宿主机的相关参数修改1. ulimit -n 参数修改永久生效1234cat &amp;lt;&amp;lt;EOF &amp;gt;  /etc/security/limits.d/k8s.conf* hard nofile 65536* soft nofile 65536EOF 参考资料：https://www.aliyun.com/jiaocheng/208647.htmlh">
-<meta name="keywords" content="Docker,Kubernetes,Setup">
+  <meta name="description" content="官方文档https://prometheus.io/docs/prometheus/2.2/getting_started/ Prometheus Operator 开源项目地址https://github.com/coreos/prometheus-operator/tree/v0.25.0 经典中文资料https://yunlzheng.gitbook.io/prometheus-book/i">
+<meta name="keywords" content="Docker,Kubernetes,Monitoring,Prometheus">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Kubeadm安装Kubernetes之宿主机的相关参数修改">
-<meta property="og:url" content="http://yoursite.com/2018/11/20/kubeadm_node_param/index.html">
+<meta property="og:title" content="Prometheus 经典资料汇总">
+<meta property="og:url" content="http://yoursite.com/2018/12/17/prometheus_resources/index.html">
 <meta property="og:site_name" content="Singh Wang">
-<meta property="og:description" content="Kubeadm安装Kubernetes之宿主机的相关参数修改1. ulimit -n 参数修改永久生效1234cat &amp;lt;&amp;lt;EOF &amp;gt;  /etc/security/limits.d/k8s.conf* hard nofile 65536* soft nofile 65536EOF 参考资料：https://www.aliyun.com/jiaocheng/208647.htmlh">
+<meta property="og:description" content="官方文档https://prometheus.io/docs/prometheus/2.2/getting_started/ Prometheus Operator 开源项目地址https://github.com/coreos/prometheus-operator/tree/v0.25.0 经典中文资料https://yunlzheng.gitbook.io/prometheus-book/i">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2018-11-20T11:17:49.310Z">
+<meta property="og:updated_time" content="2018-12-17T09:36:11.113Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Kubeadm安装Kubernetes之宿主机的相关参数修改">
-<meta name="twitter:description" content="Kubeadm安装Kubernetes之宿主机的相关参数修改1. ulimit -n 参数修改永久生效1234cat &amp;lt;&amp;lt;EOF &amp;gt;  /etc/security/limits.d/k8s.conf* hard nofile 65536* soft nofile 65536EOF 参考资料：https://www.aliyun.com/jiaocheng/208647.htmlh">
+<meta name="twitter:title" content="Prometheus 经典资料汇总">
+<meta name="twitter:description" content="官方文档https://prometheus.io/docs/prometheus/2.2/getting_started/ Prometheus Operator 开源项目地址https://github.com/coreos/prometheus-operator/tree/v0.25.0 经典中文资料https://yunlzheng.gitbook.io/prometheus-book/i">
   
     <link rel="alternative" href="/atom.xml" title="Singh Wang" type="application/atom+xml">
   
@@ -155,11 +155,11 @@
 		</header>				
 	</div>
 </nav>
-      <div class="body-wrap"><article id="post-kubeadm_node_param" class="article article-type-post" itemscope="" itemprop="blogPost">
+      <div class="body-wrap"><article id="post-prometheus_resources" class="article article-type-post" itemscope="" itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2018/11/20/kubeadm_node_param/" class="article-date">
-  	<time datetime="2018-11-20T11:15:40.296Z" itemprop="datePublished">2018-11-20</time>
+      <a href="/2018/12/17/prometheus_resources/" class="article-date">
+  	<time datetime="2018-12-17T08:52:43.737Z" itemprop="datePublished">2018-12-17</time>
 </a>
     </div>
   
@@ -172,7 +172,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      Kubeadm安装Kubernetes之宿主机的相关参数修改
+      Prometheus 经典资料汇总
       
     </h1>
   
@@ -182,7 +182,7 @@
       <div class="article-info article-info-post">
         
 	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Docker/">Docker</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Kubernetes/">Kubernetes</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Setup/">Setup</a></li></ul>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Docker/">Docker</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Kubernetes/">Kubernetes</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Monitoring/">Monitoring</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Prometheus/">Prometheus</a></li></ul>
 	</div>
 
         
@@ -198,9 +198,12 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id="Kubeadm安装Kubernetes之宿主机的相关参数修改"><a href="#Kubeadm安装Kubernetes之宿主机的相关参数修改" class="headerlink" title="Kubeadm安装Kubernetes之宿主机的相关参数修改"></a>Kubeadm安装Kubernetes之宿主机的相关参数修改</h1><h2 id="1-ulimit-n-参数修改永久生效"><a href="#1-ulimit-n-参数修改永久生效" class="headerlink" title="1. ulimit -n 参数修改永久生效"></a>1. ulimit -n 参数修改永久生效</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">cat &lt;&lt;EOF &gt;  /etc/security/limits.d/k8s.conf</span><br><span class="line">* hard nofile 65536</span><br><span class="line">* soft nofile 65536</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
-<p>参考资料：<br><a href="https://www.aliyun.com/jiaocheng/208647.html" target="_blank" rel="noopener">https://www.aliyun.com/jiaocheng/208647.html</a><br><a href="https://www.aliyun.com/jiaocheng/124954.html" target="_blank" rel="noopener">https://www.aliyun.com/jiaocheng/124954.html</a><br><a href="https://www.cnblogs.com/xuexiaohun/articles/6233430.html" target="_blank" rel="noopener">https://www.cnblogs.com/xuexiaohun/articles/6233430.html</a><br><a href="https://my.oschina.net/jxcdwangtao/blog/1621106" target="_blank" rel="noopener">https://my.oschina.net/jxcdwangtao/blog/1621106</a></p>
-<h2 id="2-通过sysctl修改的相关内核参数："><a href="#2-通过sysctl修改的相关内核参数：" class="headerlink" title="2. 通过sysctl修改的相关内核参数："></a>2. 通过sysctl修改的相关内核参数：</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">cat &lt;&lt;EOF &gt;  /etc/sysctl.d/k8s.conf</span><br><span class="line">net.bridge.bridge-nf-call-ip6tables = 1</span><br><span class="line">net.bridge.bridge-nf-call-iptables = 1</span><br><span class="line"></span><br><span class="line">vm.swappiness = 0</span><br><span class="line">net.ipv4.ip_forward = 1</span><br><span class="line"></span><br><span class="line">net.ipv4.tcp_timestamps = 1</span><br><span class="line">net.ipv4.tcp_tw_recycle = 1 </span><br><span class="line"></span><br><span class="line">net.ipv4.tcp_fin_timeout = 30</span><br><span class="line">net.ipv4.tcp_tw_resue = 1</span><br><span class="line">EOF</span><br><span class="line"></span><br><span class="line">sysctl --system</span><br></pre></td></tr></table></figure>
+        <h1 id="官方文档"><a href="#官方文档" class="headerlink" title="官方文档"></a>官方文档</h1><p><a href="https://prometheus.io/docs/prometheus/2.2/getting_started/" target="_blank" rel="noopener">https://prometheus.io/docs/prometheus/2.2/getting_started/</a></p>
+<h1 id="Prometheus-Operator-开源项目地址"><a href="#Prometheus-Operator-开源项目地址" class="headerlink" title="Prometheus Operator 开源项目地址"></a>Prometheus Operator 开源项目地址</h1><p><a href="https://github.com/coreos/prometheus-operator/tree/v0.25.0" target="_blank" rel="noopener">https://github.com/coreos/prometheus-operator/tree/v0.25.0</a></p>
+<h1 id="经典中文资料"><a href="#经典中文资料" class="headerlink" title="经典中文资料"></a>经典中文资料</h1><p><a href="https://yunlzheng.gitbook.io/prometheus-book/introduction" target="_blank" rel="noopener">https://yunlzheng.gitbook.io/prometheus-book/introduction</a></p>
+<h1 id="使用Golang实现Prometheus-Exporter"><a href="#使用Golang实现Prometheus-Exporter" class="headerlink" title="使用Golang实现Prometheus Exporter"></a>使用Golang实现Prometheus Exporter</h1><p><a href="https://blog.csdn.net/u014029783/article/details/80001251" target="_blank" rel="noopener">https://blog.csdn.net/u014029783/article/details/80001251</a></p>
+<h1 id="解惑Prometheus-API查询的时间戳格式"><a href="#解惑Prometheus-API查询的时间戳格式" class="headerlink" title="解惑Prometheus API查询的时间戳格式"></a>解惑Prometheus API查询的时间戳格式</h1><p><a href="https://www.crifan.com/timestamp_format_support_decimal_point_or_not/" target="_blank" rel="noopener">https://www.crifan.com/timestamp_format_support_decimal_point_or_not/</a></p>
+<h1 id="Golang实现四舍五入（监控指标的格式化经常用到）"><a href="#Golang实现四舍五入（监控指标的格式化经常用到）" class="headerlink" title="Golang实现四舍五入（监控指标的格式化经常用到）"></a>Golang实现四舍五入（监控指标的格式化经常用到）</h1><p><a href="https://www.jianshu.com/p/ca52f4f58353" target="_blank" rel="noopener">https://www.jianshu.com/p/ca52f4f58353</a></p>
 
       
     </div>
@@ -210,18 +213,18 @@
     
 <nav id="article-nav">
   
-    <a href="/2018/12/10/common-label/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2018/12/17/elasticsearch_resources/" id="article-nav-newer" class="article-nav-link-wrap">
       <strong class="article-nav-caption">&lt;</strong>
       <div class="article-nav-title">
         
-          容器标签使用小记
+          Elasticsearch 经典资料汇总
         
       </div>
     </a>
   
   
-    <a href="/2018/11/16/kubernetes_trouble_shooting_001/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">如何清理kubelet产生的挂载点？</div>
+    <a href="/2018/12/14/nginx_ingress/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Nginx Ingress实验小记</div>
       <strong class="article-nav-caption">&gt;</strong>
     </a>
   
