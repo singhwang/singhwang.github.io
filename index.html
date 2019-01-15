@@ -102,7 +102,7 @@
 				
 				<section class="switch-part switch-part2">
 					<div class="widget tagcloud" id="js-tagcloud">
-						<a href="/tags/Ceph/" style="font-size: 10px;">Ceph</a> <a href="/tags/Common/" style="font-size: 10px;">Common</a> <a href="/tags/Docker/" style="font-size: 20px;">Docker</a> <a href="/tags/Elasticsearch/" style="font-size: 10px;">Elasticsearch</a> <a href="/tags/Ingress/" style="font-size: 10px;">Ingress</a> <a href="/tags/Kubernetes/" style="font-size: 17.5px;">Kubernetes</a> <a href="/tags/Label/" style="font-size: 10px;">Label</a> <a href="/tags/Logging/" style="font-size: 15px;">Logging</a> <a href="/tags/Monitoring/" style="font-size: 10px;">Monitoring</a> <a href="/tags/Network/" style="font-size: 12.5px;">Network</a> <a href="/tags/Prometheus/" style="font-size: 10px;">Prometheus</a> <a href="/tags/Setup/" style="font-size: 10px;">Setup</a> <a href="/tags/Storage/" style="font-size: 10px;">Storage</a> <a href="/tags/TimeZone/" style="font-size: 10px;">TimeZone</a> <a href="/tags/Trouble-Shooting/" style="font-size: 15px;">Trouble Shooting</a>
+						<a href="/tags/Ceph/" style="font-size: 10px;">Ceph</a> <a href="/tags/Common/" style="font-size: 10px;">Common</a> <a href="/tags/Docker/" style="font-size: 20px;">Docker</a> <a href="/tags/Elasticsearch/" style="font-size: 10px;">Elasticsearch</a> <a href="/tags/Fluentd/" style="font-size: 12px;">Fluentd</a> <a href="/tags/Ingress/" style="font-size: 10px;">Ingress</a> <a href="/tags/Kubernetes/" style="font-size: 18px;">Kubernetes</a> <a href="/tags/Label/" style="font-size: 10px;">Label</a> <a href="/tags/Logging/" style="font-size: 14px;">Logging</a> <a href="/tags/Monitoring/" style="font-size: 10px;">Monitoring</a> <a href="/tags/Network/" style="font-size: 12px;">Network</a> <a href="/tags/Prometheus/" style="font-size: 10px;">Prometheus</a> <a href="/tags/Setup/" style="font-size: 10px;">Setup</a> <a href="/tags/Storage/" style="font-size: 10px;">Storage</a> <a href="/tags/TimeZone/" style="font-size: 10px;">TimeZone</a> <a href="/tags/Trouble-Shooting/" style="font-size: 16px;">Trouble Shooting</a>
 					</div>
 				</section>
 				
@@ -151,6 +151,142 @@
 	</div>
 </nav>
       <div class="body-wrap">
+  
+    <article id="post-fluentd_trouble_shooting_001" class="article article-type-post" itemscope="" itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2019/01/15/fluentd_trouble_shooting_001/" class="article-date">
+  	<time datetime="2019-01-15T02:32:04.727Z" itemprop="datePublished">2019-01-15</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/01/15/fluentd_trouble_shooting_001/">
+        Fluentd不使用运行时的时区向Elasticsearch写入日志记录，怎么解决？
+        
+      </a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>一、环境版本信息<br>Fluentd 1.1.0<br>Elasticsearch 6.3.0<br>fluent-plugin-docker_metadata_elastic_filter 0.2.1</p>
+<p>二、报错现象描述<br>以时区设置为Asia/Shanghai为例：<br>虽然Fluentd所在的运行时已经设置正确，但是上报到Elasticsearch对应索引中的日志记录，与实际相比还是相差八个小时。更直接的现象是，你发现明明应该归档在今天对应的索引中的日志，却归档在了昨天对应的索引中。再有就是你会发现，无论你怎么修改运行时的时区，Fluentd向Elasticsearch写入日志记录都始终使用UTC时区。</p>
+<p>三、解决方法<br>把utc_index的值设置为false，允许Fluentd使用本地运行时设置的时区。</p>
+<p>官方文档的原文描述如下：（详见参考资料部分的链接）<br>By default, the records inserted into index logstash-YYMMDD with UTC (Coordinated Universal Time). This option allows to use local time if you describe utc_index to false.</p>
+<p>配置修改示例如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">&lt;match **&gt;</span><br><span class="line">  @id elasticsearch</span><br><span class="line">  @type elasticsearch</span><br><span class="line">  @log_level info</span><br><span class="line">  include_tag_key true</span><br><span class="line">  host elasticsearch-ingest.logging</span><br><span class="line">  port 9200</span><br><span class="line">  logstash_format true</span><br><span class="line">  utc_index false</span><br><span class="line">  slow_flush_log_threshold 60.0</span><br><span class="line">  &lt;buffer&gt;</span><br><span class="line">    @type file</span><br><span class="line">    path /var/log/fluentd-buffers/kubernetes.system.buffer</span><br><span class="line">    flush_mode interval</span><br><span class="line">    retry_type exponential_backoff</span><br><span class="line">    flush_thread_count 2</span><br><span class="line">    flush_interval 5s</span><br><span class="line">    retry_forever</span><br><span class="line">    retry_max_interval 30</span><br><span class="line">    chunk_limit_size 6M</span><br><span class="line">    queue_limit_length 256</span><br><span class="line">    overflow_action block</span><br><span class="line">  &lt;/buffer&gt;</span><br><span class="line">&lt;/match&gt;</span><br></pre></td></tr></table></figure></p>
+<p>四、参考资料<br><a href="https://github.com/uken/fluent-plugin-elasticsearch/tree/v2.4.1#utc_index" target="_blank" rel="noopener">https://github.com/uken/fluent-plugin-elasticsearch/tree/v2.4.1#utc_index</a></p>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Docker/">Docker</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Fluentd/">Fluentd</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Kubernetes/">Kubernetes</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Trouble-Shooting/">Trouble Shooting</a></li></ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/容器云技术/">容器云技术</a>
+	</div>
+
+
+      
+      <div class="clearfix"></div>
+    </div>
+      
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+  
+    <article id="post-fluentd_trouble_shooting_000" class="article article-type-post" itemscope="" itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2019/01/15/fluentd_trouble_shooting_000/" class="article-date">
+  	<time datetime="2019-01-15T02:09:02.679Z" itemprop="datePublished">2019-01-15</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/01/15/fluentd_trouble_shooting_000/">
+        Fluentd报错批处理索引队列满了，该怎么解决？
+        
+      </a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>一、环境版本信息<br>Fluentd 1.1.0<br>Elasticsearch 6.3.0</p>
+<p>二、报错信息<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">2018-12-20 03:50:41 +0000 [info]: [elasticsearch] Connection opened to Elasticsearch cluster =&gt; &#123;:host=&gt;&quot;elasticsearch.logging&quot;, :port=&gt;9200, :scheme=&gt;&quot;http&quot;&#125;</span><br><span class="line">2018-12-20 20:28:23 +0000 [warn]: [elasticsearch] failed to flush the buffer. retry_time=0 next_retry_seconds=2018-12-20 20:28:24 +0000 chunk=&quot;57d79f767802e630777d6da9f12a1fd7&quot; error_class=Fluent::Plugin::ElasticsearchErrorHandler::BulkIndexQueueFull error=&quot;Bulk index queue is full, retrying&quot;</span><br><span class="line">  2018-12-20 20:28:23 +0000 [warn]: /var/lib/gems/2.3.0/gems/fluent-plugin-elasticsearch-2.4.1/lib/fluent/plugin/elasticsearch_error_handler.rb:90:in `block in handle_error&apos;</span><br><span class="line">  2018-12-20 20:28:23 +0000 [warn]: /var/lib/gems/2.3.0/gems/fluent-plugin-elasticsearch-2.4.1/lib/fluent/plugin/elasticsearch_error_handler.rb:85:in `each_key&apos;</span><br><span class="line">  2018-12-20 20:28:23 +0000 [warn]: /var/lib/gems/2.3.0/gems/fluent-plugin-elasticsearch-2.4.1/lib/fluent/plugin/elasticsearch_error_handler.rb:85:in `handle_error&apos;</span><br><span class="line">  2018-12-20 20:28:23 +0000 [warn]: /var/lib/gems/2.3.0/gems/fluent-plugin-elasticsearch-2.4.1/lib/fluent/plugin/out_elasticsearch.rb:434:in `send_bulk&apos;</span><br><span class="line">  2018-12-20 20:28:23 +0000 [warn]: /var/lib/gems/2.3.0/gems/fluent-plugin-elasticsearch-2.4.1/lib/fluent/plugin/out_elasticsearch.rb:418:in `write&apos;</span><br><span class="line">  2018-12-20 20:28:23 +0000 [warn]: /var/lib/gems/2.3.0/gems/fluentd-1.1.0/lib/fluent/plugin/output.rb:1094:in `try_flush&apos;</span><br><span class="line">  2018-12-20 20:28:23 +0000 [warn]: /var/lib/gems/2.3.0/gems/fluentd-1.1.0/lib/fluent/plugin/output.rb:1319:in `flush_thread_run&apos;</span><br><span class="line">  2018-12-20 20:28:23 +0000 [warn]: /var/lib/gems/2.3.0/gems/fluentd-1.1.0/lib/fluent/plugin/output.rb:439:in `block (2 levels) in start&apos;</span><br><span class="line">  2018-12-20 20:28:23 +0000 [warn]: /var/lib/gems/2.3.0/gems/fluentd-1.1.0/lib/fluent/plugin_helper/thread.rb:78:in `block in thread_create&apos;</span><br><span class="line">2018-12-20 20:28:24 +0000 [warn]: [elasticsearch] failed to flush the buffer. retry_time=0 next_retry_seconds=2018-12-20 20:28:24 +0000 chunk=&quot;57d79f767802e630777d6da9f12a1fd7&quot; error_class=Fluent::Plugin::ElasticsearchErrorHandler::BulkIndexQueueFull error=&quot;Bulk index queue is full, retrying&quot;</span><br><span class="line">  2018-12-20 20:28:24 +0000 [warn]: suppressed same stacktrace</span><br><span class="line">2018-12-20 20:28:25 +0000 [warn]: [elasticsearch] failed to flush the buffer. retry_time=1 next_retry_seconds=2018-12-20 20:28:25 +0000 chunk=&quot;57d79f767802e630777d6da9f12a1fd7&quot; error_class=Fluent::Plugin::ElasticsearchErrorHandler::BulkIndexQueueFull error=&quot;Bulk index queue is full, retrying&quot;</span><br><span class="line">  2018-12-20 20:28:25 +0000 [warn]: suppressed same stacktrace</span><br><span class="line">2018-12-20 20:28:26 +0000 [warn]: [elasticsearch] failed to flush the buffer. retry_time=2 next_retry_seconds=2018-12-20 20:28:27 +0000 chunk=&quot;57d79f78b9fce084be8b1f544a046a09&quot; error_class=Fluent::Plugin::ElasticsearchErrorHandler::BulkIndexQueueFull error=&quot;Bulk index queue is full, retrying&quot;</span><br><span class="line">  2018-12-20 20:28:26 +0000 [warn]: /var/lib/gems/2.3.0/gems/fluent-plugin-elasticsearch-2.4.1/lib/fluent/plugin/elasticsearch_error_handler.rb:90:in `block in handle_error&apos;</span><br><span class="line">  2018-12-20 20:28:26 +0000 [warn]: /var/lib/gems/2.3.0/gems/fluent-plugin-elasticsearch-2.4.1/lib/fluent/plugin/elasticsearch_error_handler.rb:85:in `each_key&apos;</span><br><span class="line">  2018-12-20 20:28:26 +0000 [warn]: /var/lib/gems/2.3.0/gems/fluent-plugin-elasticsearch-2.4.1/lib/fluent/plugin/elasticsearch_error_handler.rb:85:in `handle_error&apos;</span><br><span class="line">  2018-12-20 20:28:26 +0000 [warn]: /var/lib/gems/2.3.0/gems/fluent-plugin-elasticsearch-2.4.1/lib/fluent/plugin/out_elasticsearch.rb:434:in `send_bulk&apos;</span><br><span class="line">  2018-12-20 20:28:26 +0000 [warn]: /var/lib/gems/2.3.0/gems/fluent-plugin-elasticsearch-2.4.1/lib/fluent/plugin/out_elasticsearch.rb:418:in `write&apos;</span><br><span class="line">  2018-12-20 20:28:26 +0000 [warn]: /var/lib/gems/2.3.0/gems/fluentd-1.1.0/lib/fluent/plugin/output.rb:1094:in `try_flush&apos;</span><br><span class="line">  2018-12-20 20:28:26 +0000 [warn]: /var/lib/gems/2.3.0/gems/fluentd-1.1.0/lib/fluent/plugin/output.rb:1319:in `flush_thread_run&apos;</span><br><span class="line">  2018-12-20 20:28:26 +0000 [warn]: /var/lib/gems/2.3.0/gems/fluentd-1.1.0/lib/fluent/plugin/output.rb:439:in `block (2 levels) in start&apos;</span><br><span class="line">  2018-12-20 20:28:26 +0000 [warn]: /var/lib/gems/2.3.0/gems/fluentd-1.1.0/lib/fluent/plugin_helper/thread.rb:78:in `block in thread_create&apos;</span><br><span class="line">2018-12-20 20:28:30 +0000 [warn]: [elasticsearch] failed to flush the buffer. retry_time=3 next_retry_seconds=2018-12-20 20:28:30 +0000 chunk=&quot;57d79f78b9fce084be8b1f544a046a09&quot; error_class=Fluent::Plugin::ElasticsearchErrorHandler::BulkIndexQueueFull error=&quot;Bulk index queue is full, retrying&quot;</span><br><span class="line">  2018-12-20 20:28:30 +0000 [warn]: suppressed same stacktrace</span><br><span class="line">2018-12-20 20:28:30 +0000 [warn]: [elasticsearch] failed to flush the buffer. retry_time=4 next_retry_seconds=2018-12-20 20:28:39 +0000 chunk=&quot;57d79f767802e630777d6da9f12a1fd7&quot; error_class=Fluent::Plugin::ElasticsearchErrorHandler::BulkIndexQueueFull error=&quot;Bulk index queue is full, retrying&quot;</span><br><span class="line">  2018-12-20 20:28:30 +0000 [warn]: suppressed same stacktrace</span><br><span class="line">2018-12-20 20:28:45 +0000 [warn]: [elasticsearch] failed to flush the buffer. retry_time=5 next_retry_seconds=2018-12-20 20:28:44 +0000 chunk=&quot;57d79f767802e630777d6da9f12a1fd7&quot; error_class=Fluent::Plugin::ElasticsearchErrorHandler::BulkIndexQueueFull error=&quot;Bulk index queue is full, retrying&quot;</span><br><span class="line">  2018-12-20 20:28:45 +0000 [warn]: suppressed same stacktrace</span><br><span class="line">2018-12-20 20:28:45 +0000 [warn]: [elasticsearch] failed to flush the buffer. retry_time=6 next_retry_seconds=2018-12-20 20:29:18 +0000 chunk=&quot;57d79f78b9fce084be8b1f544a046a09&quot; error_class=Fluent::Plugin::ElasticsearchErrorHandler::BulkIndexQueueFull error=&quot;Bulk index queue is full, retrying&quot;</span><br><span class="line">  2018-12-20 20:28:45 +0000 [warn]: suppressed same stacktrace</span><br><span class="line">2018-12-20 20:29:13 +0000 [warn]: [elasticsearch] retry succeeded. chunk_id=&quot;57d79f78b9fce084be8b1f544a046a09&quot;</span><br></pre></td></tr></table></figure></p>
+<p>三、解决方法<br>在配置文件elasticsearch.yml中，增加如下配置：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line">thread_pool:</span><br><span class="line">  index:</span><br><span class="line">    queue_size: $&#123;INDEX_QUEUE_SIZE:200&#125;</span><br><span class="line">  write:</span><br><span class="line">    queue_size: $&#123;WRITE_QUEUE_SIZE:200&#125;</span><br><span class="line">...</span><br></pre></td></tr></table></figure></p>
+<p>在pod、deployment或者statefulset等pod相关的yaml中，增加如下环境变量的配置：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line">        env:</span><br><span class="line">        - name: INDEX_QUEUE_SIZE</span><br><span class="line">          value: &quot;1000&quot;</span><br><span class="line">        - name: WRITE_QUEUE_SIZE</span><br><span class="line">          value: &quot;1000&quot;</span><br><span class="line">...</span><br></pre></td></tr></table></figure></p>
+<p>如何查看配置的修改是否生效？即查看Elasticsearch的线程池配置。（注意：不通版本的Elasticsearch查看方式有所不同，详见参考资料中的链接文档）<br>提示：推荐使用 Kibana 的 Dev Tools进行查询，这种方式最为方便。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">GET _cat/thread_pool/index?v&amp;h=id,node_name,name,active,queue,rejected,completed,queue_size</span><br><span class="line">GET _cat/thread_pool/write?v&amp;h=id,node_name,name,active,queue,rejected,completed,queue_size</span><br></pre></td></tr></table></figure></p>
+<p>四、参考资料<br><a href="https://blog.csdn.net/opensure/article/details/51491815" target="_blank" rel="noopener">https://blog.csdn.net/opensure/article/details/51491815</a><br><a href="https://www.elastic.co/guide/en/elasticsearch/reference/2.4/modules-threadpool.html" target="_blank" rel="noopener">https://www.elastic.co/guide/en/elasticsearch/reference/2.4/modules-threadpool.html</a><br><a href="https://www.elastic.co/guide/en/elasticsearch/reference/6.3/modules-threadpool.html" target="_blank" rel="noopener">https://www.elastic.co/guide/en/elasticsearch/reference/6.3/modules-threadpool.html</a><br><a href="https://www.elastic.co/guide/en/elasticsearch/reference/6.3/cat-thread-pool.html" target="_blank" rel="noopener">https://www.elastic.co/guide/en/elasticsearch/reference/6.3/cat-thread-pool.html</a></p>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Docker/">Docker</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Fluentd/">Fluentd</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Kubernetes/">Kubernetes</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Trouble-Shooting/">Trouble Shooting</a></li></ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/容器云技术/">容器云技术</a>
+	</div>
+
+
+      
+      <div class="clearfix"></div>
+    </div>
+      
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
   
     <article id="post-elasticsearch_resources" class="article article-type-post" itemscope="" itemprop="blogPost">
   
@@ -576,10 +712,10 @@
 
 
   
-    <article id="post-kubernetes_trouble_shooting_001" class="article article-type-post" itemscope="" itemprop="blogPost">
+    <article id="post-kubernetes_trouble_shooting_000" class="article article-type-post" itemscope="" itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2018/11/16/kubernetes_trouble_shooting_001/" class="article-date">
+      <a href="/2018/11/16/kubernetes_trouble_shooting_000/" class="article-date">
   	<time datetime="2018-11-16T08:03:14.285Z" itemprop="datePublished">2018-11-16</time>
 </a>
     </div>
@@ -593,7 +729,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2018/11/16/kubernetes_trouble_shooting_001/">
+      <a class="article-title" href="/2018/11/16/kubernetes_trouble_shooting_000/">
         如何清理kubelet产生的挂载点？
         
       </a>
@@ -642,10 +778,10 @@
 
 
   
-    <article id="post-kubernetes_trouble_shooting_000" class="article article-type-post" itemscope="" itemprop="blogPost">
+    <article id="post-kubernetes_trouble_shooting_001" class="article article-type-post" itemscope="" itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2018/11/16/kubernetes_trouble_shooting_000/" class="article-date">
+      <a href="/2018/11/16/kubernetes_trouble_shooting_001/" class="article-date">
   	<time datetime="2018-11-16T06:09:56.144Z" itemprop="datePublished">2018-11-16</time>
 </a>
     </div>
@@ -659,7 +795,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2018/11/16/kubernetes_trouble_shooting_000/">
+      <a class="article-title" href="/2018/11/16/kubernetes_trouble_shooting_001/">
         Kubernetes批量删除资源对象的注意事项：删除顺序和监测删除状态的重要性
         
       </a>
@@ -694,138 +830,6 @@
       
 	<div class="article-tag tagcloud">
 		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Docker/">Docker</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Kubernetes/">Kubernetes</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Trouble-Shooting/">Trouble Shooting</a></li></ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/categories/容器云技术/">容器云技术</a>
-	</div>
-
-
-      
-      <div class="clearfix"></div>
-    </div>
-      
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-  
-    <article id="post-docker_trouble_shooting_000" class="article article-type-post" itemscope="" itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2018/11/16/docker_trouble_shooting_000/" class="article-date">
-  	<time datetime="2018-11-16T06:00:55.199Z" itemprop="datePublished">2018-11-16</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/11/16/docker_trouble_shooting_000/">
-        删除Docker容器或者重启Docker Daemon时，遇到device or resource busy，该怎么办？
-        
-      </a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>前段时间，在内部的线上环境修复Kubernetes集群时，需要重启Docker Daemon，可以悲剧发生了，一重启就报错：device or resource busy。Google了好久，终于找到了类似的案例和解决方法。此时才知道，原来删除Docker容器，也可能会出现这个问题。这里简单记录一下，原创详见“参考资料”。</p>
-<p>原文给出的脚本：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">#!/bin/bash</span><br><span class="line"></span><br><span class="line">for i in $(curl -s --unix /var/run/docker.sock http://localhost/info | jq -r .DockerRootDir) /var/lib/docker /run /var/run; do</span><br><span class="line">    for m in $(tac /proc/mounts | awk &apos;&#123;print $2&#125;&apos; | grep ^$&#123;i&#125;/); do</span><br><span class="line">        umount $m || true</span><br><span class="line">    done</span><br><span class="line">done</span><br></pre></td></tr></table></figure></p>
-<p>在我们内部的环境中，DockerRootDir是固定的，就在/var/lib/docker，为了避免安装jq依赖，调整为下面的脚本：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">#!/bin/bash</span><br><span class="line"></span><br><span class="line">for i in /var/lib/docker /run /var/run; do</span><br><span class="line">    for m in $(tac /proc/mounts | awk &apos;&#123;print $2&#125;&apos; | grep ^$&#123;i&#125;/); do</span><br><span class="line">        umount $m || true</span><br><span class="line">    done</span><br><span class="line">done</span><br></pre></td></tr></table></figure></p>
-<p>参考资料：<br><a href="http://niusmallnan.com/2016/12/27/docker-device-resource-busy/" target="_blank" rel="noopener">http://niusmallnan.com/2016/12/27/docker-device-resource-busy/</a></p>
-
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Docker/">Docker</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Trouble-Shooting/">Trouble Shooting</a></li></ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/categories/容器云技术/">容器云技术</a>
-	</div>
-
-
-      
-      <div class="clearfix"></div>
-    </div>
-      
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-  
-    <article id="post-manual_clean_logging" class="article article-type-post" itemscope="" itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2018/11/14/manual_clean_logging/" class="article-date">
-  	<time datetime="2018-11-14T10:01:30.172Z" itemprop="datePublished">2018-11-14</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/11/14/manual_clean_logging/">
-        手动清理Docker容器产生的日志
-        
-      </a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>实际工作中，发现有些同事会有裸跑Docker容器的用法，最主要的是用json-file的日志驱动，还不配置日志轮转清理，具体原因不详。应用产生的日志量也不小，一段时间后，有趣的事情发生了：Docker莫名其妙不好使了，一查原因日志报盘了。上网找了一下资料，找到了比较好用的手动快速清理日志的方法，这里记录一下，供日后查阅使用。原创地址详见“参考资料”。</p>
-<h2 id="1-在Docker默认配置下，利用下面的命令查看各个容器的日志文件大小；"><a href="#1-在Docker默认配置下，利用下面的命令查看各个容器的日志文件大小；" class="headerlink" title="1. 在Docker默认配置下，利用下面的命令查看各个容器的日志文件大小；"></a>1. 在Docker默认配置下，利用下面的命令查看各个容器的日志文件大小；</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ls -lh $(find /var/lib/docker/containers/ -name *-json.log)</span><br></pre></td></tr></table></figure>
-<h2 id="2-利用下面的脚本，可以手动清理宿主机上Docker容器产生的日志。"><a href="#2-利用下面的脚本，可以手动清理宿主机上Docker容器产生的日志。" class="headerlink" title="2. 利用下面的脚本，可以手动清理宿主机上Docker容器产生的日志。"></a>2. 利用下面的脚本，可以手动清理宿主机上Docker容器产生的日志。</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">#!/bin/sh</span><br><span class="line">echo &quot;==================== start clean docker containers logs ==========================&quot;</span><br><span class="line"> </span><br><span class="line">logs=$(find /var/lib/docker/containers/ -name *-json.log)</span><br><span class="line"> </span><br><span class="line">for log in $logs</span><br><span class="line">        do</span><br><span class="line">                echo &quot;clean logs : $log&quot;</span><br><span class="line">                cat /dev/null &gt; $log</span><br><span class="line">        done</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">echo &quot;==================== end clean docker containers logs   ==========================&quot;</span><br></pre></td></tr></table></figure>
-<p>参考资料：<br><a href="https://blog.csdn.net/xunzhaoyao/article/details/72959917" target="_blank" rel="noopener">https://blog.csdn.net/xunzhaoyao/article/details/72959917</a></p>
-
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Docker/">Docker</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Logging/">Logging</a></li></ul>
 	</div>
 
       

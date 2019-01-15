@@ -3,24 +3,24 @@
 <head><meta name="generator" content="Hexo 3.8.0">
   <meta charset="utf-8">
   
-  <title>如何清理kubelet产生的挂载点？ | Singh Wang</title>
+  <title>Fluentd不使用运行时的时区向Elasticsearch写入日志记录，怎么解决？ | Singh Wang</title>
 
   <!-- keywords -->
   
 
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="有时Kubernetes节点故障，需要从集群中移除，修复后再加入集群。在这个修复过程中，清理kubelet相关挂载点是个非常重要的操作。在实际使用过程中，我发现kubeadm工具的reset子命令中有这个操作，因此特意查阅了kubeadm的源码，找到了源码里的实现方法，在这里做个简单的记录。 清理kubelet相关挂载点的命令如下： 12345678# 停止Kubernetes的某一个Node节点">
-<meta name="keywords" content="Docker,Kubernetes,Trouble Shooting">
+  <meta name="description" content="一、环境版本信息Fluentd 1.1.0Elasticsearch 6.3.0fluent-plugin-docker_metadata_elastic_filter 0.2.1 二、报错现象描述以时区设置为Asia/Shanghai为例：虽然Fluentd所在的运行时已经设置正确，但是上报到Elasticsearch对应索引中的日志记录，与实际相比还是相差八个小时。更直接的现象是，你发现明明应">
+<meta name="keywords" content="Docker,Kubernetes,Trouble Shooting,Fluentd">
 <meta property="og:type" content="article">
-<meta property="og:title" content="如何清理kubelet产生的挂载点？">
-<meta property="og:url" content="http://yoursite.com/2018/11/16/kubernetes_trouble_shooting_000/index.html">
+<meta property="og:title" content="Fluentd不使用运行时的时区向Elasticsearch写入日志记录，怎么解决？">
+<meta property="og:url" content="http://yoursite.com/2019/01/15/fluentd_trouble_shooting_001/index.html">
 <meta property="og:site_name" content="Singh Wang">
-<meta property="og:description" content="有时Kubernetes节点故障，需要从集群中移除，修复后再加入集群。在这个修复过程中，清理kubelet相关挂载点是个非常重要的操作。在实际使用过程中，我发现kubeadm工具的reset子命令中有这个操作，因此特意查阅了kubeadm的源码，找到了源码里的实现方法，在这里做个简单的记录。 清理kubelet相关挂载点的命令如下： 12345678# 停止Kubernetes的某一个Node节点">
+<meta property="og:description" content="一、环境版本信息Fluentd 1.1.0Elasticsearch 6.3.0fluent-plugin-docker_metadata_elastic_filter 0.2.1 二、报错现象描述以时区设置为Asia/Shanghai为例：虽然Fluentd所在的运行时已经设置正确，但是上报到Elasticsearch对应索引中的日志记录，与实际相比还是相差八个小时。更直接的现象是，你发现明明应">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2019-01-03T06:28:05.961Z">
+<meta property="og:updated_time" content="2019-01-15T02:51:54.760Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="如何清理kubelet产生的挂载点？">
-<meta name="twitter:description" content="有时Kubernetes节点故障，需要从集群中移除，修复后再加入集群。在这个修复过程中，清理kubelet相关挂载点是个非常重要的操作。在实际使用过程中，我发现kubeadm工具的reset子命令中有这个操作，因此特意查阅了kubeadm的源码，找到了源码里的实现方法，在这里做个简单的记录。 清理kubelet相关挂载点的命令如下： 12345678# 停止Kubernetes的某一个Node节点">
+<meta name="twitter:title" content="Fluentd不使用运行时的时区向Elasticsearch写入日志记录，怎么解决？">
+<meta name="twitter:description" content="一、环境版本信息Fluentd 1.1.0Elasticsearch 6.3.0fluent-plugin-docker_metadata_elastic_filter 0.2.1 二、报错现象描述以时区设置为Asia/Shanghai为例：虽然Fluentd所在的运行时已经设置正确，但是上报到Elasticsearch对应索引中的日志记录，与实际相比还是相差八个小时。更直接的现象是，你发现明明应">
   
     <link rel="alternative" href="/atom.xml" title="Singh Wang" type="application/atom+xml">
   
@@ -155,11 +155,11 @@
 		</header>				
 	</div>
 </nav>
-      <div class="body-wrap"><article id="post-kubernetes_trouble_shooting_000" class="article article-type-post" itemscope="" itemprop="blogPost">
+      <div class="body-wrap"><article id="post-fluentd_trouble_shooting_001" class="article article-type-post" itemscope="" itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2018/11/16/kubernetes_trouble_shooting_000/" class="article-date">
-  	<time datetime="2018-11-16T08:03:14.285Z" itemprop="datePublished">2018-11-16</time>
+      <a href="/2019/01/15/fluentd_trouble_shooting_001/" class="article-date">
+  	<time datetime="2019-01-15T02:32:04.727Z" itemprop="datePublished">2019-01-15</time>
 </a>
     </div>
   
@@ -172,7 +172,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      如何清理kubelet产生的挂载点？
+      Fluentd不使用运行时的时区向Elasticsearch写入日志记录，怎么解决？
       
     </h1>
   
@@ -182,7 +182,7 @@
       <div class="article-info article-info-post">
         
 	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Docker/">Docker</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Kubernetes/">Kubernetes</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Trouble-Shooting/">Trouble Shooting</a></li></ul>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Docker/">Docker</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Fluentd/">Fluentd</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Kubernetes/">Kubernetes</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Trouble-Shooting/">Trouble Shooting</a></li></ul>
 	</div>
 
         
@@ -198,10 +198,12 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>有时Kubernetes节点故障，需要从集群中移除，修复后再加入集群。在这个修复过程中，清理kubelet相关挂载点是个非常重要的操作。在实际使用过程中，我发现kubeadm工具的reset子命令中有这个操作，因此特意查阅了kubeadm的源码，找到了源码里的实现方法，在这里做个简单的记录。</p>
-<p>清理kubelet相关挂载点的命令如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"># 停止Kubernetes的某一个Node节点</span><br><span class="line">systemctl stop kubelet.service &amp;&amp; systemctl stop docker.service</span><br><span class="line"></span><br><span class="line"># 清理kubelet的相关挂载点</span><br><span class="line">awk &apos;$2 ~ path &#123;print $2&#125;&apos; path=/var/lib/kubelet /proc/mounts | xargs -r umount</span><br><span class="line"></span><br><span class="line"># 恢复Kubernetes的某一个Node节点</span><br><span class="line">systemctl start docker.service &amp;&amp; systemctl start kubelet.service</span><br></pre></td></tr></table></figure>
-<p>参考资料：<br><a href="https://github.com/kubernetes/kubernetes/blob/v1.11.0/cmd/kubeadm/app/cmd/reset.go" target="_blank" rel="noopener">https://github.com/kubernetes/kubernetes/blob/v1.11.0/cmd/kubeadm/app/cmd/reset.go</a></p>
+        <p>一、环境版本信息<br>Fluentd 1.1.0<br>Elasticsearch 6.3.0<br>fluent-plugin-docker_metadata_elastic_filter 0.2.1</p>
+<p>二、报错现象描述<br>以时区设置为Asia/Shanghai为例：<br>虽然Fluentd所在的运行时已经设置正确，但是上报到Elasticsearch对应索引中的日志记录，与实际相比还是相差八个小时。更直接的现象是，你发现明明应该归档在今天对应的索引中的日志，却归档在了昨天对应的索引中。再有就是你会发现，无论你怎么修改运行时的时区，Fluentd向Elasticsearch写入日志记录都始终使用UTC时区。</p>
+<p>三、解决方法<br>把utc_index的值设置为false，允许Fluentd使用本地运行时设置的时区。</p>
+<p>官方文档的原文描述如下：（详见参考资料部分的链接）<br>By default, the records inserted into index logstash-YYMMDD with UTC (Coordinated Universal Time). This option allows to use local time if you describe utc_index to false.</p>
+<p>配置修改示例如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">&lt;match **&gt;</span><br><span class="line">  @id elasticsearch</span><br><span class="line">  @type elasticsearch</span><br><span class="line">  @log_level info</span><br><span class="line">  include_tag_key true</span><br><span class="line">  host elasticsearch-ingest.logging</span><br><span class="line">  port 9200</span><br><span class="line">  logstash_format true</span><br><span class="line">  utc_index false</span><br><span class="line">  slow_flush_log_threshold 60.0</span><br><span class="line">  &lt;buffer&gt;</span><br><span class="line">    @type file</span><br><span class="line">    path /var/log/fluentd-buffers/kubernetes.system.buffer</span><br><span class="line">    flush_mode interval</span><br><span class="line">    retry_type exponential_backoff</span><br><span class="line">    flush_thread_count 2</span><br><span class="line">    flush_interval 5s</span><br><span class="line">    retry_forever</span><br><span class="line">    retry_max_interval 30</span><br><span class="line">    chunk_limit_size 6M</span><br><span class="line">    queue_limit_length 256</span><br><span class="line">    overflow_action block</span><br><span class="line">  &lt;/buffer&gt;</span><br><span class="line">&lt;/match&gt;</span><br></pre></td></tr></table></figure></p>
+<p>四、参考资料<br><a href="https://github.com/uken/fluent-plugin-elasticsearch/tree/v2.4.1#utc_index" target="_blank" rel="noopener">https://github.com/uken/fluent-plugin-elasticsearch/tree/v2.4.1#utc_index</a></p>
 
       
     </div>
@@ -211,18 +213,9 @@
     
 <nav id="article-nav">
   
-    <a href="/2018/11/20/kubeadm_node_param/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">&lt;</strong>
-      <div class="article-nav-title">
-        
-          Kubeadm安装Kubernetes之宿主机的相关参数修改
-        
-      </div>
-    </a>
   
-  
-    <a href="/2018/11/16/kubernetes_trouble_shooting_001/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">Kubernetes批量删除资源对象的注意事项：删除顺序和监测删除状态的重要性</div>
+    <a href="/2019/01/15/fluentd_trouble_shooting_000/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Fluentd报错批处理索引队列满了，该怎么解决？</div>
       <strong class="article-nav-caption">&gt;</strong>
     </a>
   

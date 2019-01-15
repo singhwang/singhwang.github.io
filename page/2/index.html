@@ -102,7 +102,7 @@
 				
 				<section class="switch-part switch-part2">
 					<div class="widget tagcloud" id="js-tagcloud">
-						<a href="/tags/Ceph/" style="font-size: 10px;">Ceph</a> <a href="/tags/Common/" style="font-size: 10px;">Common</a> <a href="/tags/Docker/" style="font-size: 20px;">Docker</a> <a href="/tags/Elasticsearch/" style="font-size: 10px;">Elasticsearch</a> <a href="/tags/Ingress/" style="font-size: 10px;">Ingress</a> <a href="/tags/Kubernetes/" style="font-size: 17.5px;">Kubernetes</a> <a href="/tags/Label/" style="font-size: 10px;">Label</a> <a href="/tags/Logging/" style="font-size: 15px;">Logging</a> <a href="/tags/Monitoring/" style="font-size: 10px;">Monitoring</a> <a href="/tags/Network/" style="font-size: 12.5px;">Network</a> <a href="/tags/Prometheus/" style="font-size: 10px;">Prometheus</a> <a href="/tags/Setup/" style="font-size: 10px;">Setup</a> <a href="/tags/Storage/" style="font-size: 10px;">Storage</a> <a href="/tags/TimeZone/" style="font-size: 10px;">TimeZone</a> <a href="/tags/Trouble-Shooting/" style="font-size: 15px;">Trouble Shooting</a>
+						<a href="/tags/Ceph/" style="font-size: 10px;">Ceph</a> <a href="/tags/Common/" style="font-size: 10px;">Common</a> <a href="/tags/Docker/" style="font-size: 20px;">Docker</a> <a href="/tags/Elasticsearch/" style="font-size: 10px;">Elasticsearch</a> <a href="/tags/Fluentd/" style="font-size: 12px;">Fluentd</a> <a href="/tags/Ingress/" style="font-size: 10px;">Ingress</a> <a href="/tags/Kubernetes/" style="font-size: 18px;">Kubernetes</a> <a href="/tags/Label/" style="font-size: 10px;">Label</a> <a href="/tags/Logging/" style="font-size: 14px;">Logging</a> <a href="/tags/Monitoring/" style="font-size: 10px;">Monitoring</a> <a href="/tags/Network/" style="font-size: 12px;">Network</a> <a href="/tags/Prometheus/" style="font-size: 10px;">Prometheus</a> <a href="/tags/Setup/" style="font-size: 10px;">Setup</a> <a href="/tags/Storage/" style="font-size: 10px;">Storage</a> <a href="/tags/TimeZone/" style="font-size: 10px;">TimeZone</a> <a href="/tags/Trouble-Shooting/" style="font-size: 16px;">Trouble Shooting</a>
 					</div>
 				</section>
 				
@@ -151,6 +151,138 @@
 	</div>
 </nav>
       <div class="body-wrap">
+  
+    <article id="post-docker_trouble_shooting_000" class="article article-type-post" itemscope="" itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2018/11/16/docker_trouble_shooting_000/" class="article-date">
+  	<time datetime="2018-11-16T06:00:55.199Z" itemprop="datePublished">2018-11-16</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/11/16/docker_trouble_shooting_000/">
+        删除Docker容器或者重启Docker Daemon时，遇到device or resource busy，该怎么办？
+        
+      </a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>前段时间，在内部的线上环境修复Kubernetes集群时，需要重启Docker Daemon，可以悲剧发生了，一重启就报错：device or resource busy。Google了好久，终于找到了类似的案例和解决方法。此时才知道，原来删除Docker容器，也可能会出现这个问题。这里简单记录一下，原创详见“参考资料”。</p>
+<p>原文给出的脚本：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">#!/bin/bash</span><br><span class="line"></span><br><span class="line">for i in $(curl -s --unix /var/run/docker.sock http://localhost/info | jq -r .DockerRootDir) /var/lib/docker /run /var/run; do</span><br><span class="line">    for m in $(tac /proc/mounts | awk &apos;&#123;print $2&#125;&apos; | grep ^$&#123;i&#125;/); do</span><br><span class="line">        umount $m || true</span><br><span class="line">    done</span><br><span class="line">done</span><br></pre></td></tr></table></figure></p>
+<p>在我们内部的环境中，DockerRootDir是固定的，就在/var/lib/docker，为了避免安装jq依赖，调整为下面的脚本：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">#!/bin/bash</span><br><span class="line"></span><br><span class="line">for i in /var/lib/docker /run /var/run; do</span><br><span class="line">    for m in $(tac /proc/mounts | awk &apos;&#123;print $2&#125;&apos; | grep ^$&#123;i&#125;/); do</span><br><span class="line">        umount $m || true</span><br><span class="line">    done</span><br><span class="line">done</span><br></pre></td></tr></table></figure></p>
+<p>参考资料：<br><a href="http://niusmallnan.com/2016/12/27/docker-device-resource-busy/" target="_blank" rel="noopener">http://niusmallnan.com/2016/12/27/docker-device-resource-busy/</a></p>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Docker/">Docker</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Trouble-Shooting/">Trouble Shooting</a></li></ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/容器云技术/">容器云技术</a>
+	</div>
+
+
+      
+      <div class="clearfix"></div>
+    </div>
+      
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+  
+    <article id="post-manual_clean_logging" class="article article-type-post" itemscope="" itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2018/11/14/manual_clean_logging/" class="article-date">
+  	<time datetime="2018-11-14T10:01:30.172Z" itemprop="datePublished">2018-11-14</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/11/14/manual_clean_logging/">
+        手动清理Docker容器产生的日志
+        
+      </a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>实际工作中，发现有些同事会有裸跑Docker容器的用法，最主要的是用json-file的日志驱动，还不配置日志轮转清理，具体原因不详。应用产生的日志量也不小，一段时间后，有趣的事情发生了：Docker莫名其妙不好使了，一查原因日志报盘了。上网找了一下资料，找到了比较好用的手动快速清理日志的方法，这里记录一下，供日后查阅使用。原创地址详见“参考资料”。</p>
+<h2 id="1-在Docker默认配置下，利用下面的命令查看各个容器的日志文件大小；"><a href="#1-在Docker默认配置下，利用下面的命令查看各个容器的日志文件大小；" class="headerlink" title="1. 在Docker默认配置下，利用下面的命令查看各个容器的日志文件大小；"></a>1. 在Docker默认配置下，利用下面的命令查看各个容器的日志文件大小；</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ls -lh $(find /var/lib/docker/containers/ -name *-json.log)</span><br></pre></td></tr></table></figure>
+<h2 id="2-利用下面的脚本，可以手动清理宿主机上Docker容器产生的日志。"><a href="#2-利用下面的脚本，可以手动清理宿主机上Docker容器产生的日志。" class="headerlink" title="2. 利用下面的脚本，可以手动清理宿主机上Docker容器产生的日志。"></a>2. 利用下面的脚本，可以手动清理宿主机上Docker容器产生的日志。</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">#!/bin/sh</span><br><span class="line">echo &quot;==================== start clean docker containers logs ==========================&quot;</span><br><span class="line"> </span><br><span class="line">logs=$(find /var/lib/docker/containers/ -name *-json.log)</span><br><span class="line"> </span><br><span class="line">for log in $logs</span><br><span class="line">        do</span><br><span class="line">                echo &quot;clean logs : $log&quot;</span><br><span class="line">                cat /dev/null &gt; $log</span><br><span class="line">        done</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">echo &quot;==================== end clean docker containers logs   ==========================&quot;</span><br></pre></td></tr></table></figure>
+<p>参考资料：<br><a href="https://blog.csdn.net/xunzhaoyao/article/details/72959917" target="_blank" rel="noopener">https://blog.csdn.net/xunzhaoyao/article/details/72959917</a></p>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Docker/">Docker</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Logging/">Logging</a></li></ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/容器云技术/">容器云技术</a>
+	</div>
+
+
+      
+      <div class="clearfix"></div>
+    </div>
+      
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
   
     <article id="post-verify_network" class="article article-type-post" itemscope="" itemprop="blogPost">
   
