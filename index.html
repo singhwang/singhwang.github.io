@@ -102,7 +102,7 @@
 				
 				<section class="switch-part switch-part2">
 					<div class="widget tagcloud" id="js-tagcloud">
-						<a href="/tags/Calico/" style="font-size: 11.67px;">Calico</a> <a href="/tags/Ceph/" style="font-size: 10px;">Ceph</a> <a href="/tags/Common/" style="font-size: 10px;">Common</a> <a href="/tags/Docker/" style="font-size: 20px;">Docker</a> <a href="/tags/Elasticsearch/" style="font-size: 10px;">Elasticsearch</a> <a href="/tags/Fluentd/" style="font-size: 11.67px;">Fluentd</a> <a href="/tags/Ingress/" style="font-size: 10px;">Ingress</a> <a href="/tags/Kubernetes/" style="font-size: 18.33px;">Kubernetes</a> <a href="/tags/Label/" style="font-size: 10px;">Label</a> <a href="/tags/Logging/" style="font-size: 13.33px;">Logging</a> <a href="/tags/Monitoring/" style="font-size: 10px;">Monitoring</a> <a href="/tags/Network/" style="font-size: 15px;">Network</a> <a href="/tags/Prometheus/" style="font-size: 10px;">Prometheus</a> <a href="/tags/Setup/" style="font-size: 10px;">Setup</a> <a href="/tags/Storage/" style="font-size: 10px;">Storage</a> <a href="/tags/TimeZone/" style="font-size: 10px;">TimeZone</a> <a href="/tags/Trouble-Shooting/" style="font-size: 16.67px;">Trouble Shooting</a>
+						<a href="/tags/Calico/" style="font-size: 11.67px;">Calico</a> <a href="/tags/Ceph/" style="font-size: 10px;">Ceph</a> <a href="/tags/Common/" style="font-size: 10px;">Common</a> <a href="/tags/Docker/" style="font-size: 20px;">Docker</a> <a href="/tags/Elasticsearch/" style="font-size: 10px;">Elasticsearch</a> <a href="/tags/Fluentd/" style="font-size: 11.67px;">Fluentd</a> <a href="/tags/HAProxy/" style="font-size: 10px;">HAProxy</a> <a href="/tags/Ingress/" style="font-size: 10px;">Ingress</a> <a href="/tags/Kubernetes/" style="font-size: 18.33px;">Kubernetes</a> <a href="/tags/Label/" style="font-size: 10px;">Label</a> <a href="/tags/Logging/" style="font-size: 13.33px;">Logging</a> <a href="/tags/Monitoring/" style="font-size: 10px;">Monitoring</a> <a href="/tags/Network/" style="font-size: 15px;">Network</a> <a href="/tags/Prometheus/" style="font-size: 10px;">Prometheus</a> <a href="/tags/Setup/" style="font-size: 10px;">Setup</a> <a href="/tags/Storage/" style="font-size: 10px;">Storage</a> <a href="/tags/TimeZone/" style="font-size: 10px;">TimeZone</a> <a href="/tags/Trouble-Shooting/" style="font-size: 16.67px;">Trouble Shooting</a>
 					</div>
 				</section>
 				
@@ -151,6 +151,81 @@
 	</div>
 </nav>
       <div class="body-wrap">
+  
+    <article id="post-docker_haproxy" class="article article-type-post" itemscope="" itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2019/01/21/docker_haproxy/" class="article-date">
+  	<time datetime="2019-01-21T08:35:32.159Z" itemprop="datePublished">2019-01-21</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/01/21/docker_haproxy/">
+        Docker HAProxy使用示例
+        
+      </a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <ol>
+<li><p>准备Docker HAProxy基础环境：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">docker pull haproxy:1.6.5</span><br><span class="line">mkdir haproxy</span><br><span class="line">cd haproxy</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>编写HAProxy的配置文件：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line">cat &lt;&lt;EOF &gt; haproxy.cfg</span><br><span class="line">global</span><br><span class="line">    log 127.0.0.1 local0 # 日志输出配置，所有日志都记录在本机，通过local0输出</span><br><span class="line">    maxconn 4096 # 最大连接数</span><br><span class="line">    tune.ssl.default-dh-param 2048</span><br><span class="line">    chroot /usr/local/sbin # 改变当前工作目录</span><br><span class="line">    daemon # 以后台形式运行HAProxy</span><br><span class="line">    nbproc 4 # 启动4个HAProxy实例</span><br><span class="line">    pidfile /usr/local/sbin/haproxy.pid # pid文件位置</span><br><span class="line">defaults</span><br><span class="line">    log 127.0.0.1 local3 # 日志文件的输出定向</span><br><span class="line">    mode http # &#123; tcp|http|health &#125; 设定启动实例的协议类型</span><br><span class="line">    option dontlognull # 保证HAProxy不记录上级负载均衡发送过来的用于检测状态没有数据的心跳包</span><br><span class="line">    option redispatch # 当serverId对应的服务器挂掉后，强制定向到其他健康的服务器</span><br><span class="line">    retries 2 # 重试两次连接失败就认为服务器不可用，主要通过后面的check检查</span><br><span class="line">    maxconn 2000 # 最大连接数</span><br><span class="line">    balance roundrobin # 负载均衡算法，roundrobin表示轮询，source表示按照IP</span><br><span class="line">    timeout connect 5000ms # 连接超时时间</span><br><span class="line">    timeout client 50000ms # 客户端连接超时时间</span><br><span class="line">    timeout server 50000ms # 服务器端连接超时时间</span><br><span class="line">    errorfile 400 /usr/local/etc/haproxy/errors/400.http</span><br><span class="line">    errorfile 403 /usr/local/etc/haproxy/errors/403.http</span><br><span class="line">    errorfile 408 /usr/local/etc/haproxy/errors/408.http</span><br><span class="line">    errorfile 500 /usr/local/etc/haproxy/errors/500.http</span><br><span class="line">    errorfile 502 /usr/local/etc/haproxy/errors/502.http</span><br><span class="line">    errorfile 503 /usr/local/etc/haproxy/errors/503.http</span><br><span class="line">    errorfile 504 /usr/local/etc/haproxy/errors/504.http</span><br><span class="line">    balance source</span><br><span class="line"></span><br><span class="line">frontend http_frontend</span><br><span class="line">        bind *:80</span><br><span class="line">        mode http</span><br><span class="line"></span><br><span class="line">        default_backend server_harbor_backend</span><br><span class="line"></span><br><span class="line">backend server_backend</span><br><span class="line">        mode http</span><br><span class="line">        ...</span><br><span class="line">        server s1 192.168.86.128:31451</span><br><span class="line">        server s2 192.168.86.129:31451</span><br><span class="line">        server s3 192.168.86.130:31451</span><br><span class="line">        ...</span><br><span class="line"></span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>注意事项：宿主机的80端口未被占用；根据需要配置server_backend中的使用标记（…）圈上的部分。</p>
+<ol start="3">
+<li>使用Docker镜像启动HAProxy容器：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -d -p 80:80 --name haproxy -v `pwd`/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg haproxy:1.6.5</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Docker/">Docker</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/HAProxy/">HAProxy</a></li></ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/容器云技术/">容器云技术</a>
+	</div>
+
+
+      
+      <div class="clearfix"></div>
+    </div>
+      
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
   
     <article id="post-kubernetes_trouble_shooting_002" class="article article-type-post" itemscope="" itemprop="blogPost">
   
@@ -828,80 +903,6 @@
       
 	<div class="article-tag tagcloud">
 		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Ceph/">Ceph</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Docker/">Docker</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Kubernetes/">Kubernetes</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Storage/">Storage</a></li></ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/categories/容器云技术/">容器云技术</a>
-	</div>
-
-
-      
-      <div class="clearfix"></div>
-    </div>
-      
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-  
-    <article id="post-common-label" class="article article-type-post" itemscope="" itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2018/12/10/common-label/" class="article-date">
-  	<time datetime="2018-12-10T03:20:49.595Z" itemprop="datePublished">2018-12-10</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/12/10/common-label/">
-        容器标签使用小记
-        
-      </a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="docker-cli使用举例"><a href="#docker-cli使用举例" class="headerlink" title="docker cli使用举例"></a>docker cli使用举例</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">docker ps -a --filter &quot;label=org.hyperledger.fabric.chaincode.id.name=test-chaincode&quot; --filter &quot;label=org.hyperledger.fabric.chaincode.id.version=v0.0.1&quot;</span><br><span class="line"></span><br><span class="line">或者</span><br><span class="line"></span><br><span class="line">docker ps -a -f &quot;label=org.hyperledger.fabric.chaincode.id.name=test-chaincode&quot; -f &quot;label=org.hyperledger.fabric.chaincode.id.version=v0.0.1&quot;</span><br></pre></td></tr></table></figure>
-<p>如下图所示：</p>
-<p><img src="/2018/12/10/common-label/docker_label.png" alt="docker_label"></p>
-<h1 id="docker-client-go编码示例"><a href="#docker-client-go编码示例" class="headerlink" title="docker client go编码示例"></a>docker client go编码示例</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line">import (</span><br><span class="line">	&quot;github.com/docker/docker/api/types&quot;</span><br><span class="line"></span><br><span class="line">	&quot;github.com/docker/docker/api/types/filters&quot;</span><br><span class="line">)</span><br><span class="line">...</span><br><span class="line">...</span><br><span class="line">		flagArgs := []string&#123;</span><br><span class="line">			fmt.Sprintf(&quot;label=%s=%s&quot;, ChainCodeNameLabelKey, contractName), // &quot;label=org.hyperledger.fabric.chaincode.id.name=wx-hy001&quot;</span><br><span class="line">			fmt.Sprintf(&quot;label=%s=%s&quot;, ChainCodeVersionLabelKey, contractVersion), // &quot;label=org.hyperledger.fabric.chaincode.id.version=1.2.0&quot;</span><br><span class="line">		&#125;</span><br><span class="line">		args := filters.NewArgs()</span><br><span class="line">		for i := range flagArgs &#123;</span><br><span class="line">			args, err = filters.ParseFlag(flagArgs[i], args)</span><br><span class="line">			if err != nil &#123;</span><br><span class="line">				glog.Error(err)</span><br><span class="line">				return contractChainCodes, err</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		containerList, err := cli.ContainerList(types.ContainerListOptions&#123;</span><br><span class="line">			Filters: args,</span><br><span class="line">		&#125;)</span><br><span class="line">		if err != nil &#123;</span><br><span class="line">			glog.Error(err)</span><br><span class="line">			return contractChainCodes, err</span><br><span class="line">		&#125;</span><br><span class="line">		for j := 0; j &lt; len(containerList); j++ &#123;</span><br><span class="line">			container := containerList[j]</span><br><span class="line">			containerId := container.ID</span><br><span class="line">			containerName := container.Names[0][1 : ]</span><br><span class="line">			contractChainCode := module.ContractChainCode&#123;</span><br><span class="line">				ContainerId: containerId,</span><br><span class="line">				ContainerName: containerName,</span><br><span class="line">				ContainerHost: hostIP,</span><br><span class="line">			&#125;</span><br><span class="line">			contractChainCodes = append(contractChainCodes, contractChainCode)</span><br><span class="line">		&#125;</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
-<p>如下图所示：</p>
-<p><img src="/2018/12/10/common-label/docker_label_go.png" alt="docker_label"></p>
-<h1 id="kubernetes-cli使用举例"><a href="#kubernetes-cli使用举例" class="headerlink" title="kubernetes cli使用举例"></a>kubernetes cli使用举例</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">kubectl get pod --all-namespaces -o wide -l baas.yonghui.cn/network-name=test-network</span><br><span class="line"></span><br><span class="line">或者</span><br><span class="line"></span><br><span class="line">kubectl get pod --all-namespaces -o wide -l baas.yonghui.cn/network-name=test-network,baas.yonghui.cn/network-component=peer</span><br></pre></td></tr></table></figure>
-<p>如下图所示：</p>
-<p><img src="/2018/12/10/common-label/kubernetes_label.png" alt="kubernetes_label"></p>
-<h1 id="kubernetes-client-go编码示例"><a href="#kubernetes-client-go编码示例" class="headerlink" title="kubernetes client go编码示例"></a>kubernetes client go编码示例</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line">import (</span><br><span class="line">	module &quot;yonghui.cn/blockchain/yhbkas/module/network&quot;</span><br><span class="line">	pkglabels &quot;k8s.io/apimachinery/pkg/labels&quot;</span><br><span class="line">)</span><br><span class="line">...</span><br><span class="line">...</span><br><span class="line">	networkNameKey := string(sc.NetworkNameKey)</span><br><span class="line">	labels := map[string]string&#123;</span><br><span class="line">		networkNameKey: networkName,</span><br><span class="line">	&#125;</span><br><span class="line">	selector := pkglabels.FormatLabels(labels)</span><br><span class="line">	opts := metav1.ListOptions&#123;</span><br><span class="line">		LabelSelector: selector,</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	podList, err := clientSet.CoreV1().Pods(metav1.NamespaceAll).List(opts)</span><br><span class="line">	if err != nil &#123;</span><br><span class="line">		return module.GetNetworkComponentsResponse&#123;</span><br><span class="line">			CommonResponse: module.CommonResponse&#123;</span><br><span class="line">				Status:  http.StatusInternalServerError,</span><br><span class="line">				Message: &quot;GetNetworkComponents unsuccessfully.&quot;,</span><br><span class="line">			&#125;,</span><br><span class="line">			NetworkComponents: networkComponents,</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	for i := 0; i &lt; len(podList.Items); i++  &#123;</span><br><span class="line">		pod := podList.Items[i]</span><br><span class="line">		podContainers := make([]module.PodContainer, 0)</span><br><span class="line">		containers := pod.Spec.Containers</span><br><span class="line">		for j := 0; j &lt; len(containers); j++ &#123;</span><br><span class="line">			container := containers[j]</span><br><span class="line">			podContainer := module.PodContainer&#123;</span><br><span class="line">				Name: container.Name,</span><br><span class="line">			&#125;</span><br><span class="line">			podContainers = append(podContainers, podContainer)</span><br><span class="line">		&#125;</span><br><span class="line">		labels := pod.Labels</span><br><span class="line">		componentTypeKey := string(sc.NetworkComponentTypeKey)</span><br><span class="line">		componentTypeValue := labels[componentTypeKey]</span><br><span class="line">		networkComponent := module.NetworkComponent&#123;</span><br><span class="line">			Id: string(pod.UID),</span><br><span class="line">			Name: pod.Name,</span><br><span class="line">			Namespace: pod.Namespace,</span><br><span class="line">			Containers: podContainers,</span><br><span class="line">			Role: componentTypeValue,</span><br><span class="line">		&#125;</span><br><span class="line">		networkComponents = append(networkComponents, networkComponent)</span><br><span class="line">	&#125;</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
-<p>如下图所示：</p>
-<p><img src="/2018/12/10/common-label/kubernetes_label_go.png" alt="kubernetes_label"></p>
-
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Common/">Common</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Docker/">Docker</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Kubernetes/">Kubernetes</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Label/">Label</a></li></ul>
 	</div>
 
       

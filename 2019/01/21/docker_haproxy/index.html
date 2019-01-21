@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+  <title>Docker HAProxy使用示例 | Singh Wang</title>
+
+  <!-- keywords -->
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="准备Docker HAProxy基础环境： 123docker pull haproxy:1.6.5mkdir haproxycd haproxy  编写HAProxy的配置文件： 1234567891011121314151617181920212223242526272829303132333435363738394041424344cat &amp;lt;&amp;lt;EOF &amp;gt; haproxy.">
+<meta name="keywords" content="Docker,HAProxy">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Docker HAProxy使用示例">
+<meta property="og:url" content="http://yoursite.com/2019/01/21/docker_haproxy/index.html">
+<meta property="og:site_name" content="Singh Wang">
+<meta property="og:description" content="准备Docker HAProxy基础环境： 123docker pull haproxy:1.6.5mkdir haproxycd haproxy  编写HAProxy的配置文件： 1234567891011121314151617181920212223242526272829303132333435363738394041424344cat &amp;lt;&amp;lt;EOF &amp;gt; haproxy.">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2019-01-21T08:52:14.134Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Docker HAProxy使用示例">
+<meta name="twitter:description" content="准备Docker HAProxy基础环境： 123docker pull haproxy:1.6.5mkdir haproxycd haproxy  编写HAProxy的配置文件： 1234567891011121314151617181920212223242526272829303132333435363738394041424344cat &amp;lt;&amp;lt;EOF &amp;gt; haproxy.">
+  
+    <link rel="alternative" href="/atom.xml" title="Singh Wang" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="http://7xkj1z.com1.z0.glb.clouddn.com/head.jpg">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+  
+
+  <script src="//cdn.bootcss.com/require.js/2.3.2/require.min.js"></script>
+  <script src="//cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>
+
+  
+</head></html>
+<body>
+  <div id="container">
+    <div id="particles-js"></div>
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="https://avatars0.githubusercontent.com/u/17465385?s=400&amp;u=cea56ed1710ec6ebab160c1ce1e068317e05b025&amp;v=4" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">Singh Wang</a></h1>
+		</hgroup>
+
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>菜单</li>
+						<li>标签</li>
+						
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/archives">所有文章</a></li>
+				        
+							<li><a href="/categories/容器云技术/">容器云技术</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="https://github.com/singhwang" title="github">github</a>
+					        
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/Calico/" style="font-size: 11.67px;">Calico</a> <a href="/tags/Ceph/" style="font-size: 10px;">Ceph</a> <a href="/tags/Common/" style="font-size: 10px;">Common</a> <a href="/tags/Docker/" style="font-size: 20px;">Docker</a> <a href="/tags/Elasticsearch/" style="font-size: 10px;">Elasticsearch</a> <a href="/tags/Fluentd/" style="font-size: 11.67px;">Fluentd</a> <a href="/tags/HAProxy/" style="font-size: 10px;">HAProxy</a> <a href="/tags/Ingress/" style="font-size: 10px;">Ingress</a> <a href="/tags/Kubernetes/" style="font-size: 18.33px;">Kubernetes</a> <a href="/tags/Label/" style="font-size: 10px;">Label</a> <a href="/tags/Logging/" style="font-size: 13.33px;">Logging</a> <a href="/tags/Monitoring/" style="font-size: 10px;">Monitoring</a> <a href="/tags/Network/" style="font-size: 15px;">Network</a> <a href="/tags/Prometheus/" style="font-size: 10px;">Prometheus</a> <a href="/tags/Setup/" style="font-size: 10px;">Setup</a> <a href="/tags/Storage/" style="font-size: 10px;">Storage</a> <a href="/tags/TimeZone/" style="font-size: 10px;">TimeZone</a> <a href="/tags/Trouble-Shooting/" style="font-size: 16.67px;">Trouble Shooting</a>
+					</div>
+				</section>
+				
+				
+				
+
+				
+			</div>
+		</div>
+	</header>				
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">Singh Wang</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				<img lazy-src="https://avatars0.githubusercontent.com/u/17465385?s=400&amp;u=cea56ed1710ec6ebab160c1ce1e068317e05b025&amp;v=4" class="js-avatar">
+			</div>
+			<hgroup>
+			  <h1 class="header-author">Singh Wang</h1>
+			</hgroup>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/archives">所有文章</a></li>
+		        
+					<li><a href="/categories/容器云技术/">容器云技术</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/singhwang" title="github">github</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+      <div class="body-wrap"><article id="post-docker_haproxy" class="article article-type-post" itemscope="" itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2019/01/21/docker_haproxy/" class="article-date">
+  	<time datetime="2019-01-21T08:35:32.159Z" itemprop="datePublished">2019-01-21</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Docker HAProxy使用示例
+      
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Docker/">Docker</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/HAProxy/">HAProxy</a></li></ul>
+	</div>
+
+        
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/容器云技术/">容器云技术</a>
+	</div>
+
+
+        
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <ol>
+<li><p>准备Docker HAProxy基础环境：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">docker pull haproxy:1.6.5</span><br><span class="line">mkdir haproxy</span><br><span class="line">cd haproxy</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>编写HAProxy的配置文件：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line">cat &lt;&lt;EOF &gt; haproxy.cfg</span><br><span class="line">global</span><br><span class="line">    log 127.0.0.1 local0 # 日志输出配置，所有日志都记录在本机，通过local0输出</span><br><span class="line">    maxconn 4096 # 最大连接数</span><br><span class="line">    tune.ssl.default-dh-param 2048</span><br><span class="line">    chroot /usr/local/sbin # 改变当前工作目录</span><br><span class="line">    daemon # 以后台形式运行HAProxy</span><br><span class="line">    nbproc 4 # 启动4个HAProxy实例</span><br><span class="line">    pidfile /usr/local/sbin/haproxy.pid # pid文件位置</span><br><span class="line">defaults</span><br><span class="line">    log 127.0.0.1 local3 # 日志文件的输出定向</span><br><span class="line">    mode http # &#123; tcp|http|health &#125; 设定启动实例的协议类型</span><br><span class="line">    option dontlognull # 保证HAProxy不记录上级负载均衡发送过来的用于检测状态没有数据的心跳包</span><br><span class="line">    option redispatch # 当serverId对应的服务器挂掉后，强制定向到其他健康的服务器</span><br><span class="line">    retries 2 # 重试两次连接失败就认为服务器不可用，主要通过后面的check检查</span><br><span class="line">    maxconn 2000 # 最大连接数</span><br><span class="line">    balance roundrobin # 负载均衡算法，roundrobin表示轮询，source表示按照IP</span><br><span class="line">    timeout connect 5000ms # 连接超时时间</span><br><span class="line">    timeout client 50000ms # 客户端连接超时时间</span><br><span class="line">    timeout server 50000ms # 服务器端连接超时时间</span><br><span class="line">    errorfile 400 /usr/local/etc/haproxy/errors/400.http</span><br><span class="line">    errorfile 403 /usr/local/etc/haproxy/errors/403.http</span><br><span class="line">    errorfile 408 /usr/local/etc/haproxy/errors/408.http</span><br><span class="line">    errorfile 500 /usr/local/etc/haproxy/errors/500.http</span><br><span class="line">    errorfile 502 /usr/local/etc/haproxy/errors/502.http</span><br><span class="line">    errorfile 503 /usr/local/etc/haproxy/errors/503.http</span><br><span class="line">    errorfile 504 /usr/local/etc/haproxy/errors/504.http</span><br><span class="line">    balance source</span><br><span class="line"></span><br><span class="line">frontend http_frontend</span><br><span class="line">        bind *:80</span><br><span class="line">        mode http</span><br><span class="line"></span><br><span class="line">        default_backend server_harbor_backend</span><br><span class="line"></span><br><span class="line">backend server_backend</span><br><span class="line">        mode http</span><br><span class="line">        ...</span><br><span class="line">        server s1 192.168.86.128:31451</span><br><span class="line">        server s2 192.168.86.129:31451</span><br><span class="line">        server s3 192.168.86.130:31451</span><br><span class="line">        ...</span><br><span class="line"></span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>注意事项：宿主机的80端口未被占用；根据需要配置server_backend中的使用标记（…）圈上的部分。</p>
+<ol start="3">
+<li>使用Docker镜像启动HAProxy容器：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -d -p 80:80 --name haproxy -v `pwd`/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg haproxy:1.6.5</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2019/01/21/kubernetes_trouble_shooting_002/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">如何保护系统级Pod不被Kubelet驱逐？</div>
+      <strong class="article-nav-caption">&gt;</strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+
+
+
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+      <div class="footer-left">
+        &copy; 2019 Singh Wang
+      </div>
+        <div class="footer-right">
+          <a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/smackgg/hexo-theme-smackdown" target="_blank">Smackdown</a>
+        </div>
+    </div>
+  </div>
+</footer>
+    </div>
+    
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: true,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false
+	}
+</script>
+<script src="/js/main.js"></script>
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js"></script>
+
+
+  </div>
+</body>
+</html>
