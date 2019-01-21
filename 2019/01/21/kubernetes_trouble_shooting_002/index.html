@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+  <title>如何保护系统级Pod不被Kubelet驱逐？ | Singh Wang</title>
+
+  <!-- keywords -->
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="一、环境版本信息Kubeadm v1.11.0Kubelet v1.11.0Calico v3.1.3 二、问题描述使用Kubeadm搭建的Kubernetes集群在资源紧张的情况下，Kubernetes Control Plan开始挂掉了，集群开始变得不好用。比如你可以让你的Kubernetes Control Plan所在的服务器，磁盘使用率超过90%，问题就会立马复现。 三、问题定位经排查发">
+<meta name="keywords" content="Docker,Kubernetes,Trouble Shooting">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何保护系统级Pod不被Kubelet驱逐？">
+<meta property="og:url" content="http://yoursite.com/2019/01/21/kubernetes_trouble_shooting_002/index.html">
+<meta property="og:site_name" content="Singh Wang">
+<meta property="og:description" content="一、环境版本信息Kubeadm v1.11.0Kubelet v1.11.0Calico v3.1.3 二、问题描述使用Kubeadm搭建的Kubernetes集群在资源紧张的情况下，Kubernetes Control Plan开始挂掉了，集群开始变得不好用。比如你可以让你的Kubernetes Control Plan所在的服务器，磁盘使用率超过90%，问题就会立马复现。 三、问题定位经排查发">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2019-01-21T03:41:11.575Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="如何保护系统级Pod不被Kubelet驱逐？">
+<meta name="twitter:description" content="一、环境版本信息Kubeadm v1.11.0Kubelet v1.11.0Calico v3.1.3 二、问题描述使用Kubeadm搭建的Kubernetes集群在资源紧张的情况下，Kubernetes Control Plan开始挂掉了，集群开始变得不好用。比如你可以让你的Kubernetes Control Plan所在的服务器，磁盘使用率超过90%，问题就会立马复现。 三、问题定位经排查发">
+  
+    <link rel="alternative" href="/atom.xml" title="Singh Wang" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="http://7xkj1z.com1.z0.glb.clouddn.com/head.jpg">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+  
+
+  <script src="//cdn.bootcss.com/require.js/2.3.2/require.min.js"></script>
+  <script src="//cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>
+
+  
+</head></html>
+<body>
+  <div id="container">
+    <div id="particles-js"></div>
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="https://avatars0.githubusercontent.com/u/17465385?s=400&amp;u=cea56ed1710ec6ebab160c1ce1e068317e05b025&amp;v=4" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">Singh Wang</a></h1>
+		</hgroup>
+
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>菜单</li>
+						<li>标签</li>
+						
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/archives">所有文章</a></li>
+				        
+							<li><a href="/categories/容器云技术/">容器云技术</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="https://github.com/singhwang" title="github">github</a>
+					        
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/Calico/" style="font-size: 11.67px;">Calico</a> <a href="/tags/Ceph/" style="font-size: 10px;">Ceph</a> <a href="/tags/Common/" style="font-size: 10px;">Common</a> <a href="/tags/Docker/" style="font-size: 20px;">Docker</a> <a href="/tags/Elasticsearch/" style="font-size: 10px;">Elasticsearch</a> <a href="/tags/Fluentd/" style="font-size: 11.67px;">Fluentd</a> <a href="/tags/Ingress/" style="font-size: 10px;">Ingress</a> <a href="/tags/Kubernetes/" style="font-size: 18.33px;">Kubernetes</a> <a href="/tags/Label/" style="font-size: 10px;">Label</a> <a href="/tags/Logging/" style="font-size: 13.33px;">Logging</a> <a href="/tags/Monitoring/" style="font-size: 10px;">Monitoring</a> <a href="/tags/Network/" style="font-size: 15px;">Network</a> <a href="/tags/Prometheus/" style="font-size: 10px;">Prometheus</a> <a href="/tags/Setup/" style="font-size: 10px;">Setup</a> <a href="/tags/Storage/" style="font-size: 10px;">Storage</a> <a href="/tags/TimeZone/" style="font-size: 10px;">TimeZone</a> <a href="/tags/Trouble-Shooting/" style="font-size: 16.67px;">Trouble Shooting</a>
+					</div>
+				</section>
+				
+				
+				
+
+				
+			</div>
+		</div>
+	</header>				
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">Singh Wang</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				<img lazy-src="https://avatars0.githubusercontent.com/u/17465385?s=400&amp;u=cea56ed1710ec6ebab160c1ce1e068317e05b025&amp;v=4" class="js-avatar">
+			</div>
+			<hgroup>
+			  <h1 class="header-author">Singh Wang</h1>
+			</hgroup>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/archives">所有文章</a></li>
+		        
+					<li><a href="/categories/容器云技术/">容器云技术</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/singhwang" title="github">github</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+      <div class="body-wrap"><article id="post-kubernetes_trouble_shooting_002" class="article article-type-post" itemscope="" itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2019/01/21/kubernetes_trouble_shooting_002/" class="article-date">
+  	<time datetime="2019-01-21T01:47:22.815Z" itemprop="datePublished">2019-01-21</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      如何保护系统级Pod不被Kubelet驱逐？
+      
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Docker/">Docker</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Kubernetes/">Kubernetes</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Trouble-Shooting/">Trouble Shooting</a></li></ul>
+	</div>
+
+        
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/容器云技术/">容器云技术</a>
+	</div>
+
+
+        
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>一、环境版本信息<br>Kubeadm v1.11.0<br>Kubelet v1.11.0<br>Calico v3.1.3</p>
+<p>二、问题描述<br>使用Kubeadm搭建的Kubernetes集群在资源紧张的情况下，Kubernetes Control Plan开始挂掉了，集群开始变得不好用。比如你可以让你的Kubernetes Control Plan所在的服务器，磁盘使用率超过90%，问题就会立马复现。</p>
+<p>三、问题定位<br>经排查发现，资源紧张的情况下，Kubelet驱逐对应Node上的Pod，当然，这也包括Kubernetes Control Plan的相关Pod，会导致其被杀死及其相关镜像被删除。Kubelet这么做是为了释放资源，当然把Kubernetes Control Plan的相关Pod都干掉，并不是用户所希望看到的。一旦放大到Node节点上，问题就变成Node节点上非常重要的系统Pod会被干掉，导致相关的Node变成不好用的Node节点了。一旦放大到整个集群上，就变成Kubernetes Control Plan的相关Pod、Node节点上非常重要的系统级别Pod和集群上非常重要的Addon级别的Pod都会被干掉。问题的严重性，在规模效应下，可想而知了。</p>
+<p>四、问题分析<br>有些Kubernetes的使用者可能会说，Kubeadm搭建的Kubernetes集群不推荐在生产环境使用，你非要用它，肯定会有问题。这一点也不奇怪。因为一直以来，使用Kubeadm搭建的Kubernetes集群都不推荐在生产环境使用，最开始是官方不推荐，大部分使用者也随着不推荐。随着Kubernetes的发展，我们逐渐发现使用Kubeadm搭建Kubernetes集群原有那句不推荐在生产环境使用的禁止提示不见了，你也会发现官方文档上花费了大量的笔墨介绍Kubeadm这种安装方式，甚至关于这种方式的高可用方案，官方文档也开始有了描述。但是对于其他的安装方式都是一笔带过，甚至只字未提。说明了什么？那便是官方推荐并鼓励用户使用这种方式部署Kubernetes集群。</p>
+<p>该种方式搭建的集群真得就能应用于生产环境吗？如果不能，那么又是哪些问题导致的它不能应用于生产环境呢？笔者在实际工作中做了大量的实践，目前已经将其应用于生产环境了。实践过程中发现，Kubeadm已经相当成熟了，问题并不是很多，不过还是有一些的，但是就算有问题，读其规范的代码结构，改起来也相当方便。笔者在生产环境使用的版本，就做过一些修改。</p>
+<p>这里我只给出Kubeadm在实际应用中两个大问题，并针对其中一个致命问题在本文中详细描述其解决方案。</p>
+<ol>
+<li>时区问题。一直以来，时区问题都是个看似简单又不引起重视的问题，特别对于美国用户，默认的UTC时区足够满足用户的需求了。那么生活在其他时区的用户怎么办？特别是我们这些生活在中国的用户该怎么办？修改Kubeadm的源码，在Kubernetes Control Plan的相关Pod的YAML上，加入社区设置的相关支持，详见《Docker容器的时区设置》。</li>
+<li>当节点资源紧张，Kubelet开始驱逐Pod，删除其对应的镜像，来释放资源。看似没有问题，实际呢？很悲剧，这是个悲催的致命问题。为什么呢？对于Kubeadm这种安装方式，kube-apiserver、kube-controller-manager、kube-scheduler这种静态Pod没有问题，官方有解决方法不让其被驱逐，但是对于以Addon方式安装的系统级Pod呢？悲催了，没有保护机制。想重现问题很简单，磁盘使用率到90%以上，集群立刻开始往复于自杀和恢复之间。能解决吗？当然可以，不过社区现在并没有解决，笔者查看了GitHub上相关的Issue，详见参考资料。看来为了应用到生产环境，只能自己动手解决了。怎么解决呢？这个问题是Kubelet导致的，肯定是需要修改Kubelet的源码。</li>
+</ol>
+<p>五、问题解决（这里以Kubernetes v1.11.0版本为例，更高的版本会有所变化）<br>示例如下：（以示例描述，如何看笔者要添加和修改的代码）<br>example.go<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line">这里是要添加和修改的代码</span><br><span class="line">...</span><br></pre></td></tr></table></figure></p>
+<p>下面看具体的源码修改：</p>
+<ol>
+<li><p>kube_features.go</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br></pre></td><td class="code"><pre><span class="line">// defaultKubernetesFeatureGates consists of all known Kubernetes-specific feature keys.</span><br><span class="line">// To add a new feature, define a key for it above and add it here. The features will be</span><br><span class="line">// available throughout Kubernetes binaries.</span><br><span class="line">var defaultKubernetesFeatureGates = map[utilfeature.Feature]utilfeature.FeatureSpec&#123;</span><br><span class="line">	AppArmor:                                    &#123;Default: true, PreRelease: utilfeature.Beta&#125;,</span><br><span class="line">	DynamicKubeletConfig:                        &#123;Default: true, PreRelease: utilfeature.Beta&#125;,</span><br><span class="line">	ExperimentalHostUserNamespaceDefaultingGate: &#123;Default: false, PreRelease: utilfeature.Beta&#125;,</span><br><span class="line">	ExperimentalCriticalPodAnnotation:           &#123;Default: false, PreRelease: utilfeature.Alpha&#125;,</span><br><span class="line">	...</span><br><span class="line">	ExperimentalNotEvictedPodAnnotation:         &#123;Default: false, PreRelease: utilfeature.Alpha&#125;,</span><br><span class="line">	...</span><br><span class="line">	DevicePlugins:                               &#123;Default: true, PreRelease: utilfeature.Beta&#125;,</span><br><span class="line">	TaintBasedEvictions:                         &#123;Default: false, PreRelease: utilfeature.Alpha&#125;,</span><br><span class="line">	RotateKubeletServerCertificate:              &#123;Default: false, PreRelease: utilfeature.Alpha&#125;,</span><br><span class="line">	RotateKubeletClientCertificate:              &#123;Default: true, PreRelease: utilfeature.Beta&#125;,</span><br><span class="line">	PersistentLocalVolumes:                      &#123;Default: true, PreRelease: utilfeature.Beta&#125;,</span><br><span class="line">	LocalStorageCapacityIsolation:               &#123;Default: true, PreRelease: utilfeature.Beta&#125;,</span><br><span class="line">	HugePages:                                   &#123;Default: true, PreRelease: utilfeature.Beta&#125;,</span><br><span class="line">	Sysctls:                                     &#123;Default: true, PreRelease: utilfeature.Beta&#125;,</span><br><span class="line">	DebugContainers:                             &#123;Default: false, PreRelease: utilfeature.Alpha&#125;,</span><br><span class="line">	PodShareProcessNamespace:                    &#123;Default: false, PreRelease: utilfeature.Alpha&#125;,</span><br><span class="line">	PodPriority:                                 &#123;Default: true, PreRelease: utilfeature.Beta&#125;,</span><br><span class="line">	EnableEquivalenceClassCache:                 &#123;Default: false, PreRelease: utilfeature.Alpha&#125;,</span><br><span class="line">	TaintNodesByCondition:                       &#123;Default: false, PreRelease: utilfeature.Alpha&#125;,</span><br><span class="line">	MountPropagation:                            &#123;Default: true, PreRelease: utilfeature.Beta&#125;,</span><br><span class="line">	QOSReserved:                                 &#123;Default: false, PreRelease: utilfeature.Alpha&#125;,</span><br><span class="line">	ExpandPersistentVolumes:                     &#123;Default: true, PreRelease: utilfeature.Beta&#125;,</span><br><span class="line">	ExpandInUsePersistentVolumes:                &#123;Default: false, PreRelease: utilfeature.Alpha&#125;,</span><br><span class="line">	AttachVolumeLimit:                           &#123;Default: false, PreRelease: utilfeature.Alpha&#125;,</span><br><span class="line">	CPUManager:                                  &#123;Default: true, PreRelease: utilfeature.Beta&#125;,</span><br><span class="line">	ServiceNodeExclusion:                        &#123;Default: false, PreRelease: utilfeature.Alpha&#125;,</span><br><span class="line">	MountContainers:                             &#123;Default: false, PreRelease: utilfeature.Alpha&#125;,</span><br><span class="line">	VolumeScheduling:                            &#123;Default: true, PreRelease: utilfeature.Beta&#125;,</span><br><span class="line">	CSIPersistentVolume:                         &#123;Default: true, PreRelease: utilfeature.Beta&#125;,</span><br><span class="line">	CustomPodDNS:                                &#123;Default: true, PreRelease: utilfeature.Beta&#125;,</span><br><span class="line">	BlockVolume:                                 &#123;Default: false, PreRelease: utilfeature.Alpha&#125;,</span><br><span class="line">	StorageObjectInUseProtection:                &#123;Default: true, PreRelease: utilfeature.GA&#125;,</span><br><span class="line">	ResourceLimitsPriorityFunction:              &#123;Default: false, PreRelease: utilfeature.Alpha&#125;,</span><br><span class="line">	SupportIPVSProxyMode:                        &#123;Default: true, PreRelease: utilfeature.GA&#125;,</span><br><span class="line">	SupportPodPidsLimit:                         &#123;Default: false, PreRelease: utilfeature.Alpha&#125;,</span><br><span class="line">	HyperVContainer:                             &#123;Default: false, PreRelease: utilfeature.Alpha&#125;,</span><br><span class="line">	ScheduleDaemonSetPods:                       &#123;Default: false, PreRelease: utilfeature.Alpha&#125;,</span><br><span class="line">	TokenRequest:                                &#123;Default: false, PreRelease: utilfeature.Alpha&#125;,</span><br><span class="line">	TokenRequestProjection:                      &#123;Default: false, PreRelease: utilfeature.Alpha&#125;,</span><br><span class="line">	CRIContainerLogRotation:                     &#123;Default: true, PreRelease: utilfeature.Beta&#125;,</span><br><span class="line">	GCERegionalPersistentDisk:                   &#123;Default: true, PreRelease: utilfeature.Beta&#125;,</span><br><span class="line">	RunAsGroup:                                  &#123;Default: false, PreRelease: utilfeature.Alpha&#125;,</span><br><span class="line">	VolumeSubpath:                               &#123;Default: true, PreRelease: utilfeature.GA&#125;,</span><br><span class="line">	BalanceAttachedNodeVolumes:                  &#123;Default: false, PreRelease: utilfeature.Alpha&#125;,</span><br><span class="line">	DynamicProvisioningScheduling:               &#123;Default: false, PreRelease: utilfeature.Alpha&#125;,</span><br><span class="line">	PodReadinessGates:                           &#123;Default: false, PreRelease: utilfeature.Beta&#125;,</span><br><span class="line">	VolumeSubpathEnvExpansion:                   &#123;Default: false, PreRelease: utilfeature.Alpha&#125;,</span><br><span class="line">	KubeletPluginsWatcher:                       &#123;Default: false, PreRelease: utilfeature.Alpha&#125;,</span><br><span class="line">	ResourceQuotaScopeSelectors:                 &#123;Default: false, PreRelease: utilfeature.Alpha&#125;,</span><br><span class="line">	CSIBlockVolume:                              &#123;Default: false, PreRelease: utilfeature.Alpha&#125;,</span><br><span class="line"></span><br><span class="line">	// inherited features from generic apiserver, relisted here to get a conflict if it is changed</span><br><span class="line">	// unintentionally on either side:</span><br><span class="line">	genericfeatures.StreamingProxyRedirects: &#123;Default: true, PreRelease: utilfeature.Beta&#125;,</span><br><span class="line">	genericfeatures.AdvancedAuditing:        &#123;Default: true, PreRelease: utilfeature.Beta&#125;,</span><br><span class="line">	genericfeatures.APIResponseCompression:  &#123;Default: false, PreRelease: utilfeature.Alpha&#125;,</span><br><span class="line">	genericfeatures.Initializers:            &#123;Default: false, PreRelease: utilfeature.Alpha&#125;,</span><br><span class="line">	genericfeatures.APIListChunking:         &#123;Default: true, PreRelease: utilfeature.Beta&#125;,</span><br><span class="line"></span><br><span class="line">	// inherited features from apiextensions-apiserver, relisted here to get a conflict if it is changed</span><br><span class="line">	// unintentionally on either side:</span><br><span class="line">	apiextensionsfeatures.CustomResourceValidation:   &#123;Default: true, PreRelease: utilfeature.Beta&#125;,</span><br><span class="line">	apiextensionsfeatures.CustomResourceSubresources: &#123;Default: true, PreRelease: utilfeature.Beta&#125;,</span><br><span class="line"></span><br><span class="line">	// features that enable backwards compatibility but are scheduled to be removed</span><br><span class="line">	ServiceProxyAllowExternalIPs: &#123;Default: false, PreRelease: utilfeature.Deprecated&#125;,</span><br><span class="line">	ReadOnlyAPIDataVolumes:       &#123;Default: true, PreRelease: utilfeature.Deprecated&#125;,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">	// owner: @vishh</span><br><span class="line">	// alpha: v1.5</span><br><span class="line">	//</span><br><span class="line">	// Ensures guaranteed scheduling of pods marked with a special pod annotation `scheduler.alpha.kubernetes.io/critical-pod`</span><br><span class="line">	// and also prevents them from being evicted from a node.</span><br><span class="line">	// Note: This feature is not supported for `BestEffort` pods.</span><br><span class="line">	ExperimentalCriticalPodAnnotation utilfeature.Feature = &quot;ExperimentalCriticalPodAnnotation&quot;</span><br><span class="line">...</span><br><span class="line">	// owner: @singhwang</span><br><span class="line">	// alpha: v1.5</span><br><span class="line">	//</span><br><span class="line">	// Ensures guaranteed scheduling of pods marked with a special pod annotation `scheduler.alpha.kubernetes.io/not-evicted-pod`</span><br><span class="line">	// and also prevents them from being evicted from a node.</span><br><span class="line">	ExperimentalNotEvictedPodAnnotation utilfeature.Feature = &quot;ExperimentalNotEvictedPodAnnotation&quot;</span><br><span class="line">...</span><br><span class="line">	// owner: @jiayingz</span><br><span class="line">	// beta: v1.10</span><br><span class="line">	//</span><br><span class="line">	// Enables support for Device Plugins</span><br><span class="line">	DevicePlugins utilfeature.Feature = &quot;DevicePlugins&quot;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>pod_update.go</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">const (</span><br><span class="line">	ConfigSourceAnnotationKey    = &quot;kubernetes.io/config.source&quot;</span><br><span class="line">	ConfigMirrorAnnotationKey    = v1.MirrorPodAnnotationKey</span><br><span class="line">	ConfigFirstSeenAnnotationKey = &quot;kubernetes.io/config.seen&quot;</span><br><span class="line">	ConfigHashAnnotationKey      = &quot;kubernetes.io/config.hash&quot;</span><br><span class="line">	CriticalPodAnnotationKey     = &quot;scheduler.alpha.kubernetes.io/critical-pod&quot;</span><br><span class="line">	...</span><br><span class="line">	NotEvictedPodAnnotationKey   = &quot;scheduler.alpha.kubernetes.io/not-evicted-pod&quot;</span><br><span class="line">	...</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">// IsCriticalPodBasedOnPriority checks if the given pod is a critical pod based on priority resolved from pod Spec.</span><br><span class="line">func IsCriticalPodBasedOnPriority(priority int32) bool &#123;</span><br><span class="line">	if priority &gt;= scheduling.SystemCriticalPriority &#123;</span><br><span class="line">		return true</span><br><span class="line">	&#125;</span><br><span class="line">	return false</span><br><span class="line">&#125;</span><br><span class="line">...</span><br><span class="line">// IsNotEvictedPod returns true if the pod bears the not evicted pod annotation key.</span><br><span class="line">func IsNotEvictedPod(pod *v1.Pod) bool &#123;</span><br><span class="line">	return IsNotEvicted(pod.Namespace, pod.Annotations)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// IsNotEvicted returns true if parameters bear the not evicted pod annotation key.</span><br><span class="line">func IsNotEvicted(ns string, annotations map[string]string) bool &#123;</span><br><span class="line">	// NotEvicted pods are restricted to &quot;kube-system&quot; namespace as of now.</span><br><span class="line">	if ns != kubeapi.NamespaceSystem &#123;</span><br><span class="line">		return false</span><br><span class="line">	&#125;</span><br><span class="line">	val, ok := annotations[NotEvictedPodAnnotationKey]</span><br><span class="line">	if ok &amp;&amp; val == &quot;&quot; &#123;</span><br><span class="line">		return true</span><br><span class="line">	&#125;</span><br><span class="line">	return false</span><br><span class="line">&#125;</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>eviction_manager.go</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">func (m *managerImpl) evictPod(pod *v1.Pod, gracePeriodOverride int64, evictMsg string, annotations map[string]string) bool &#123;</span><br><span class="line">	// If the pod is marked as critical and static, and support for critical pod annotations is enabled,</span><br><span class="line">	// do not evict such pods. Static pods are not re-admitted after evictions.</span><br><span class="line">	// https://github.com/kubernetes/kubernetes/issues/40573 has more details.</span><br><span class="line">	if utilfeature.DefaultFeatureGate.Enabled(features.ExperimentalCriticalPodAnnotation) &amp;&amp;</span><br><span class="line">		kubelettypes.IsCriticalPod(pod) &amp;&amp; kubepod.IsStaticPod(pod) &#123;</span><br><span class="line">		glog.Errorf(&quot;eviction manager: cannot evict a critical static pod %s&quot;, format.Pod(pod))</span><br><span class="line">		return false</span><br><span class="line">	&#125;</span><br><span class="line">...</span><br><span class="line">	// If the pod is marked as not evicted, and support for not evicted pod annotations is enabled,</span><br><span class="line">	// do not evict such pods.</span><br><span class="line">	if utilfeature.DefaultFeatureGate.Enabled(features.ExperimentalNotEvictedPodAnnotation) &amp;&amp;</span><br><span class="line">		kubelettypes.IsNotEvictedPod(pod) &#123;</span><br><span class="line">		glog.Errorf(&quot;eviction manager: cannot evict a marked not evicted pod %s&quot;, format.Pod(pod))</span><br><span class="line">		return false</span><br><span class="line">	&#125;</span><br><span class="line">...	</span><br><span class="line">	status := v1.PodStatus&#123;</span><br><span class="line">		Phase:   v1.PodFailed,</span><br><span class="line">		Message: evictMsg,</span><br><span class="line">		Reason:  Reason,</span><br><span class="line">	&#125;</span><br><span class="line">	// record that we are evicting the pod</span><br><span class="line">	m.recorder.AnnotatedEventf(pod, annotations, v1.EventTypeWarning, Reason, evictMsg)</span><br><span class="line">	// this is a blocking call and should only return when the pod and its containers are killed.</span><br><span class="line">	err := m.killPodFunc(pod, status, &amp;gracePeriodOverride)</span><br><span class="line">	if err != nil &#123;</span><br><span class="line">		glog.Errorf(&quot;eviction manager: pod %s failed to evict %v&quot;, format.Pod(pod), err)</span><br><span class="line">	&#125; else &#123;</span><br><span class="line">		glog.Infof(&quot;eviction manager: pod %s is evicted successfully&quot;, format.Pod(pod))</span><br><span class="line">	&#125;</span><br><span class="line">	return true</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>重新编译源代码，生成新的Kubelet二进制文件，替换的对应的Node上，使用方式如下：<br>注意–feature-gates部分，其中ExperimentalCriticalPodAnnotation为官方原生支持的功能，它可以保证kube-system下的Critical级别的静态Pod始终不被Kubelet所驱逐。另一个ExperimentalNotEvictedPodAnnotation是笔者加入的功能特性，它可以保证kube-system下的Pod如果其Annotations中包括scheduler.alpha.kubernetes.io/not-evicted-pod，那么这样的Pod也始终不会被Kubelet所驱逐。这个功能特的目的是保证，Kubernetes容器系统的系统级Pod和重要Addon级别的Pod，允许用户通过这个scheduler.alpha.kubernetes.io/not-evicted-pod把那些系统级Pod（用户为了扩充Kubernetes功能的而增加的非常重要的Pod）保护起来，提高Kubernetes容器系统的稳健性，避免集群资源紧张时，陷入集群自杀和自我修复的循环中而无法恢复。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">KUBELET_EXTRA_ARGS=&quot;--cgroup-driver=cgroupfs --pod-infra-container-image=registry.cn-hangzhou.aliyuncs.com/google_containers/pause-amd64:3.1 --feature-gates=ExperimentalCriticalPodAnnotation=true,ExperimentalNotEvictedPodAnnotation=true&quot;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>六、参考资料<br><a href="https://github.com/kubernetes/kubernetes/tree/v1.11.0" target="_blank" rel="noopener">https://github.com/kubernetes/kubernetes/tree/v1.11.0</a><br><a href="https://github.com/kubernetes/kubernetes/issues/53659" target="_blank" rel="noopener">https://github.com/kubernetes/kubernetes/issues/53659</a><br><a href="https://kubernetes.io/docs/tasks/administer-cluster/out-of-resource/" target="_blank" rel="noopener">https://kubernetes.io/docs/tasks/administer-cluster/out-of-resource/</a><br><a href="https://kubernetes.io/docs/tasks/administer-cluster/guaranteed-scheduling-critical-addon-pods/" target="_blank" rel="noopener">https://kubernetes.io/docs/tasks/administer-cluster/guaranteed-scheduling-critical-addon-pods/</a><br><a href="https://www.centos.bz/2017/09/linux-命令行-创建指定大小的文件/" target="_blank" rel="noopener">https://www.centos.bz/2017/09/linux-命令行-创建指定大小的文件/</a><br><a href="https://www.hi-linux.com/posts/59095.html" target="_blank" rel="noopener">https://www.hi-linux.com/posts/59095.html</a></p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2019/01/17/kubernetes_calico_001/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Calico IPIP（Always和CrossSubnet）模式和BGP模式的区别</div>
+      <strong class="article-nav-caption">&gt;</strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+
+
+
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+      <div class="footer-left">
+        &copy; 2019 Singh Wang
+      </div>
+        <div class="footer-right">
+          <a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/smackgg/hexo-theme-smackdown" target="_blank">Smackdown</a>
+        </div>
+    </div>
+  </div>
+</footer>
+    </div>
+    
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: true,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false
+	}
+</script>
+<script src="/js/main.js"></script>
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js"></script>
+
+
+  </div>
+</body>
+</html>
