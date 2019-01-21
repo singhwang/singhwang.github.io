@@ -17,7 +17,7 @@
 <meta property="og:site_name" content="Singh Wang">
 <meta property="og:description" content="一、环境版本信息Kubeadm v1.11.0Kubelet v1.11.0Calico v3.1.3 二、问题描述使用Kubeadm搭建的Kubernetes集群在资源紧张的情况下，Kubernetes Control Plan开始挂掉了，集群开始变得不好用。比如你可以让你的Kubernetes Control Plan所在的服务器，磁盘使用率超过90%，问题就会立马复现。 三、问题定位经排查发">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2019-01-21T03:41:11.575Z">
+<meta property="og:updated_time" content="2019-01-21T03:50:08.038Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="如何保护系统级Pod不被Kubelet驱逐？">
 <meta name="twitter:description" content="一、环境版本信息Kubeadm v1.11.0Kubelet v1.11.0Calico v3.1.3 二、问题描述使用Kubeadm搭建的Kubernetes集群在资源紧张的情况下，Kubernetes Control Plan开始挂掉了，集群开始变得不好用。比如你可以让你的Kubernetes Control Plan所在的服务器，磁盘使用率超过90%，问题就会立马复现。 三、问题定位经排查发">
@@ -200,7 +200,7 @@
       
         <p>一、环境版本信息<br>Kubeadm v1.11.0<br>Kubelet v1.11.0<br>Calico v3.1.3</p>
 <p>二、问题描述<br>使用Kubeadm搭建的Kubernetes集群在资源紧张的情况下，Kubernetes Control Plan开始挂掉了，集群开始变得不好用。比如你可以让你的Kubernetes Control Plan所在的服务器，磁盘使用率超过90%，问题就会立马复现。</p>
-<p>三、问题定位<br>经排查发现，资源紧张的情况下，Kubelet驱逐对应Node上的Pod，当然，这也包括Kubernetes Control Plan的相关Pod，会导致其被杀死及其相关镜像被删除。Kubelet这么做是为了释放资源，当然把Kubernetes Control Plan的相关Pod都干掉，并不是用户所希望看到的。一旦放大到Node节点上，问题就变成Node节点上非常重要的系统Pod会被干掉，导致相关的Node变成不好用的Node节点了。一旦放大到整个集群上，就变成Kubernetes Control Plan的相关Pod、Node节点上非常重要的系统级别Pod和集群上非常重要的Addon级别的Pod都会被干掉。问题的严重性，在规模效应下，可想而知了。</p>
+<p>三、问题定位<br>经排查发现，资源紧张的情况下，Kubelet会驱逐对应Node上的Pod，当然，这也包括Kubernetes Control Plan的相关Pod，会导致其被杀死及其相关镜像被删除。Kubelet这么做是为了释放资源，当然把Kubernetes Control Plan的相关Pod都干掉，并不是用户所希望看到的。一旦放大到Node节点上，问题就变成Node节点上非常重要的系统Pod会被干掉，导致相关的Node变成不好用的Node节点了。一旦放大到整个集群上，就变成Kubernetes Control Plan的相关Pod、Node节点上非常重要的系统级别Pod和集群上非常重要的Addon级别的Pod都会被干掉。问题的严重性，在规模效应下，可想而知了。</p>
 <p>四、问题分析<br>有些Kubernetes的使用者可能会说，Kubeadm搭建的Kubernetes集群不推荐在生产环境使用，你非要用它，肯定会有问题。这一点也不奇怪。因为一直以来，使用Kubeadm搭建的Kubernetes集群都不推荐在生产环境使用，最开始是官方不推荐，大部分使用者也随着不推荐。随着Kubernetes的发展，我们逐渐发现使用Kubeadm搭建Kubernetes集群原有那句不推荐在生产环境使用的禁止提示不见了，你也会发现官方文档上花费了大量的笔墨介绍Kubeadm这种安装方式，甚至关于这种方式的高可用方案，官方文档也开始有了描述。但是对于其他的安装方式都是一笔带过，甚至只字未提。说明了什么？那便是官方推荐并鼓励用户使用这种方式部署Kubernetes集群。</p>
 <p>该种方式搭建的集群真得就能应用于生产环境吗？如果不能，那么又是哪些问题导致的它不能应用于生产环境呢？笔者在实际工作中做了大量的实践，目前已经将其应用于生产环境了。实践过程中发现，Kubeadm已经相当成熟了，问题并不是很多，不过还是有一些的，但是就算有问题，读其规范的代码结构，改起来也相当方便。笔者在生产环境使用的版本，就做过一些修改。</p>
 <p>这里我只给出Kubeadm在实际应用中两个大问题，并针对其中一个致命问题在本文中详细描述其解决方案。</p>
