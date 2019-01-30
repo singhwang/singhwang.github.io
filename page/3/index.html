@@ -102,7 +102,7 @@
 				
 				<section class="switch-part switch-part2">
 					<div class="widget tagcloud" id="js-tagcloud">
-						<a href="/tags/Calico/" style="font-size: 11.67px;">Calico</a> <a href="/tags/Ceph/" style="font-size: 10px;">Ceph</a> <a href="/tags/Common/" style="font-size: 10px;">Common</a> <a href="/tags/Docker/" style="font-size: 20px;">Docker</a> <a href="/tags/Elasticsearch/" style="font-size: 10px;">Elasticsearch</a> <a href="/tags/Fluentd/" style="font-size: 11.67px;">Fluentd</a> <a href="/tags/GlusterFS/" style="font-size: 11.67px;">GlusterFS</a> <a href="/tags/HAProxy/" style="font-size: 10px;">HAProxy</a> <a href="/tags/Highly-Available/" style="font-size: 10px;">Highly Available</a> <a href="/tags/Ingress/" style="font-size: 10px;">Ingress</a> <a href="/tags/Kubeadm/" style="font-size: 11.67px;">Kubeadm</a> <a href="/tags/Kubernetes/" style="font-size: 18.33px;">Kubernetes</a> <a href="/tags/Label/" style="font-size: 10px;">Label</a> <a href="/tags/Logging/" style="font-size: 13.33px;">Logging</a> <a href="/tags/Monitoring/" style="font-size: 10px;">Monitoring</a> <a href="/tags/Network/" style="font-size: 15px;">Network</a> <a href="/tags/Prometheus/" style="font-size: 10px;">Prometheus</a> <a href="/tags/Setup/" style="font-size: 11.67px;">Setup</a> <a href="/tags/Storage/" style="font-size: 13.33px;">Storage</a> <a href="/tags/TimeZone/" style="font-size: 10px;">TimeZone</a> <a href="/tags/Trouble-Shooting/" style="font-size: 16.67px;">Trouble Shooting</a>
+						<a href="/tags/Calico/" style="font-size: 11.43px;">Calico</a> <a href="/tags/Ceph/" style="font-size: 10px;">Ceph</a> <a href="/tags/Common/" style="font-size: 10px;">Common</a> <a href="/tags/Docker/" style="font-size: 20px;">Docker</a> <a href="/tags/Elasticsearch/" style="font-size: 10px;">Elasticsearch</a> <a href="/tags/Fluentd/" style="font-size: 11.43px;">Fluentd</a> <a href="/tags/GlusterFS/" style="font-size: 14.29px;">GlusterFS</a> <a href="/tags/HAProxy/" style="font-size: 10px;">HAProxy</a> <a href="/tags/Highly-Available/" style="font-size: 10px;">Highly Available</a> <a href="/tags/Ingress/" style="font-size: 10px;">Ingress</a> <a href="/tags/Kubeadm/" style="font-size: 11.43px;">Kubeadm</a> <a href="/tags/Kubernetes/" style="font-size: 18.57px;">Kubernetes</a> <a href="/tags/Label/" style="font-size: 10px;">Label</a> <a href="/tags/Logging/" style="font-size: 12.86px;">Logging</a> <a href="/tags/Monitoring/" style="font-size: 10px;">Monitoring</a> <a href="/tags/Network/" style="font-size: 14.29px;">Network</a> <a href="/tags/Prometheus/" style="font-size: 10px;">Prometheus</a> <a href="/tags/Setup/" style="font-size: 11.43px;">Setup</a> <a href="/tags/Storage/" style="font-size: 15.71px;">Storage</a> <a href="/tags/TimeZone/" style="font-size: 10px;">TimeZone</a> <a href="/tags/Trouble-Shooting/" style="font-size: 17.14px;">Trouble Shooting</a>
 					</div>
 				</section>
 				
@@ -151,6 +151,143 @@
 	</div>
 </nav>
       <div class="body-wrap">
+  
+    <article id="post-manual_clean_logging" class="article article-type-post" itemscope="" itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2018/11/14/manual_clean_logging/" class="article-date">
+  	<time datetime="2018-11-14T10:01:30.172Z" itemprop="datePublished">2018-11-14</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/11/14/manual_clean_logging/">
+        手动清理Docker容器产生的日志
+        
+      </a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>实际工作中，发现有些同事会有裸跑Docker容器的用法，最主要的是用json-file的日志驱动，还不配置日志轮转清理，具体原因不详。应用产生的日志量也不小，一段时间后，有趣的事情发生了：Docker莫名其妙不好使了，一查原因日志报盘了。上网找了一下资料，找到了比较好用的手动快速清理日志的方法，这里记录一下，供日后查阅使用。原创地址详见“参考资料”。</p>
+<h2 id="1-在Docker默认配置下，利用下面的命令查看各个容器的日志文件大小；"><a href="#1-在Docker默认配置下，利用下面的命令查看各个容器的日志文件大小；" class="headerlink" title="1. 在Docker默认配置下，利用下面的命令查看各个容器的日志文件大小；"></a>1. 在Docker默认配置下，利用下面的命令查看各个容器的日志文件大小；</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ls -lh $(find /var/lib/docker/containers/ -name *-json.log)</span><br></pre></td></tr></table></figure>
+<h2 id="2-利用下面的脚本，可以手动清理宿主机上Docker容器产生的日志。"><a href="#2-利用下面的脚本，可以手动清理宿主机上Docker容器产生的日志。" class="headerlink" title="2. 利用下面的脚本，可以手动清理宿主机上Docker容器产生的日志。"></a>2. 利用下面的脚本，可以手动清理宿主机上Docker容器产生的日志。</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">#!/bin/sh</span><br><span class="line">echo &quot;==================== start clean docker containers logs ==========================&quot;</span><br><span class="line"> </span><br><span class="line">logs=$(find /var/lib/docker/containers/ -name *-json.log)</span><br><span class="line"> </span><br><span class="line">for log in $logs</span><br><span class="line">        do</span><br><span class="line">                echo &quot;clean logs : $log&quot;</span><br><span class="line">                cat /dev/null &gt; $log</span><br><span class="line">        done</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">echo &quot;==================== end clean docker containers logs   ==========================&quot;</span><br></pre></td></tr></table></figure>
+<p>参考资料：<br><a href="https://blog.csdn.net/xunzhaoyao/article/details/72959917" target="_blank" rel="noopener">https://blog.csdn.net/xunzhaoyao/article/details/72959917</a></p>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Docker/">Docker</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Logging/">Logging</a></li></ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/容器云技术/">容器云技术</a>
+	</div>
+
+
+      
+      <div class="clearfix"></div>
+    </div>
+      
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+  
+    <article id="post-verify_network" class="article article-type-post" itemscope="" itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2018/11/14/verify_network/" class="article-date">
+  	<time datetime="2018-11-14T06:19:59.861Z" itemprop="datePublished">2018-11-14</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/11/14/verify_network/">
+        Kubernetes集群中验证集群网络
+        
+      </a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>在Kubernetes集群中验证网络是否好用，一般从以下几个方面入手：<br>1.相同主机上的不同Pod之间的网络连通性；<br>2.不同主机上的不同Pod之间的网络连通性；<br>3.不同主机上的Pod中能否解析Kubernetes集群中的DNS记录。</p>
+<p>为了顺利完成上述验证，需要准备一个验证环境。下面先介绍一下，如何构建这样一个网络验证环境，然后再介绍如何验证网络。</p>
+<h1 id="一、构建集群网络验证环境"><a href="#一、构建集群网络验证环境" class="headerlink" title="一、构建集群网络验证环境"></a>一、构建集群网络验证环境</h1><h2 id="1-构建网络验证环境基础镜像"><a href="#1-构建网络验证环境基础镜像" class="headerlink" title="1. 构建网络验证环境基础镜像"></a>1. 构建网络验证环境基础镜像</h2><h3 id="Alpine-3-8-Dockerfile-Example"><a href="#Alpine-3-8-Dockerfile-Example" class="headerlink" title="Alpine 3.8 Dockerfile Example"></a>Alpine 3.8 Dockerfile Example</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">FROM alpine:3.8</span><br><span class="line"></span><br><span class="line">MAINTAINER wangxin_0611@126.com</span><br><span class="line"></span><br><span class="line">RUN apk add --no-cache ca-certificates bind-tools iputils iproute2 net-tools tcpdump</span><br></pre></td></tr></table></figure>
+<h3 id="Ubuntu-16-04-Dockerfile-Example"><a href="#Ubuntu-16-04-Dockerfile-Example" class="headerlink" title="Ubuntu 16.04 Dockerfile Example"></a>Ubuntu 16.04 Dockerfile Example</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">FROM ubuntu:16.04</span><br><span class="line"></span><br><span class="line">MAINTAINER wangxin_0611@126.com</span><br><span class="line"></span><br><span class="line">RUN apt-get update &amp;&amp; \</span><br><span class="line">    apt-get install -y iproute2 &amp;&amp; \</span><br><span class="line">    apt-get install -y dnsutils &amp;&amp; \</span><br><span class="line">    apt-get install -y net-tools &amp;&amp; \</span><br><span class="line">    apt-get install -y iputils-ping &amp;&amp; \</span><br><span class="line">    apt-get install -y tcpdump</span><br></pre></td></tr></table></figure>
+<h3 id="CentOS-7-5-1804-Dockerfile-Example"><a href="#CentOS-7-5-1804-Dockerfile-Example" class="headerlink" title="CentOS 7.5.1804 Dockerfile Example"></a>CentOS 7.5.1804 Dockerfile Example</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">FROM centos:7.5.1804</span><br><span class="line"></span><br><span class="line">MAINTAINER wangxin_0611@126.com</span><br><span class="line"></span><br><span class="line">RUN yum makecache fast &amp;&amp; \</span><br><span class="line">    yum install -y iproute &amp;&amp; \</span><br><span class="line">    yum install -y bind-utils &amp;&amp; \</span><br><span class="line">    yum install -y net-tools &amp;&amp; \</span><br><span class="line">    yum install -y iputils &amp;&amp; \</span><br><span class="line">    yum install -y tcpdump</span><br></pre></td></tr></table></figure>
+<h2 id="2-利用基础镜像在各个宿主机上部署一个Pod，对于该种情况，利用DaemonSet实现最为合适。"><a href="#2-利用基础镜像在各个宿主机上部署一个Pod，对于该种情况，利用DaemonSet实现最为合适。" class="headerlink" title="2. 利用基础镜像在各个宿主机上部署一个Pod，对于该种情况，利用DaemonSet实现最为合适。"></a>2. 利用基础镜像在各个宿主机上部署一个Pod，对于该种情况，利用DaemonSet实现最为合适。</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">apiVersion: apps/v1</span><br><span class="line">kind: DaemonSet</span><br><span class="line">metadata:</span><br><span class="line">  name: network</span><br><span class="line">  namespace: default</span><br><span class="line">spec:</span><br><span class="line">  selector:</span><br><span class="line">    matchLabels:</span><br><span class="line">      app: network</span><br><span class="line">  template:</span><br><span class="line">    metadata:</span><br><span class="line">      labels:</span><br><span class="line">        app: network</span><br><span class="line">    spec:</span><br><span class="line">      containers:</span><br><span class="line">      - name: network</span><br><span class="line">        image: 10.0.55.126/base/alpine:3.8-network</span><br><span class="line">        imagePullPolicy: IfNotPresent</span><br><span class="line">        command:</span><br><span class="line">        - sleep</span><br><span class="line">        - &quot;3600&quot;</span><br><span class="line">      restartPolicy: Always</span><br><span class="line">      tolerations:</span><br><span class="line">      - effect: NoSchedule</span><br><span class="line">        operator: Exists</span><br></pre></td></tr></table></figure>
+<p>创建后，查看DaemonSet和其对应的Pod信息如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">[root@master alpine]# kubectl get daemonsets</span><br><span class="line">NAME             DESIRED   CURRENT   READY     UP-TO-DATE   AVAILABLE   NODE SELECTOR   AGE</span><br><span class="line">network          9         9         9         9            9           &lt;none&gt;          1m</span><br><span class="line">[root@master alpine]# kubectl get pods -o wide</span><br><span class="line">NAME                   READY     STATUS    RESTARTS   AGE       IP              NODE</span><br><span class="line">network-76xzk          1/1       Running   0          1m        10.211.3.42     node03</span><br><span class="line">network-79dzf          1/1       Running   0          1m        10.211.2.195    node02</span><br><span class="line">network-ftn7g          1/1       Running   0          1m        10.211.4.25     node04</span><br><span class="line">network-jbr8g          1/1       Running   0          1m        10.211.13.187   node07</span><br><span class="line">network-kflgv          1/1       Running   0          1m        10.211.0.153    master</span><br><span class="line">network-mvqlx          1/1       Running   0          1m        10.211.14.97    node08</span><br><span class="line">network-nbzsc          1/1       Running   0          1m        10.211.12.94    node06</span><br><span class="line">network-rxc2f          1/1       Running   0          1m        10.211.6.5      node05</span><br><span class="line">network-w89xg          1/1       Running   0          1m        10.211.1.240    node01</span><br></pre></td></tr></table></figure></p>
+<h1 id="二、验证集群网络"><a href="#二、验证集群网络" class="headerlink" title="二、验证集群网络"></a>二、验证集群网络</h1><h2 id="1-进入master上对应的Pod后，ping各个Node上对应的Pod的IP地址，以此验证连通性；"><a href="#1-进入master上对应的Pod后，ping各个Node上对应的Pod的IP地址，以此验证连通性；" class="headerlink" title="1. 进入master上对应的Pod后，ping各个Node上对应的Pod的IP地址，以此验证连通性；"></a>1. 进入master上对应的Pod后，ping各个Node上对应的Pod的IP地址，以此验证连通性；</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">[root@master alpine]# kubectl exec -it network-kflgv /bin/sh</span><br><span class="line">/ # ping -c 4 10.211.1.240</span><br><span class="line">PING 10.211.1.240 (10.211.1.240) 56(84) bytes of data.</span><br><span class="line">64 bytes from 10.211.1.240: icmp_seq=1 ttl=62 time=0.575 ms</span><br><span class="line">64 bytes from 10.211.1.240: icmp_seq=2 ttl=62 time=0.374 ms</span><br><span class="line">64 bytes from 10.211.1.240: icmp_seq=3 ttl=62 time=0.445 ms</span><br><span class="line">64 bytes from 10.211.1.240: icmp_seq=4 ttl=62 time=0.380 ms</span><br><span class="line"></span><br><span class="line">--- 10.211.1.240 ping statistics ---</span><br><span class="line">4 packets transmitted, 4 received, 0% packet loss, time 3103ms</span><br><span class="line">rtt min/avg/max/mdev = 0.374/0.443/0.575/0.083 ms</span><br><span class="line">/ # ping -c 4 10.211.2.195</span><br><span class="line">PING 10.211.2.195 (10.211.2.195) 56(84) bytes of data.</span><br><span class="line">64 bytes from 10.211.2.195: icmp_seq=1 ttl=62 time=0.390 ms</span><br><span class="line">64 bytes from 10.211.2.195: icmp_seq=2 ttl=62 time=0.544 ms</span><br><span class="line">64 bytes from 10.211.2.195: icmp_seq=3 ttl=62 time=0.460 ms</span><br><span class="line">64 bytes from 10.211.2.195: icmp_seq=4 ttl=62 time=0.483 ms</span><br><span class="line"></span><br><span class="line">--- 10.211.2.195 ping statistics ---</span><br><span class="line">4 packets transmitted, 4 received, 0% packet loss, time 3064ms</span><br><span class="line">rtt min/avg/max/mdev = 0.390/0.469/0.544/0.057 ms</span><br><span class="line">/ # ping -c 4 10.211.3.42</span><br><span class="line">PING 10.211.3.42 (10.211.3.42) 56(84) bytes of data.</span><br><span class="line">64 bytes from 10.211.3.42: icmp_seq=1 ttl=62 time=0.598 ms</span><br><span class="line">64 bytes from 10.211.3.42: icmp_seq=2 ttl=62 time=0.463 ms</span><br><span class="line">64 bytes from 10.211.3.42: icmp_seq=3 ttl=62 time=0.530 ms</span><br><span class="line">64 bytes from 10.211.3.42: icmp_seq=4 ttl=62 time=0.426 ms</span><br><span class="line"></span><br><span class="line">以此类推 。。。。。。</span><br></pre></td></tr></table></figure>
+<h2 id="2-验证各个Pod中能否解析Kubernetes集群中的DNS记录。"><a href="#2-验证各个Pod中能否解析Kubernetes集群中的DNS记录。" class="headerlink" title="2. 验证各个Pod中能否解析Kubernetes集群中的DNS记录。"></a>2. 验证各个Pod中能否解析Kubernetes集群中的DNS记录。</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">[root@master alpine]# kubectl exec -it network-kflgv /bin/sh</span><br><span class="line">/ # nslookup kubernetes.default</span><br><span class="line">Server:		10.96.0.10</span><br><span class="line">Address:	10.96.0.10#53</span><br><span class="line"></span><br><span class="line">Name:	kubernetes.default.svc.cluster.local</span><br><span class="line">Address: 10.96.0.1</span><br><span class="line"></span><br><span class="line">[root@master alpine]# kubectl exec -it network-w89xg /bin/sh</span><br><span class="line">/ # nslookup kubernetes.default</span><br><span class="line">Server:		10.96.0.10</span><br><span class="line">Address:	10.96.0.10#53</span><br><span class="line"></span><br><span class="line">Name:	kubernetes.default.svc.cluster.local</span><br><span class="line">Address: 10.96.0.1</span><br><span class="line"></span><br><span class="line">[root@master alpine]# kubectl exec -it network-79dzf /bin/sh</span><br><span class="line">/ # nslookup kubernetes.default</span><br><span class="line">Server:		10.96.0.10</span><br><span class="line">Address:	10.96.0.10#53</span><br><span class="line"></span><br><span class="line">Name:	kubernetes.default.svc.cluster.local</span><br><span class="line">Address: 10.96.0.1</span><br><span class="line"></span><br><span class="line">[root@master alpine]# kubectl exec -it network-76xzk /bin/sh</span><br><span class="line">/ # nslookup kubernetes.default</span><br><span class="line">Server:		10.96.0.10</span><br><span class="line">Address:	10.96.0.10#53</span><br><span class="line"></span><br><span class="line">Name:	kubernetes.default.svc.cluster.local</span><br><span class="line">Address: 10.96.0.1</span><br><span class="line"></span><br><span class="line">以此类推 。。。。。。</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Docker/">Docker</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Kubernetes/">Kubernetes</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Network/">Network</a></li></ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/容器云技术/">容器云技术</a>
+	</div>
+
+
+      
+      <div class="clearfix"></div>
+    </div>
+      
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
   
     <article id="post-timezone" class="article article-type-post" itemscope="" itemprop="blogPost">
   
