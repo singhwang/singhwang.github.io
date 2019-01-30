@@ -3,20 +3,24 @@
 <head><meta name="generator" content="Hexo 3.8.0">
   <meta charset="utf-8">
   
-  <title>categories | Singh Wang</title>
+  <title>Kubernetes对接GlusterFS（把GlusterFS部署在Kubernetes集群外） | Singh Wang</title>
 
   <!-- keywords -->
   
 
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="categories">
-<meta property="og:url" content="http://yoursite.com/categories/index.html">
+  <meta name="description" content="一、环境版本信息1. 版本信息CentOS 7.6.1810Kubernetes v1.11.0GlusterFS gluster3u13_centos7Heketi 4 2. 服务器信息server01  172.16.170.128  masterserver02  172.16.170.129  nodeserver03  172.16.170.130  node server07  172">
+<meta name="keywords" content="Docker,Kubernetes,Storage,GlusterFS">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Kubernetes对接GlusterFS（把GlusterFS部署在Kubernetes集群外）">
+<meta property="og:url" content="http://yoursite.com/2019/01/30/kubernetes_glusterfs_001/index.html">
 <meta property="og:site_name" content="Singh Wang">
+<meta property="og:description" content="一、环境版本信息1. 版本信息CentOS 7.6.1810Kubernetes v1.11.0GlusterFS gluster3u13_centos7Heketi 4 2. 服务器信息server01  172.16.170.128  masterserver02  172.16.170.129  nodeserver03  172.16.170.130  node server07  172">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2018-11-12T04:52:58.335Z">
+<meta property="og:updated_time" content="2019-01-30T02:07:48.748Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="categories">
+<meta name="twitter:title" content="Kubernetes对接GlusterFS（把GlusterFS部署在Kubernetes集群外）">
+<meta name="twitter:description" content="一、环境版本信息1. 版本信息CentOS 7.6.1810Kubernetes v1.11.0GlusterFS gluster3u13_centos7Heketi 4 2. 服务器信息server01  172.16.170.128  masterserver02  172.16.170.129  nodeserver03  172.16.170.130  node server07  172">
   
     <link rel="alternative" href="/atom.xml" title="Singh Wang" type="application/atom+xml">
   
@@ -151,11 +155,11 @@
 		</header>				
 	</div>
 </nav>
-      <div class="body-wrap"><article id="page-" class="article article-type-page" itemscope="" itemprop="blogPost">
+      <div class="body-wrap"><article id="post-kubernetes_glusterfs_001" class="article article-type-post" itemscope="" itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/categories/index.html" class="article-date">
-  	<time datetime="2018-11-10T15:58:48.000Z" itemprop="datePublished">2018-11-10</time>
+      <a href="/2019/01/30/kubernetes_glusterfs_001/" class="article-date">
+  	<time datetime="2019-01-30T02:05:36.673Z" itemprop="datePublished">2019-01-30</time>
 </a>
     </div>
   
@@ -168,7 +172,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      categories
+      Kubernetes对接GlusterFS（把GlusterFS部署在Kubernetes集群外）
       
     </h1>
   
@@ -177,7 +181,15 @@
       
       <div class="article-info article-info-post">
         
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Docker/">Docker</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/GlusterFS/">GlusterFS</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Kubernetes/">Kubernetes</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Storage/">Storage</a></li></ul>
+	</div>
+
         
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/容器云技术/">容器云技术</a>
+	</div>
+
 
         
         <div class="clearfix"></div>
@@ -186,13 +198,26 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        
+        <h1 id="一、环境版本信息"><a href="#一、环境版本信息" class="headerlink" title="一、环境版本信息"></a>一、环境版本信息</h1><h2 id="1-版本信息"><a href="#1-版本信息" class="headerlink" title="1. 版本信息"></a>1. 版本信息</h2><p>CentOS 7.6.1810<br>Kubernetes v1.11.0<br>GlusterFS gluster3u13_centos7<br>Heketi 4</p>
+<h2 id="2-服务器信息"><a href="#2-服务器信息" class="headerlink" title="2. 服务器信息"></a>2. 服务器信息</h2><p>server01 <-> 172.16.170.128 <-> master<br>server02 <-> 172.16.170.129 <-> node<br>server03 <-> 172.16.170.130 <-> node</-></-></-></-></-></-></p>
+<p>server07 <-> 172.16.170.134 <-> glusterfs<br>server08 <-> 172.16.170.135 <-> glusterfs<br>server09 <-> 172.16.170.136 <-> glusterfs</-></-></-></-></-></-></p>
+
       
     </div>
     
   </div>
   
     
+<nav id="article-nav">
+  
+  
+    <a href="/2019/01/29/kubernetes_glusterfs_000/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Kubernetes对接GlusterFS（把GlusterFS部署在Kubernetes集群内）</div>
+      <strong class="article-nav-caption">&gt;</strong>
+    </a>
+  
+</nav>
+
   
 </article>
 
@@ -225,7 +250,7 @@
 		mathjax: true,
 		animate: true,
 		isHome: false,
-		isPost: false,
+		isPost: true,
 		isArchive: false,
 		isTag: false,
 		isCategory: false,

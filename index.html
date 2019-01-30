@@ -102,7 +102,7 @@
 				
 				<section class="switch-part switch-part2">
 					<div class="widget tagcloud" id="js-tagcloud">
-						<a href="/tags/Calico/" style="font-size: 11.67px;">Calico</a> <a href="/tags/Ceph/" style="font-size: 10px;">Ceph</a> <a href="/tags/Common/" style="font-size: 10px;">Common</a> <a href="/tags/Docker/" style="font-size: 20px;">Docker</a> <a href="/tags/Elasticsearch/" style="font-size: 10px;">Elasticsearch</a> <a href="/tags/Fluentd/" style="font-size: 11.67px;">Fluentd</a> <a href="/tags/GlusterFS/" style="font-size: 10px;">GlusterFS</a> <a href="/tags/HAProxy/" style="font-size: 10px;">HAProxy</a> <a href="/tags/Highly-Available/" style="font-size: 10px;">Highly Available</a> <a href="/tags/Ingress/" style="font-size: 10px;">Ingress</a> <a href="/tags/Kubeadm/" style="font-size: 11.67px;">Kubeadm</a> <a href="/tags/Kubernetes/" style="font-size: 18.33px;">Kubernetes</a> <a href="/tags/Label/" style="font-size: 10px;">Label</a> <a href="/tags/Logging/" style="font-size: 13.33px;">Logging</a> <a href="/tags/Monitoring/" style="font-size: 10px;">Monitoring</a> <a href="/tags/Network/" style="font-size: 15px;">Network</a> <a href="/tags/Prometheus/" style="font-size: 10px;">Prometheus</a> <a href="/tags/Setup/" style="font-size: 11.67px;">Setup</a> <a href="/tags/Storage/" style="font-size: 11.67px;">Storage</a> <a href="/tags/TimeZone/" style="font-size: 10px;">TimeZone</a> <a href="/tags/Trouble-Shooting/" style="font-size: 16.67px;">Trouble Shooting</a>
+						<a href="/tags/Calico/" style="font-size: 11.67px;">Calico</a> <a href="/tags/Ceph/" style="font-size: 10px;">Ceph</a> <a href="/tags/Common/" style="font-size: 10px;">Common</a> <a href="/tags/Docker/" style="font-size: 20px;">Docker</a> <a href="/tags/Elasticsearch/" style="font-size: 10px;">Elasticsearch</a> <a href="/tags/Fluentd/" style="font-size: 11.67px;">Fluentd</a> <a href="/tags/GlusterFS/" style="font-size: 11.67px;">GlusterFS</a> <a href="/tags/HAProxy/" style="font-size: 10px;">HAProxy</a> <a href="/tags/Highly-Available/" style="font-size: 10px;">Highly Available</a> <a href="/tags/Ingress/" style="font-size: 10px;">Ingress</a> <a href="/tags/Kubeadm/" style="font-size: 11.67px;">Kubeadm</a> <a href="/tags/Kubernetes/" style="font-size: 18.33px;">Kubernetes</a> <a href="/tags/Label/" style="font-size: 10px;">Label</a> <a href="/tags/Logging/" style="font-size: 13.33px;">Logging</a> <a href="/tags/Monitoring/" style="font-size: 10px;">Monitoring</a> <a href="/tags/Network/" style="font-size: 15px;">Network</a> <a href="/tags/Prometheus/" style="font-size: 10px;">Prometheus</a> <a href="/tags/Setup/" style="font-size: 11.67px;">Setup</a> <a href="/tags/Storage/" style="font-size: 13.33px;">Storage</a> <a href="/tags/TimeZone/" style="font-size: 10px;">TimeZone</a> <a href="/tags/Trouble-Shooting/" style="font-size: 16.67px;">Trouble Shooting</a>
 					</div>
 				</section>
 				
@@ -152,6 +152,71 @@
 </nav>
       <div class="body-wrap">
   
+    <article id="post-kubernetes_glusterfs_001" class="article article-type-post" itemscope="" itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2019/01/30/kubernetes_glusterfs_001/" class="article-date">
+  	<time datetime="2019-01-30T02:05:36.673Z" itemprop="datePublished">2019-01-30</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/01/30/kubernetes_glusterfs_001/">
+        Kubernetes对接GlusterFS（把GlusterFS部署在Kubernetes集群外）
+        
+      </a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="一、环境版本信息"><a href="#一、环境版本信息" class="headerlink" title="一、环境版本信息"></a>一、环境版本信息</h1><h2 id="1-版本信息"><a href="#1-版本信息" class="headerlink" title="1. 版本信息"></a>1. 版本信息</h2><p>CentOS 7.6.1810<br>Kubernetes v1.11.0<br>GlusterFS gluster3u13_centos7<br>Heketi 4</p>
+<h2 id="2-服务器信息"><a href="#2-服务器信息" class="headerlink" title="2. 服务器信息"></a>2. 服务器信息</h2><p>server01 <-> 172.16.170.128 <-> master<br>server02 <-> 172.16.170.129 <-> node<br>server03 <-> 172.16.170.130 <-> node</-></-></-></-></-></-></p>
+<p>server07 <-> 172.16.170.134 <-> glusterfs<br>server08 <-> 172.16.170.135 <-> glusterfs<br>server09 <-> 172.16.170.136 <-> glusterfs</-></-></-></-></-></-></p>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Docker/">Docker</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/GlusterFS/">GlusterFS</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Kubernetes/">Kubernetes</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Storage/">Storage</a></li></ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/容器云技术/">容器云技术</a>
+	</div>
+
+
+      
+      <div class="clearfix"></div>
+    </div>
+      
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+  
     <article id="post-kubernetes_glusterfs_000" class="article article-type-post" itemscope="" itemprop="blogPost">
   
     <div class="article-meta">
@@ -170,7 +235,7 @@
   
     <h1 itemprop="name">
       <a class="article-title" href="/2019/01/29/kubernetes_glusterfs_000/">
-        Kubernetes对接GlusterFS（把GlusterFS部署在Kubernetes集群上）
+        Kubernetes对接GlusterFS（把GlusterFS部署在Kubernetes集群内）
         
       </a>
     </h1>
@@ -802,77 +867,9 @@
 
 
   
-    <article id="post-prometheus_resources" class="article article-type-post" itemscope="" itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2018/12/17/prometheus_resources/" class="article-date">
-  	<time datetime="2018-12-17T08:52:43.737Z" itemprop="datePublished">2018-12-17</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/12/17/prometheus_resources/">
-        Prometheus 经典资料汇总
-        
-      </a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="官方文档"><a href="#官方文档" class="headerlink" title="官方文档"></a>官方文档</h1><p><a href="https://prometheus.io/docs/prometheus/2.2/getting_started/" target="_blank" rel="noopener">https://prometheus.io/docs/prometheus/2.2/getting_started/</a></p>
-<h1 id="Prometheus-Operator-开源项目地址"><a href="#Prometheus-Operator-开源项目地址" class="headerlink" title="Prometheus Operator 开源项目地址"></a>Prometheus Operator 开源项目地址</h1><p><a href="https://github.com/coreos/prometheus-operator/tree/v0.25.0" target="_blank" rel="noopener">https://github.com/coreos/prometheus-operator/tree/v0.25.0</a></p>
-<h1 id="经典中文资料"><a href="#经典中文资料" class="headerlink" title="经典中文资料"></a>经典中文资料</h1><p><a href="https://yunlzheng.gitbook.io/prometheus-book/introduction" target="_blank" rel="noopener">https://yunlzheng.gitbook.io/prometheus-book/introduction</a></p>
-<h1 id="使用Golang实现Prometheus-Exporter"><a href="#使用Golang实现Prometheus-Exporter" class="headerlink" title="使用Golang实现Prometheus Exporter"></a>使用Golang实现Prometheus Exporter</h1><p><a href="https://blog.csdn.net/u014029783/article/details/80001251" target="_blank" rel="noopener">https://blog.csdn.net/u014029783/article/details/80001251</a></p>
-<h1 id="解惑Prometheus-API查询的时间戳格式"><a href="#解惑Prometheus-API查询的时间戳格式" class="headerlink" title="解惑Prometheus API查询的时间戳格式"></a>解惑Prometheus API查询的时间戳格式</h1><p><a href="https://www.crifan.com/timestamp_format_support_decimal_point_or_not/" target="_blank" rel="noopener">https://www.crifan.com/timestamp_format_support_decimal_point_or_not/</a></p>
-<h1 id="Golang实现四舍五入（监控指标的格式化经常用到）"><a href="#Golang实现四舍五入（监控指标的格式化经常用到）" class="headerlink" title="Golang实现四舍五入（监控指标的格式化经常用到）"></a>Golang实现四舍五入（监控指标的格式化经常用到）</h1><p><a href="https://www.jianshu.com/p/ca52f4f58353" target="_blank" rel="noopener">https://www.jianshu.com/p/ca52f4f58353</a></p>
-
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Docker/">Docker</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Kubernetes/">Kubernetes</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Monitoring/">Monitoring</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Prometheus/">Prometheus</a></li></ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/categories/容器云技术/">容器云技术</a>
-	</div>
-
-
-      
-      <div class="clearfix"></div>
-    </div>
-      
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-  
   
     <nav id="page-nav">
-      <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
+      <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
     </nav>
   
 </div>

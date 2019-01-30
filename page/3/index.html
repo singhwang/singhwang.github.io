@@ -3,24 +3,19 @@
 <head><meta name="generator" content="Hexo 3.8.0">
   <meta charset="utf-8">
   
-  <title>Docker容器的时区设置 | Singh Wang</title>
+  <title>Singh Wang</title>
 
   <!-- keywords -->
   
 
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="Docker容器的时区设置，一直以来都是个简单而且重要的问题。下面笔者以CentOS 7.5.1804作为容器宿主机为例，分别介绍如何在原生Docker容器和Kubernetes的Pod中正确设置时区。 Node设置正确时区（以CentOS 7.5.1804 为例）123timedatectl list-timezonestimedatectl set-timezone Asia/Shanghai">
-<meta name="keywords" content="Docker,Kubernetes,Logging,TimeZone">
-<meta property="og:type" content="article">
-<meta property="og:title" content="Docker容器的时区设置">
-<meta property="og:url" content="http://yoursite.com/2018/11/12/timezone/index.html">
+  <meta property="og:type" content="website">
+<meta property="og:title" content="Singh Wang">
+<meta property="og:url" content="http://yoursite.com/page/3/index.html">
 <meta property="og:site_name" content="Singh Wang">
-<meta property="og:description" content="Docker容器的时区设置，一直以来都是个简单而且重要的问题。下面笔者以CentOS 7.5.1804作为容器宿主机为例，分别介绍如何在原生Docker容器和Kubernetes的Pod中正确设置时区。 Node设置正确时区（以CentOS 7.5.1804 为例）123timedatectl list-timezonestimedatectl set-timezone Asia/Shanghai">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2019-01-07T01:49:10.841Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Docker容器的时区设置">
-<meta name="twitter:description" content="Docker容器的时区设置，一直以来都是个简单而且重要的问题。下面笔者以CentOS 7.5.1804作为容器宿主机为例，分别介绍如何在原生Docker容器和Kubernetes的Pod中正确设置时区。 Node设置正确时区（以CentOS 7.5.1804 为例）123timedatectl list-timezonestimedatectl set-timezone Asia/Shanghai">
+<meta name="twitter:title" content="Singh Wang">
   
     <link rel="alternative" href="/atom.xml" title="Singh Wang" type="application/atom+xml">
   
@@ -155,7 +150,9 @@
 		</header>				
 	</div>
 </nav>
-      <div class="body-wrap"><article id="post-timezone" class="article article-type-post" itemscope="" itemprop="blogPost">
+      <div class="body-wrap">
+  
+    <article id="post-timezone" class="article article-type-post" itemscope="" itemprop="blogPost">
   
     <div class="article-meta">
       <a href="/2018/11/12/timezone/" class="article-date">
@@ -171,29 +168,15 @@
       <header class="article-header">
         
   
-    <h1 class="article-title" itemprop="name">
-      Docker容器的时区设置
-      
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/11/12/timezone/">
+        Docker容器的时区设置
+        
+      </a>
     </h1>
   
 
       </header>
-      
-      <div class="article-info article-info-post">
-        
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Docker/">Docker</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Kubernetes/">Kubernetes</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Logging/">Logging</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TimeZone/">TimeZone</a></li></ul>
-	</div>
-
-        
-	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/categories/容器云技术/">容器云技术</a>
-	</div>
-
-
-        
-        <div class="clearfix"></div>
-      </div>
       
     
     <div class="article-entry" itemprop="articleBody">
@@ -214,23 +197,25 @@
       
     </div>
     
-  </div>
-  
-    
-<nav id="article-nav">
-  
-    <a href="/2018/11/14/verify_network/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">&lt;</strong>
-      <div class="article-nav-title">
-        
-          Kubernetes集群中验证集群网络
-        
-      </div>
-    </a>
-  
-  
-</nav>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Docker/">Docker</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Kubernetes/">Kubernetes</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Logging/">Logging</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TimeZone/">TimeZone</a></li></ul>
+	</div>
 
+      
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/容器云技术/">容器云技术</a>
+	</div>
+
+
+      
+      <div class="clearfix"></div>
+    </div>
+      
+    
+  </div>
   
 </article>
 
@@ -239,6 +224,13 @@
 
 
 
+
+  
+  
+    <nav id="page-nav">
+      <a class="extend prev" rel="prev" href="/page/2/">&laquo; Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span>
+    </nav>
+  
 </div>
       <footer id="footer">
   <div class="outer">
@@ -262,8 +254,8 @@
 		fancybox: true,
 		mathjax: true,
 		animate: true,
-		isHome: false,
-		isPost: true,
+		isHome: true,
+		isPost: false,
 		isArchive: false,
 		isTag: false,
 		isCategory: false,
