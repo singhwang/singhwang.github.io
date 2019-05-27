@@ -17,7 +17,7 @@
 <meta property="og:site_name" content="Singh Wang">
 <meta property="og:description" content="一、Dragonfly概述1. 简介Dragonfly 是一款基于 P2P 的智能镜像和文件分发工具。它旨在提高文件传输的效率和速率，最大限度地利用网络带宽，尤其是在分发大量数据时，例如应用分发、缓存分发、日志分发和镜像分发。尽管容器技术大部分时候简化了运维工作，但是它也带来了一些挑战：例如镜像分发的效率问题，尤其是必须在多个主机上复制镜像分发时。Dragonfly 在这种场景下能够完美支持 Do">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2019-05-27T02:44:29.406Z">
+<meta property="og:updated_time" content="2019-05-27T04:35:44.190Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="使用Dragonfly实现P2P分发镜像">
 <meta name="twitter:description" content="一、Dragonfly概述1. 简介Dragonfly 是一款基于 P2P 的智能镜像和文件分发工具。它旨在提高文件传输的效率和速率，最大限度地利用网络带宽，尤其是在分发大量数据时，例如应用分发、缓存分发、日志分发和镜像分发。尽管容器技术大部分时候简化了运维工作，但是它也带来了一些挑战：例如镜像分发的效率问题，尤其是必须在多个主机上复制镜像分发时。Dragonfly 在这种场景下能够完美支持 Do">
@@ -107,7 +107,7 @@
 				
 				<section class="switch-part switch-part2">
 					<div class="widget tagcloud" id="js-tagcloud">
-						<a href="/tags/Calico/" style="font-size: 11.43px;">Calico</a> <a href="/tags/Ceph/" style="font-size: 10px;">Ceph</a> <a href="/tags/Common/" style="font-size: 10px;">Common</a> <a href="/tags/DNS/" style="font-size: 10px;">DNS</a> <a href="/tags/Docker/" style="font-size: 20px;">Docker</a> <a href="/tags/Dragonfly/" style="font-size: 10px;">Dragonfly</a> <a href="/tags/Elasticsearch/" style="font-size: 10px;">Elasticsearch</a> <a href="/tags/Fluentd/" style="font-size: 11.43px;">Fluentd</a> <a href="/tags/GlusterFS/" style="font-size: 14.29px;">GlusterFS</a> <a href="/tags/HAProxy/" style="font-size: 10px;">HAProxy</a> <a href="/tags/Highly-Available/" style="font-size: 10px;">Highly Available</a> <a href="/tags/Ingress/" style="font-size: 10px;">Ingress</a> <a href="/tags/Kubeadm/" style="font-size: 11.43px;">Kubeadm</a> <a href="/tags/Kubernetes/" style="font-size: 18.57px;">Kubernetes</a> <a href="/tags/Label/" style="font-size: 10px;">Label</a> <a href="/tags/Logging/" style="font-size: 12.86px;">Logging</a> <a href="/tags/Monitoring/" style="font-size: 10px;">Monitoring</a> <a href="/tags/Network/" style="font-size: 15.71px;">Network</a> <a href="/tags/P2P/" style="font-size: 10px;">P2P</a> <a href="/tags/Prometheus/" style="font-size: 10px;">Prometheus</a> <a href="/tags/Setup/" style="font-size: 11.43px;">Setup</a> <a href="/tags/Source-Build/" style="font-size: 10px;">Source Build</a> <a href="/tags/Storage/" style="font-size: 15.71px;">Storage</a> <a href="/tags/TimeZone/" style="font-size: 10px;">TimeZone</a> <a href="/tags/Trouble-Shooting/" style="font-size: 17.14px;">Trouble Shooting</a>
+						<a href="/tags/Calico/" style="font-size: 11.43px;">Calico</a> <a href="/tags/Ceph/" style="font-size: 10px;">Ceph</a> <a href="/tags/Common/" style="font-size: 10px;">Common</a> <a href="/tags/DNS/" style="font-size: 10px;">DNS</a> <a href="/tags/Docker/" style="font-size: 20px;">Docker</a> <a href="/tags/Dragonfly/" style="font-size: 10px;">Dragonfly</a> <a href="/tags/Elasticsearch/" style="font-size: 10px;">Elasticsearch</a> <a href="/tags/Fluentd/" style="font-size: 11.43px;">Fluentd</a> <a href="/tags/GlusterFS/" style="font-size: 14.29px;">GlusterFS</a> <a href="/tags/HAProxy/" style="font-size: 10px;">HAProxy</a> <a href="/tags/Highly-Available/" style="font-size: 10px;">Highly Available</a> <a href="/tags/Ingress/" style="font-size: 10px;">Ingress</a> <a href="/tags/Kubeadm/" style="font-size: 11.43px;">Kubeadm</a> <a href="/tags/Kubernetes/" style="font-size: 18.57px;">Kubernetes</a> <a href="/tags/Label/" style="font-size: 10px;">Label</a> <a href="/tags/Logging/" style="font-size: 12.86px;">Logging</a> <a href="/tags/Monitoring/" style="font-size: 10px;">Monitoring</a> <a href="/tags/Network/" style="font-size: 15.71px;">Network</a> <a href="/tags/P2P/" style="font-size: 10px;">P2P</a> <a href="/tags/Prometheus/" style="font-size: 10px;">Prometheus</a> <a href="/tags/Setup/" style="font-size: 12.86px;">Setup</a> <a href="/tags/Source-Build/" style="font-size: 10px;">Source Build</a> <a href="/tags/Storage/" style="font-size: 15.71px;">Storage</a> <a href="/tags/TimeZone/" style="font-size: 10px;">TimeZone</a> <a href="/tags/Trouble-Shooting/" style="font-size: 17.14px;">Trouble Shooting</a>
 					</div>
 				</section>
 				
@@ -218,6 +218,15 @@
   
     
 <nav id="article-nav">
+  
+    <a href="/2019/05/27/binary_kubernetes_cluster_000/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">&lt;</strong>
+      <div class="article-nav-title">
+        
+          使用二进制文件的方式安装Kubernetes集群（一）
+        
+      </div>
+    </a>
   
   
     <a href="/2019/02/14/kubernetes_build_000/" id="article-nav-older" class="article-nav-link-wrap">

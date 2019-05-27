@@ -9,18 +9,18 @@
   
 
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="在Kubernetes集群中验证网络是否好用，一般从以下几个方面入手：1.相同主机上的不同Pod之间的网络连通性；2.不同主机上的不同Pod之间的网络连通性；3.不同主机上的Pod中能否解析Kubernetes集群中的DNS记录。 为了顺利完成上述验证，需要准备一个验证环境。下面先介绍一下，如何构建这样一个网络验证环境，然后再介绍如何验证网络。 一、构建集群网络验证环境1. 构建网络验证环境基础镜">
+  <meta name="description" content="在Kubernetes集群中验证网络是否好用，一般从以下几个方面入手：  相同主机上的不同Pod之间的网络连通性； 不同主机上的不同Pod之间的网络连通性； 不同主机上的Pod中能否解析Kubernetes集群中的DNS记录。  为了顺利完成上述验证，需要准备一个验证环境。下面先介绍一下，如何构建这样一个网络验证环境，然后再介绍如何验证网络。 一、构建集群网络验证环境1. 构建网络验证环境基础镜像">
 <meta name="keywords" content="Docker,Kubernetes,Network">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Kubernetes集群中验证集群网络">
 <meta property="og:url" content="http://yoursite.com/2018/11/14/verify_network/index.html">
 <meta property="og:site_name" content="Singh Wang">
-<meta property="og:description" content="在Kubernetes集群中验证网络是否好用，一般从以下几个方面入手：1.相同主机上的不同Pod之间的网络连通性；2.不同主机上的不同Pod之间的网络连通性；3.不同主机上的Pod中能否解析Kubernetes集群中的DNS记录。 为了顺利完成上述验证，需要准备一个验证环境。下面先介绍一下，如何构建这样一个网络验证环境，然后再介绍如何验证网络。 一、构建集群网络验证环境1. 构建网络验证环境基础镜">
+<meta property="og:description" content="在Kubernetes集群中验证网络是否好用，一般从以下几个方面入手：  相同主机上的不同Pod之间的网络连通性； 不同主机上的不同Pod之间的网络连通性； 不同主机上的Pod中能否解析Kubernetes集群中的DNS记录。  为了顺利完成上述验证，需要准备一个验证环境。下面先介绍一下，如何构建这样一个网络验证环境，然后再介绍如何验证网络。 一、构建集群网络验证环境1. 构建网络验证环境基础镜像">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2018-12-11T01:55:42.866Z">
+<meta property="og:updated_time" content="2019-05-27T04:37:10.048Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Kubernetes集群中验证集群网络">
-<meta name="twitter:description" content="在Kubernetes集群中验证网络是否好用，一般从以下几个方面入手：1.相同主机上的不同Pod之间的网络连通性；2.不同主机上的不同Pod之间的网络连通性；3.不同主机上的Pod中能否解析Kubernetes集群中的DNS记录。 为了顺利完成上述验证，需要准备一个验证环境。下面先介绍一下，如何构建这样一个网络验证环境，然后再介绍如何验证网络。 一、构建集群网络验证环境1. 构建网络验证环境基础镜">
+<meta name="twitter:description" content="在Kubernetes集群中验证网络是否好用，一般从以下几个方面入手：  相同主机上的不同Pod之间的网络连通性； 不同主机上的不同Pod之间的网络连通性； 不同主机上的Pod中能否解析Kubernetes集群中的DNS记录。  为了顺利完成上述验证，需要准备一个验证环境。下面先介绍一下，如何构建这样一个网络验证环境，然后再介绍如何验证网络。 一、构建集群网络验证环境1. 构建网络验证环境基础镜像">
   
     <link rel="alternative" href="/atom.xml" title="Singh Wang" type="application/atom+xml">
   
@@ -107,7 +107,7 @@
 				
 				<section class="switch-part switch-part2">
 					<div class="widget tagcloud" id="js-tagcloud">
-						<a href="/tags/Calico/" style="font-size: 11.43px;">Calico</a> <a href="/tags/Ceph/" style="font-size: 10px;">Ceph</a> <a href="/tags/Common/" style="font-size: 10px;">Common</a> <a href="/tags/DNS/" style="font-size: 10px;">DNS</a> <a href="/tags/Docker/" style="font-size: 20px;">Docker</a> <a href="/tags/Dragonfly/" style="font-size: 10px;">Dragonfly</a> <a href="/tags/Elasticsearch/" style="font-size: 10px;">Elasticsearch</a> <a href="/tags/Fluentd/" style="font-size: 11.43px;">Fluentd</a> <a href="/tags/GlusterFS/" style="font-size: 14.29px;">GlusterFS</a> <a href="/tags/HAProxy/" style="font-size: 10px;">HAProxy</a> <a href="/tags/Highly-Available/" style="font-size: 10px;">Highly Available</a> <a href="/tags/Ingress/" style="font-size: 10px;">Ingress</a> <a href="/tags/Kubeadm/" style="font-size: 11.43px;">Kubeadm</a> <a href="/tags/Kubernetes/" style="font-size: 18.57px;">Kubernetes</a> <a href="/tags/Label/" style="font-size: 10px;">Label</a> <a href="/tags/Logging/" style="font-size: 12.86px;">Logging</a> <a href="/tags/Monitoring/" style="font-size: 10px;">Monitoring</a> <a href="/tags/Network/" style="font-size: 15.71px;">Network</a> <a href="/tags/P2P/" style="font-size: 10px;">P2P</a> <a href="/tags/Prometheus/" style="font-size: 10px;">Prometheus</a> <a href="/tags/Setup/" style="font-size: 11.43px;">Setup</a> <a href="/tags/Source-Build/" style="font-size: 10px;">Source Build</a> <a href="/tags/Storage/" style="font-size: 15.71px;">Storage</a> <a href="/tags/TimeZone/" style="font-size: 10px;">TimeZone</a> <a href="/tags/Trouble-Shooting/" style="font-size: 17.14px;">Trouble Shooting</a>
+						<a href="/tags/Calico/" style="font-size: 11.43px;">Calico</a> <a href="/tags/Ceph/" style="font-size: 10px;">Ceph</a> <a href="/tags/Common/" style="font-size: 10px;">Common</a> <a href="/tags/DNS/" style="font-size: 10px;">DNS</a> <a href="/tags/Docker/" style="font-size: 20px;">Docker</a> <a href="/tags/Dragonfly/" style="font-size: 10px;">Dragonfly</a> <a href="/tags/Elasticsearch/" style="font-size: 10px;">Elasticsearch</a> <a href="/tags/Fluentd/" style="font-size: 11.43px;">Fluentd</a> <a href="/tags/GlusterFS/" style="font-size: 14.29px;">GlusterFS</a> <a href="/tags/HAProxy/" style="font-size: 10px;">HAProxy</a> <a href="/tags/Highly-Available/" style="font-size: 10px;">Highly Available</a> <a href="/tags/Ingress/" style="font-size: 10px;">Ingress</a> <a href="/tags/Kubeadm/" style="font-size: 11.43px;">Kubeadm</a> <a href="/tags/Kubernetes/" style="font-size: 18.57px;">Kubernetes</a> <a href="/tags/Label/" style="font-size: 10px;">Label</a> <a href="/tags/Logging/" style="font-size: 12.86px;">Logging</a> <a href="/tags/Monitoring/" style="font-size: 10px;">Monitoring</a> <a href="/tags/Network/" style="font-size: 15.71px;">Network</a> <a href="/tags/P2P/" style="font-size: 10px;">P2P</a> <a href="/tags/Prometheus/" style="font-size: 10px;">Prometheus</a> <a href="/tags/Setup/" style="font-size: 12.86px;">Setup</a> <a href="/tags/Source-Build/" style="font-size: 10px;">Source Build</a> <a href="/tags/Storage/" style="font-size: 15.71px;">Storage</a> <a href="/tags/TimeZone/" style="font-size: 10px;">TimeZone</a> <a href="/tags/Trouble-Shooting/" style="font-size: 17.14px;">Trouble Shooting</a>
 					</div>
 				</section>
 				
@@ -198,7 +198,12 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>在Kubernetes集群中验证网络是否好用，一般从以下几个方面入手：<br>1.相同主机上的不同Pod之间的网络连通性；<br>2.不同主机上的不同Pod之间的网络连通性；<br>3.不同主机上的Pod中能否解析Kubernetes集群中的DNS记录。</p>
+        <p>在Kubernetes集群中验证网络是否好用，一般从以下几个方面入手：</p>
+<ol>
+<li>相同主机上的不同Pod之间的网络连通性；</li>
+<li>不同主机上的不同Pod之间的网络连通性；</li>
+<li>不同主机上的Pod中能否解析Kubernetes集群中的DNS记录。</li>
+</ol>
 <p>为了顺利完成上述验证，需要准备一个验证环境。下面先介绍一下，如何构建这样一个网络验证环境，然后再介绍如何验证网络。</p>
 <h1 id="一、构建集群网络验证环境"><a href="#一、构建集群网络验证环境" class="headerlink" title="一、构建集群网络验证环境"></a>一、构建集群网络验证环境</h1><h2 id="1-构建网络验证环境基础镜像"><a href="#1-构建网络验证环境基础镜像" class="headerlink" title="1. 构建网络验证环境基础镜像"></a>1. 构建网络验证环境基础镜像</h2><h3 id="Alpine-3-8-Dockerfile-Example"><a href="#Alpine-3-8-Dockerfile-Example" class="headerlink" title="Alpine 3.8 Dockerfile Example"></a>Alpine 3.8 Dockerfile Example</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">FROM alpine:3.8</span><br><span class="line"></span><br><span class="line">MAINTAINER wangxin_0611@126.com</span><br><span class="line"></span><br><span class="line">RUN apk add --no-cache ca-certificates bind-tools iputils iproute2 net-tools tcpdump</span><br></pre></td></tr></table></figure>
 <h3 id="Ubuntu-16-04-Dockerfile-Example"><a href="#Ubuntu-16-04-Dockerfile-Example" class="headerlink" title="Ubuntu 16.04 Dockerfile Example"></a>Ubuntu 16.04 Dockerfile Example</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">FROM ubuntu:16.04</span><br><span class="line"></span><br><span class="line">MAINTAINER wangxin_0611@126.com</span><br><span class="line"></span><br><span class="line">RUN apt-get update &amp;&amp; \</span><br><span class="line">    apt-get install -y iproute2 &amp;&amp; \</span><br><span class="line">    apt-get install -y dnsutils &amp;&amp; \</span><br><span class="line">    apt-get install -y net-tools &amp;&amp; \</span><br><span class="line">    apt-get install -y iputils-ping &amp;&amp; \</span><br><span class="line">    apt-get install -y tcpdump</span><br></pre></td></tr></table></figure>

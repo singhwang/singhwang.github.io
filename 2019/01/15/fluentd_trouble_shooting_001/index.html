@@ -10,14 +10,14 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description" content="一、环境版本信息Fluentd 1.1.0Elasticsearch 6.3.0fluent-plugin-elasticsearch 2.4.1 二、报错现象描述以时区设置为Asia/Shanghai为例：虽然Fluentd所在的运行时已经设置正确，但是上报到Elasticsearch对应索引中的日志记录，与实际相比还是相差八个小时。更直接的现象是，你发现明明应该归档在今天对应的索引中的日志，却">
-<meta name="keywords" content="Docker,Kubernetes,Fluentd,Trouble Shooting">
+<meta name="keywords" content="Docker,Kubernetes,Trouble Shooting,Fluentd">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Fluentd不使用运行时的时区向Elasticsearch写入日志记录，怎么解决？">
 <meta property="og:url" content="http://yoursite.com/2019/01/15/fluentd_trouble_shooting_001/index.html">
 <meta property="og:site_name" content="Singh Wang">
 <meta property="og:description" content="一、环境版本信息Fluentd 1.1.0Elasticsearch 6.3.0fluent-plugin-elasticsearch 2.4.1 二、报错现象描述以时区设置为Asia/Shanghai为例：虽然Fluentd所在的运行时已经设置正确，但是上报到Elasticsearch对应索引中的日志记录，与实际相比还是相差八个小时。更直接的现象是，你发现明明应该归档在今天对应的索引中的日志，却">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2019-01-23T08:38:27.332Z">
+<meta property="og:updated_time" content="2019-05-27T04:32:32.858Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Fluentd不使用运行时的时区向Elasticsearch写入日志记录，怎么解决？">
 <meta name="twitter:description" content="一、环境版本信息Fluentd 1.1.0Elasticsearch 6.3.0fluent-plugin-elasticsearch 2.4.1 二、报错现象描述以时区设置为Asia/Shanghai为例：虽然Fluentd所在的运行时已经设置正确，但是上报到Elasticsearch对应索引中的日志记录，与实际相比还是相差八个小时。更直接的现象是，你发现明明应该归档在今天对应的索引中的日志，却">
@@ -107,7 +107,7 @@
 				
 				<section class="switch-part switch-part2">
 					<div class="widget tagcloud" id="js-tagcloud">
-						<a href="/tags/Calico/" style="font-size: 11.43px;">Calico</a> <a href="/tags/Ceph/" style="font-size: 10px;">Ceph</a> <a href="/tags/Common/" style="font-size: 10px;">Common</a> <a href="/tags/DNS/" style="font-size: 10px;">DNS</a> <a href="/tags/Docker/" style="font-size: 20px;">Docker</a> <a href="/tags/Dragonfly/" style="font-size: 10px;">Dragonfly</a> <a href="/tags/Elasticsearch/" style="font-size: 10px;">Elasticsearch</a> <a href="/tags/Fluentd/" style="font-size: 11.43px;">Fluentd</a> <a href="/tags/GlusterFS/" style="font-size: 14.29px;">GlusterFS</a> <a href="/tags/HAProxy/" style="font-size: 10px;">HAProxy</a> <a href="/tags/Highly-Available/" style="font-size: 10px;">Highly Available</a> <a href="/tags/Ingress/" style="font-size: 10px;">Ingress</a> <a href="/tags/Kubeadm/" style="font-size: 11.43px;">Kubeadm</a> <a href="/tags/Kubernetes/" style="font-size: 18.57px;">Kubernetes</a> <a href="/tags/Label/" style="font-size: 10px;">Label</a> <a href="/tags/Logging/" style="font-size: 12.86px;">Logging</a> <a href="/tags/Monitoring/" style="font-size: 10px;">Monitoring</a> <a href="/tags/Network/" style="font-size: 15.71px;">Network</a> <a href="/tags/P2P/" style="font-size: 10px;">P2P</a> <a href="/tags/Prometheus/" style="font-size: 10px;">Prometheus</a> <a href="/tags/Setup/" style="font-size: 11.43px;">Setup</a> <a href="/tags/Source-Build/" style="font-size: 10px;">Source Build</a> <a href="/tags/Storage/" style="font-size: 15.71px;">Storage</a> <a href="/tags/TimeZone/" style="font-size: 10px;">TimeZone</a> <a href="/tags/Trouble-Shooting/" style="font-size: 17.14px;">Trouble Shooting</a>
+						<a href="/tags/Calico/" style="font-size: 11.43px;">Calico</a> <a href="/tags/Ceph/" style="font-size: 10px;">Ceph</a> <a href="/tags/Common/" style="font-size: 10px;">Common</a> <a href="/tags/DNS/" style="font-size: 10px;">DNS</a> <a href="/tags/Docker/" style="font-size: 20px;">Docker</a> <a href="/tags/Dragonfly/" style="font-size: 10px;">Dragonfly</a> <a href="/tags/Elasticsearch/" style="font-size: 10px;">Elasticsearch</a> <a href="/tags/Fluentd/" style="font-size: 11.43px;">Fluentd</a> <a href="/tags/GlusterFS/" style="font-size: 14.29px;">GlusterFS</a> <a href="/tags/HAProxy/" style="font-size: 10px;">HAProxy</a> <a href="/tags/Highly-Available/" style="font-size: 10px;">Highly Available</a> <a href="/tags/Ingress/" style="font-size: 10px;">Ingress</a> <a href="/tags/Kubeadm/" style="font-size: 11.43px;">Kubeadm</a> <a href="/tags/Kubernetes/" style="font-size: 18.57px;">Kubernetes</a> <a href="/tags/Label/" style="font-size: 10px;">Label</a> <a href="/tags/Logging/" style="font-size: 12.86px;">Logging</a> <a href="/tags/Monitoring/" style="font-size: 10px;">Monitoring</a> <a href="/tags/Network/" style="font-size: 15.71px;">Network</a> <a href="/tags/P2P/" style="font-size: 10px;">P2P</a> <a href="/tags/Prometheus/" style="font-size: 10px;">Prometheus</a> <a href="/tags/Setup/" style="font-size: 12.86px;">Setup</a> <a href="/tags/Source-Build/" style="font-size: 10px;">Source Build</a> <a href="/tags/Storage/" style="font-size: 15.71px;">Storage</a> <a href="/tags/TimeZone/" style="font-size: 10px;">TimeZone</a> <a href="/tags/Trouble-Shooting/" style="font-size: 17.14px;">Trouble Shooting</a>
 					</div>
 				</section>
 				
