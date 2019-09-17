@@ -3,19 +3,24 @@
 <head><meta name="generator" content="Hexo 3.8.0">
   <meta charset="utf-8">
   
-  <title>Archives: 2019/9 | Singh Wang</title>
+  <title>容器故障排除之重要的Linux命令 | Singh Wang</title>
 
   <!-- keywords -->
   
 
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Singh Wang">
-<meta property="og:url" content="http://yoursite.com/archives/2019/09/index.html">
+  <meta name="description" content="如何查看磁盘是否坏了？1查看能否向磁盘上写入文件 -&amp;gt; 查看磁盘是否满了-&amp;gt; 查看是否是小文件把inode是否耗光了 如何查看进程占用了哪些端口？1netstat -ntlup 或者 lsof -i:1988 如何查看进程打开了哪些文件？1lsof -p pid 如何查看inode使用情况？1df -i 如何查询文件的inode是什么？1stat filename ulimit 代表进">
+<meta name="keywords" content="Docker,Kubernetes,Trouble Shooting">
+<meta property="og:type" content="article">
+<meta property="og:title" content="容器故障排除之重要的Linux命令">
+<meta property="og:url" content="http://yoursite.com/2019/09/17/trouble_shooting_000/index.html">
 <meta property="og:site_name" content="Singh Wang">
+<meta property="og:description" content="如何查看磁盘是否坏了？1查看能否向磁盘上写入文件 -&amp;gt; 查看磁盘是否满了-&amp;gt; 查看是否是小文件把inode是否耗光了 如何查看进程占用了哪些端口？1netstat -ntlup 或者 lsof -i:1988 如何查看进程打开了哪些文件？1lsof -p pid 如何查看inode使用情况？1df -i 如何查询文件的inode是什么？1stat filename ulimit 代表进">
 <meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2019-09-17T06:58:07.675Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Singh Wang">
+<meta name="twitter:title" content="容器故障排除之重要的Linux命令">
+<meta name="twitter:description" content="如何查看磁盘是否坏了？1查看能否向磁盘上写入文件 -&amp;gt; 查看磁盘是否满了-&amp;gt; 查看是否是小文件把inode是否耗光了 如何查看进程占用了哪些端口？1netstat -ntlup 或者 lsof -i:1988 如何查看进程打开了哪些文件？1lsof -p pid 如何查看inode使用情况？1df -i 如何查询文件的inode是什么？1stat filename ulimit 代表进">
   
     <link rel="alternative" href="/atom.xml" title="Singh Wang" type="application/atom+xml">
   
@@ -150,178 +155,79 @@
 		</header>				
 	</div>
 </nav>
-      <div class="body-wrap">
+      <div class="body-wrap"><article id="post-trouble_shooting_000" class="article article-type-post" itemscope="" itemprop="blogPost">
   
-  
-    
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2019" class="archive-year">2019</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/09/17/trouble_shooting_000/" class="archive-article-date">
-  	<time datetime="2019-09-17T06:27:25.690Z" itemprop="datePublished">Sep 17</time>
+    <div class="article-meta">
+      <a href="/2019/09/17/trouble_shooting_000/" class="article-date">
+  	<time datetime="2019-09-17T06:27:25.690Z" itemprop="datePublished">2019-09-17</time>
 </a>
-        </div>
-    	 
+    </div>
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/09/17/trouble_shooting_000/">
-        容器故障排除之重要的Linux命令
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy">
+    
+    
+      <header class="article-header">
         
-      </a>
+  
+    <h1 class="article-title" itemprop="name">
+      容器故障排除之重要的Linux命令
+      
     </h1>
   
 
-        <div class="article-info info-on-left">
-          
+      </header>
+      
+      <div class="article-info article-info-post">
+        
 	<div class="article-tag tagcloud">
 		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Docker/">Docker</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Kubernetes/">Kubernetes</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Trouble-Shooting/">Trouble Shooting</a></li></ul>
 	</div>
 
-          
-	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/categories/容器云技术/">容器云技术</a>
-	</div>
-
-
-          
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/09/17/smartping_practice/" class="archive-article-date">
-  	<time datetime="2019-09-17T03:41:36.337Z" itemprop="datePublished">Sep 17</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/09/17/smartping_practice/">
-        搭建综合性网络质量检测工具-Smartping的体验环境
         
-      </a>
-    </h1>
-  
-
-        <div class="article-info info-on-left">
-          
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Docker/">Docker</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Kubernetes/">Kubernetes</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Monitoring/">Monitoring</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Smartping/">Smartping</a></li></ul>
-	</div>
-
-          
 	<div class="article-category tagcloud">
 	<a class="article-category-link" href="/categories/容器云技术/">容器云技术</a>
 	</div>
 
 
-          
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/09/13/falcon_practice/" class="archive-article-date">
-  	<time datetime="2019-09-13T09:22:15.447Z" itemprop="datePublished">Sep 13</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/09/13/falcon_practice/">
-        使用Docker容器快速搭建Open Falcon体验环境
         
-      </a>
-    </h1>
-  
-
-        <div class="article-info info-on-left">
-          
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Docker/">Docker</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Kubernetes/">Kubernetes</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Monitoring/">Monitoring</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Open-Falcon/">Open Falcon</a></li></ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/categories/容器云技术/">容器云技术</a>
-	</div>
-
-
-          
-        </div>
         <div class="clearfix"></div>
-    </header>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>如何查看磁盘是否坏了？<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">查看能否向磁盘上写入文件 -&gt; 查看磁盘是否满了-&gt; 查看是否是小文件把inode是否耗光了</span><br></pre></td></tr></table></figure></p>
+<p>如何查看进程占用了哪些端口？<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">netstat -ntlup 或者 lsof -i:1988</span><br></pre></td></tr></table></figure></p>
+<p>如何查看进程打开了哪些文件？<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">lsof -p pid</span><br></pre></td></tr></table></figure></p>
+<p>如何查看inode使用情况？<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">df -i</span><br></pre></td></tr></table></figure></p>
+<p>如何查询文件的inode是什么？<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">stat filename</span><br></pre></td></tr></table></figure></p>
+<p>ulimit 代表进程能打开的文件数</p>
+
+      
+    </div>
+    
   </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2019/09/17/smartping_practice/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">搭建综合性网络质量检测工具-Smartping的体验环境</div>
+      <strong class="article-nav-caption">&gt;</strong>
+    </a>
+  
+</nav>
+
+  
 </article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/09/13/prometheus_practice_000/" class="archive-article-date">
-  	<time datetime="2019-09-13T03:05:53.198Z" itemprop="datePublished">Sep 13</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/09/13/prometheus_practice_000/">
-        使用Docker容器快速体验Prometheus的生态体系
-        
-      </a>
-    </h1>
-  
-
-        <div class="article-info info-on-left">
-          
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Docker/">Docker</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Kubernetes/">Kubernetes</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Monitoring/">Monitoring</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Prometheus/">Prometheus</a></li></ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/categories/容器云技术/">容器云技术</a>
-	</div>
 
 
-          
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-  
-    </div></section>
-  
 
-    
+
+
 
 </div>
       <footer id="footer">
@@ -347,8 +253,8 @@
 		mathjax: true,
 		animate: true,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false
