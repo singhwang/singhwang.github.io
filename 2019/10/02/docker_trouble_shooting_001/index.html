@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+  <title>Docker针对iptables的filter表的FORWARD链的默认设置 | Singh Wang</title>
+
+  <!-- keywords -->
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="一、环境版本信息Docker Community 18.09.9  Client Version: 18.09.9 Server Docker Engine Version: 18.09.9  二、问题现象 在一台Linux服务器上，首先安装并启动了docker，接着设置了如下内核参数：1234cat &amp;lt;&amp;lt;EOF &amp;gt; /etc/sysctl.d/docker.confnet.br">
+<meta name="keywords" content="Docker,Trouble Shooting">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Docker针对iptables的filter表的FORWARD链的默认设置">
+<meta property="og:url" content="http://yoursite.com/2019/10/02/docker_trouble_shooting_001/index.html">
+<meta property="og:site_name" content="Singh Wang">
+<meta property="og:description" content="一、环境版本信息Docker Community 18.09.9  Client Version: 18.09.9 Server Docker Engine Version: 18.09.9  二、问题现象 在一台Linux服务器上，首先安装并启动了docker，接着设置了如下内核参数：1234cat &amp;lt;&amp;lt;EOF &amp;gt; /etc/sysctl.d/docker.confnet.br">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="http://yoursite.com/2019/10/02/docker_trouble_shooting_001/docker_ipv4_forward.png">
+<meta property="og:updated_time" content="2019-10-02T10:32:57.711Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Docker针对iptables的filter表的FORWARD链的默认设置">
+<meta name="twitter:description" content="一、环境版本信息Docker Community 18.09.9  Client Version: 18.09.9 Server Docker Engine Version: 18.09.9  二、问题现象 在一台Linux服务器上，首先安装并启动了docker，接着设置了如下内核参数：1234cat &amp;lt;&amp;lt;EOF &amp;gt; /etc/sysctl.d/docker.confnet.br">
+<meta name="twitter:image" content="http://yoursite.com/2019/10/02/docker_trouble_shooting_001/docker_ipv4_forward.png">
+  
+    <link rel="alternative" href="/atom.xml" title="Singh Wang" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="http://7xkj1z.com1.z0.glb.clouddn.com/head.jpg">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+  
+
+  <script src="//cdn.bootcss.com/require.js/2.3.2/require.min.js"></script>
+  <script src="//cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>
+
+  
+</head></html>
+<body>
+  <div id="container">
+    <div id="particles-js"></div>
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="https://avatars0.githubusercontent.com/u/17465385?s=400&amp;u=cea56ed1710ec6ebab160c1ce1e068317e05b025&amp;v=4" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">Singh Wang</a></h1>
+		</hgroup>
+
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>菜单</li>
+						<li>标签</li>
+						
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/archives">所有文章</a></li>
+				        
+							<li><a href="/categories/容器云技术/">容器云技术</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="https://github.com/singhwang" title="github">github</a>
+					        
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/Calico/" style="font-size: 11.43px;">Calico</a> <a href="/tags/Ceph/" style="font-size: 10px;">Ceph</a> <a href="/tags/Common/" style="font-size: 10px;">Common</a> <a href="/tags/DNS/" style="font-size: 10px;">DNS</a> <a href="/tags/Docker/" style="font-size: 20px;">Docker</a> <a href="/tags/Dragonfly/" style="font-size: 10px;">Dragonfly</a> <a href="/tags/Elasticsearch/" style="font-size: 10px;">Elasticsearch</a> <a href="/tags/Fluentd/" style="font-size: 11.43px;">Fluentd</a> <a href="/tags/GlusterFS/" style="font-size: 14.29px;">GlusterFS</a> <a href="/tags/HAProxy/" style="font-size: 10px;">HAProxy</a> <a href="/tags/Highly-Available/" style="font-size: 10px;">Highly Available</a> <a href="/tags/Ingress/" style="font-size: 10px;">Ingress</a> <a href="/tags/Kubeadm/" style="font-size: 11.43px;">Kubeadm</a> <a href="/tags/Kubernetes/" style="font-size: 18.57px;">Kubernetes</a> <a href="/tags/Label/" style="font-size: 10px;">Label</a> <a href="/tags/Logging/" style="font-size: 12.86px;">Logging</a> <a href="/tags/Monitoring/" style="font-size: 14.29px;">Monitoring</a> <a href="/tags/Network/" style="font-size: 15.71px;">Network</a> <a href="/tags/Open-Falcon/" style="font-size: 10px;">Open Falcon</a> <a href="/tags/P2P/" style="font-size: 10px;">P2P</a> <a href="/tags/Prometheus/" style="font-size: 11.43px;">Prometheus</a> <a href="/tags/Setup/" style="font-size: 12.86px;">Setup</a> <a href="/tags/Smartping/" style="font-size: 10px;">Smartping</a> <a href="/tags/Source-Build/" style="font-size: 10px;">Source Build</a> <a href="/tags/Storage/" style="font-size: 15.71px;">Storage</a> <a href="/tags/TimeZone/" style="font-size: 10px;">TimeZone</a> <a href="/tags/Trouble-Shooting/" style="font-size: 17.14px;">Trouble Shooting</a>
+					</div>
+				</section>
+				
+				
+				
+
+				
+			</div>
+		</div>
+	</header>				
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">Singh Wang</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				<img lazy-src="https://avatars0.githubusercontent.com/u/17465385?s=400&amp;u=cea56ed1710ec6ebab160c1ce1e068317e05b025&amp;v=4" class="js-avatar">
+			</div>
+			<hgroup>
+			  <h1 class="header-author">Singh Wang</h1>
+			</hgroup>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/archives">所有文章</a></li>
+		        
+					<li><a href="/categories/容器云技术/">容器云技术</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/singhwang" title="github">github</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+      <div class="body-wrap"><article id="post-docker_trouble_shooting_001" class="article article-type-post" itemscope="" itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2019/10/02/docker_trouble_shooting_001/" class="article-date">
+  	<time datetime="2019-10-02T07:52:36.605Z" itemprop="datePublished">2019-10-02</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Docker针对iptables的filter表的FORWARD链的默认设置
+      
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Docker/">Docker</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Trouble-Shooting/">Trouble Shooting</a></li></ul>
+	</div>
+
+        
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/容器云技术/">容器云技术</a>
+	</div>
+
+
+        
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="一、环境版本信息"><a href="#一、环境版本信息" class="headerlink" title="一、环境版本信息"></a>一、环境版本信息</h1><p>Docker Community 18.09.9</p>
+<ul>
+<li>Client Version: 18.09.9</li>
+<li>Server Docker Engine Version: 18.09.9</li>
+</ul>
+<h1 id="二、问题现象"><a href="#二、问题现象" class="headerlink" title="二、问题现象"></a>二、问题现象</h1><ol>
+<li>在一台Linux服务器上，首先安装并启动了docker，接着设置了如下内核参数：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">cat &lt;&lt;EOF &gt; /etc/sysctl.d/docker.conf</span><br><span class="line">net.bridge.bridge-nf-call-iptables = 1</span><br><span class="line">net.ipv4.ip_forward = 1</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>这时发现了个有趣的现象，docker容器之间网络不通了。甚至当你使用了linux原生的两个network namespace通过veth pair设备连接在同一网桥上，然后为两个linux原生的两个network namespace中的设备配置同一网段的ip地址后，这两个linux原生的两个network namespace的网络也是不通的。</p>
+<ol start="2">
+<li>在kubernetes环境中，发现当把service改为nodePort形式对外暴露时，无法通过nodeIP+nodePort的方式访问Pod内的服务。很有意思，这个问题有人装kubernetes就会遇到，有人就不会遇到。</li>
+</ol>
+<h1 id="三、排查过程"><a href="#三、排查过程" class="headerlink" title="三、排查过程"></a>三、排查过程</h1><ol>
+<li><p>如果开着 net.bridge.bridge-nf-call-iptables 这个参数，用tcmdump抓包，只能看到arp有请求和回复，icmp就只有请求没有回复，关掉就一切正常了；（net.bridge.bridge-nf-call-iptables = 1 表示开启； net.bridge.bridge-nf-call-iptables = 0 表示关闭）</p>
+</li>
+<li><p>查资料确定 net.bridge.bridge-nf-call-iptables 这个内核参数的含义，发现其含义用比较直白的话概括是这样的：<br>网桥做流量转发时是否先转到iptables进行过滤。<br>关闭 net.bridge.bridge-nf-call-iptables 这个内核参数就意味着网桥把流量流量直接转发，不经过iptables，反之则先要经过iptables；</p>
+</li>
+<li><p>既然是在iptables中出了问题，那么查看iptables中filter表中的FORWARD链的Policy设置，发现其为DROP；</p>
+</li>
+<li><p>这个不是我们要的设置，只能想办法手动覆盖了，于是想到了改docker的systemd脚本docker.service，加入ExecStartPost=/usr/sbin/iptables -P FORWARD ACCEPT；</p>
+</li>
+<li><p>目前只是在外围临时解决了，但是并未探知到问题的本质，导致官方为什么要这么改？一头雾水，于是继续通过github上的CHANGELOG、issues和PR查找线索，发现了如下线索：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">## 1.13.0 (2017-01-18)</span><br><span class="line">。。。</span><br><span class="line">### Networking</span><br><span class="line">。。。</span><br><span class="line">* Change the default `FORWARD` policy to `DROP` [#28257](https://github.com/docker/docker/pull/28257)</span><br><span class="line">。。。</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>通过阅读PR可以看到这个修改的来龙去脉；</p>
+<ol start="6">
+<li>现在只知道默认会把 FORWARD 设置为 DROP，开始查找如何才能避免docker daemon做这个配置；</li>
+<li>阅读了与实验环境版本一致的docker源码，终于找到了问题的原因：net.ipv4.ip_forward 只要在docker daemon 启动之前手动把这个参数设置为1，docker daemon 默认就认为有人用iptables的filter表的forward链了，就不会更改forward链的默认策略了。源码详见 “五、根本原因” 部分的截图。</li>
+</ol>
+<h1 id="四、解决方法"><a href="#四、解决方法" class="headerlink" title="四、解决方法"></a>四、解决方法</h1><h2 id="1-外围的解决方法"><a href="#1-外围的解决方法" class="headerlink" title="1. 外围的解决方法"></a>1. 外围的解决方法</h2><p>我们自己可以在外围这么修改systemd的service脚本<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">vi /lib/systemd/system/docker.service</span><br><span class="line">。。。</span><br><span class="line">ExecStart=/usr/bin/dockerd -H fd:// --containerd=/run/containerd/containerd.sock</span><br><span class="line">ExecReload=/bin/kill -s HUP $MAINPID</span><br><span class="line">ExecStartPost=/usr/sbin/iptables -P FORWARD ACCEPT</span><br><span class="line">。。。</span><br></pre></td></tr></table></figure></p>
+<p>其实主要是加最后那句 ExecStartPost=/usr/sbin/iptables -P FORWARD ACCEPT</p>
+<h2 id="2-推荐的解决方法"><a href="#2-推荐的解决方法" class="headerlink" title="2. 推荐的解决方法"></a>2. 推荐的解决方法</h2><p>先设置如下两个关键的内核参数并让其生效：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">cat &lt;&lt;EOF &gt; /etc/sysctl.d/docker.conf</span><br><span class="line">net.bridge.bridge-nf-call-iptables = 1</span><br><span class="line">net.ipv4.ip_forward = 1</span><br><span class="line">EOF</span><br><span class="line"></span><br><span class="line">sysctl --system</span><br></pre></td></tr></table></figure></p>
+<p>之后再安装docker，然后启动即可。这里的关键是，安装或者首次启动docker前，linux操作系统需要设置内核参数 net.ipv4.ip_forward = 1 才可以。</p>
+<h1 id="五、根本原因（可以从对应版本的docker源码中找到线索）"><a href="#五、根本原因（可以从对应版本的docker源码中找到线索）" class="headerlink" title="五、根本原因（可以从对应版本的docker源码中找到线索）"></a>五、根本原因（可以从对应版本的docker源码中找到线索）</h1><p><img src="/2019/10/02/docker_trouble_shooting_001/docker_ipv4_forward.png" alt="docker_ipv4_forward"><br>通过源码可以看出来，当内核参数 net.ipv4.ip_forward 的值不为1时，docker daemon会默认把iptables的filter表的FORWARD链默认设置为DROP。</p>
+<h1 id="六、参考资料"><a href="#六、参考资料" class="headerlink" title="六、参考资料"></a>六、参考资料</h1><p>这个是为什么要这么改？因为从纯docker角度看，是个漏洞，详见链接。不过这个漏洞对我们来说影响意义不大。<br><a href="https://github.com/moby/moby/issues/14041" target="_blank" rel="noopener">https://github.com/moby/moby/issues/14041</a></p>
+<p>这个是问题的PR描述：<br><a href="https://github.com/moby/moby/pull/28257" target="_blank" rel="noopener">https://github.com/moby/moby/pull/28257</a></p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2019/09/17/trouble_shooting_000/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">容器故障排除之重要的Linux命令</div>
+      <strong class="article-nav-caption">&gt;</strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+
+
+
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+      <div class="footer-left">
+        &copy; 2019 Singh Wang
+      </div>
+        <div class="footer-right">
+          <a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/smackgg/hexo-theme-smackdown" target="_blank">Smackdown</a>
+        </div>
+    </div>
+  </div>
+</footer>
+    </div>
+    
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: true,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false
+	}
+</script>
+<script src="/js/main.js"></script>
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js"></script>
+
+
+  </div>
+</body>
+</html>
