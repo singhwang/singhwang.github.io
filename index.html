@@ -102,7 +102,7 @@
 				
 				<section class="switch-part switch-part2">
 					<div class="widget tagcloud" id="js-tagcloud">
-						<a href="/tags/Calico/" style="font-size: 11.43px;">Calico</a> <a href="/tags/Ceph/" style="font-size: 10px;">Ceph</a> <a href="/tags/Common/" style="font-size: 10px;">Common</a> <a href="/tags/DNS/" style="font-size: 10px;">DNS</a> <a href="/tags/Docker/" style="font-size: 20px;">Docker</a> <a href="/tags/Dragonfly/" style="font-size: 10px;">Dragonfly</a> <a href="/tags/Elasticsearch/" style="font-size: 10px;">Elasticsearch</a> <a href="/tags/Fluentd/" style="font-size: 11.43px;">Fluentd</a> <a href="/tags/GlusterFS/" style="font-size: 14.29px;">GlusterFS</a> <a href="/tags/HAProxy/" style="font-size: 10px;">HAProxy</a> <a href="/tags/Highly-Available/" style="font-size: 10px;">Highly Available</a> <a href="/tags/Ingress/" style="font-size: 10px;">Ingress</a> <a href="/tags/Kubeadm/" style="font-size: 11.43px;">Kubeadm</a> <a href="/tags/Kubernetes/" style="font-size: 18.57px;">Kubernetes</a> <a href="/tags/Label/" style="font-size: 10px;">Label</a> <a href="/tags/Logging/" style="font-size: 12.86px;">Logging</a> <a href="/tags/Monitoring/" style="font-size: 14.29px;">Monitoring</a> <a href="/tags/Network/" style="font-size: 15.71px;">Network</a> <a href="/tags/Open-Falcon/" style="font-size: 10px;">Open Falcon</a> <a href="/tags/P2P/" style="font-size: 10px;">P2P</a> <a href="/tags/Prometheus/" style="font-size: 11.43px;">Prometheus</a> <a href="/tags/Setup/" style="font-size: 14.29px;">Setup</a> <a href="/tags/Smartping/" style="font-size: 10px;">Smartping</a> <a href="/tags/Source-Build/" style="font-size: 10px;">Source Build</a> <a href="/tags/Storage/" style="font-size: 15.71px;">Storage</a> <a href="/tags/TimeZone/" style="font-size: 10px;">TimeZone</a> <a href="/tags/Trouble-Shooting/" style="font-size: 17.14px;">Trouble Shooting</a>
+						<a href="/tags/Calico/" style="font-size: 11.25px;">Calico</a> <a href="/tags/Ceph/" style="font-size: 11.25px;">Ceph</a> <a href="/tags/Common/" style="font-size: 10px;">Common</a> <a href="/tags/DNS/" style="font-size: 10px;">DNS</a> <a href="/tags/Docker/" style="font-size: 20px;">Docker</a> <a href="/tags/Dragonfly/" style="font-size: 10px;">Dragonfly</a> <a href="/tags/Elasticsearch/" style="font-size: 10px;">Elasticsearch</a> <a href="/tags/Fluentd/" style="font-size: 11.25px;">Fluentd</a> <a href="/tags/GlusterFS/" style="font-size: 13.75px;">GlusterFS</a> <a href="/tags/HAProxy/" style="font-size: 10px;">HAProxy</a> <a href="/tags/Highly-Available/" style="font-size: 10px;">Highly Available</a> <a href="/tags/Ingress/" style="font-size: 10px;">Ingress</a> <a href="/tags/Kubeadm/" style="font-size: 11.25px;">Kubeadm</a> <a href="/tags/Kubernetes/" style="font-size: 18.75px;">Kubernetes</a> <a href="/tags/Label/" style="font-size: 10px;">Label</a> <a href="/tags/Logging/" style="font-size: 12.5px;">Logging</a> <a href="/tags/Monitoring/" style="font-size: 13.75px;">Monitoring</a> <a href="/tags/Network/" style="font-size: 15px;">Network</a> <a href="/tags/Open-Falcon/" style="font-size: 10px;">Open Falcon</a> <a href="/tags/P2P/" style="font-size: 10px;">P2P</a> <a href="/tags/Prometheus/" style="font-size: 11.25px;">Prometheus</a> <a href="/tags/Setup/" style="font-size: 13.75px;">Setup</a> <a href="/tags/Smartping/" style="font-size: 10px;">Smartping</a> <a href="/tags/Source-Build/" style="font-size: 10px;">Source Build</a> <a href="/tags/Storage/" style="font-size: 16.25px;">Storage</a> <a href="/tags/TimeZone/" style="font-size: 10px;">TimeZone</a> <a href="/tags/Trouble-Shooting/" style="font-size: 17.5px;">Trouble Shooting</a>
 					</div>
 				</section>
 				
@@ -151,6 +151,81 @@
 	</div>
 </nav>
       <div class="body-wrap">
+  
+    <article id="post-ceph_dock_kubernetes_000" class="article article-type-post" itemscope="" itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2019/10/12/ceph_dock_kubernetes_000/" class="article-date">
+  	<time datetime="2019-10-12T06:05:38.987Z" itemprop="datePublished">2019-10-12</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/10/12/ceph_dock_kubernetes_000/">
+        Kubernetes集群对接Ceph集群：搭建可供Kubernetes对接的Ceph实验环境
+        
+      </a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="一、实验环境说明"><a href="#一、实验环境说明" class="headerlink" title="一、实验环境说明"></a>一、实验环境说明</h1><h2 id="1-环境主旨说明"><a href="#1-环境主旨说明" class="headerlink" title="1. 环境主旨说明"></a>1. 环境主旨说明</h2><p>本文旨在使用ceph-deploy工具搭建一个可供Kubernetes集群对接使用的单点Ceph集群。更多有关多点Ceph集群搭建和使用的资料详见本文“参考资料”部分的链接。</p>
+<h2 id="2-环境形态说明"><a href="#2-环境形态说明" class="headerlink" title="2. 环境形态说明"></a>2. 环境形态说明</h2><p>多点部署环境形态：<br><img src="/2019/10/12/ceph_dock_kubernetes_000/ceph_deploy_architecture.png" alt="ceph_deploy_architecture"><br>其中admin-node、node1、node2和node3各代表一台Linux服务器，共有admin-node和node两种角色。</p>
+<p>本文使用ceph-deploy工具搭建的单点Ceph集群，共使用了一台Linux服务器，同时扮演了admin-node和node两种角色。</p>
+<h1 id="二、实验环境版本信息"><a href="#二、实验环境版本信息" class="headerlink" title="二、实验环境版本信息"></a>二、实验环境版本信息</h1><h2 id="1-操作系统的版本信息"><a href="#1-操作系统的版本信息" class="headerlink" title="1. 操作系统的版本信息"></a>1. 操作系统的版本信息</h2><p>CentOS Linux release 7.7.1908 (Core)</p>
+<h2 id="2-核心组件的版本信息"><a href="#2-核心组件的版本信息" class="headerlink" title="2. 核心组件的版本信息"></a>2. 核心组件的版本信息</h2><p>Ceph Luminous 版本</p>
+<h1 id="三、搭建步骤"><a href="#三、搭建步骤" class="headerlink" title="三、搭建步骤"></a>三、搭建步骤</h1><h2 id="1-准备基础的Linux服务器环境"><a href="#1-准备基础的Linux服务器环境" class="headerlink" title="1. 准备基础的Linux服务器环境"></a>1. 准备基础的Linux服务器环境</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"># 更新系统</span><br><span class="line">yum update -y</span><br><span class="line"></span><br><span class="line"># 设置正确的时区和时间</span><br><span class="line">yum install -y ntpdate</span><br><span class="line">timedatectl set-timezone Asia/Shanghai</span><br><span class="line">ntpdate cn.ntp.org.cn</span><br><span class="line"></span><br><span class="line"># 关闭防火墙</span><br><span class="line">systemctl disable firewalld.service</span><br><span class="line">systemctl stop firewalld.service</span><br><span class="line"></span><br><span class="line"># 关闭swap分区</span><br><span class="line">swapoff -a</span><br><span class="line">sed -i &apos;s#/dev/mapper/cl-swap#\# /dev/mapper/cl-swap#&apos; /etc/fstab</span><br><span class="line"></span><br><span class="line"># 关闭selinux</span><br><span class="line">setenforce 0</span><br><span class="line">sed -i &apos;s/SELINUX=enforcing/SELINUX=disabled/&apos; /etc/selinux/config</span><br><span class="line"></span><br><span class="line"># 设置节点的主机名</span><br><span class="line">## 192.168.112.131</span><br><span class="line">hostnamectl set-hostname node1</span><br><span class="line"></span><br><span class="line"># 配置主机名和IP的映射</span><br><span class="line">cat &lt;&lt;EOF &gt;&gt; /etc/hosts</span><br><span class="line"></span><br><span class="line"># For Ceph Cluster</span><br><span class="line">192.168.112.131 node1</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+<h2 id="2-安装ceph-deploy的基础环境"><a href="#2-安装ceph-deploy的基础环境" class="headerlink" title="2. 安装ceph-deploy的基础环境"></a>2. 安装ceph-deploy的基础环境</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">yum install -y epel-release</span><br><span class="line">yum makecache fast</span><br><span class="line">yum install -y python-pip</span><br><span class="line"></span><br><span class="line">cat &lt;&lt;EOM &gt; /etc/yum.repos.d/ceph.repo</span><br><span class="line">[ceph-noarch]</span><br><span class="line">name=Ceph noarch packages</span><br><span class="line">baseurl=http://mirrors.163.com/ceph/rpm-luminous/el7/noarch</span><br><span class="line">enabled=1</span><br><span class="line">gpgcheck=1</span><br><span class="line">type=rpm-md</span><br><span class="line">gpgkey=http://mirrors.163.com/ceph/keys/release.asc</span><br><span class="line">EOM</span><br><span class="line"></span><br><span class="line">yum makecache fast</span><br><span class="line">yum install -y ceph-deploy</span><br><span class="line"></span><br><span class="line">ceph-deploy --version</span><br></pre></td></tr></table></figure>
+<h2 id="3-配置从admin-node到node1的ssh免用户和免密登录"><a href="#3-配置从admin-node到node1的ssh免用户和免密登录" class="headerlink" title="3. 配置从admin-node到node1的ssh免用户和免密登录"></a>3. 配置从admin-node到node1的ssh免用户和免密登录</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"># 创建ceph-deploy工具需要使用的node用户</span><br><span class="line">useradd -d /home/node -m node</span><br><span class="line">passwd node</span><br><span class="line"></span><br><span class="line">echo &quot;node ALL = (root) NOPASSWD:ALL&quot; | tee /etc/sudoers.d/node</span><br><span class="line">chmod 0440 /etc/sudoers.d/node</span><br><span class="line"></span><br><span class="line"># 配置ssh免用户和免密登录</span><br><span class="line">su node</span><br><span class="line">cd ~</span><br><span class="line"></span><br><span class="line">ssh-keygen</span><br><span class="line"></span><br><span class="line">ssh-copy-id node@node1</span><br><span class="line"></span><br><span class="line">cat &lt;&lt;EOM &gt; ~/.ssh/config</span><br><span class="line">Host node1</span><br><span class="line">   Hostname node1</span><br><span class="line">   User node</span><br><span class="line">EOM</span><br><span class="line"></span><br><span class="line">chmod 0600 ~/.ssh/config</span><br></pre></td></tr></table></figure>
+<h2 id="3-配置ceph-deploy工具使用国内源安装指定的ceph版本"><a href="#3-配置ceph-deploy工具使用国内源安装指定的ceph版本" class="headerlink" title="3. 配置ceph-deploy工具使用国内源安装指定的ceph版本"></a>3. 配置ceph-deploy工具使用国内源安装指定的ceph版本</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">cat &lt;&lt;EOF &gt;&gt; ~/.bash_profile</span><br><span class="line"></span><br><span class="line">export CEPH_DEPLOY_REPO_URL=http://mirrors.163.com/ceph/rpm-luminous/el7</span><br><span class="line">export CEPH_DEPLOY_GPG_URL=http://mirrors.163.com/ceph/keys/release.asc</span><br><span class="line">EOF</span><br><span class="line"></span><br><span class="line">source ~/.bash_profile</span><br><span class="line">sudo yum install -y yum-plugin-priorities</span><br></pre></td></tr></table></figure>
+<h2 id="4-使用ceph-deploy工具安装ceph集群"><a href="#4-使用ceph-deploy工具安装ceph集群" class="headerlink" title="4. 使用ceph-deploy工具安装ceph集群"></a>4. 使用ceph-deploy工具安装ceph集群</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">mkdir my-cluster</span><br><span class="line">cd my-cluster</span><br><span class="line"></span><br><span class="line">ceph-deploy new node1</span><br><span class="line">ceph-deploy install node1</span><br><span class="line">ceph-deploy mon create-initial</span><br><span class="line"></span><br><span class="line">ceph-deploy admin node1</span><br><span class="line">ceph-deploy mgr create node1</span><br><span class="line"></span><br><span class="line">ceph-deploy osd create --data /dev/sdb node1</span><br><span class="line"></span><br><span class="line">sudo ceph health</span><br><span class="line">sudo ceph -s</span><br><span class="line"></span><br><span class="line">ceph-deploy mds create node1</span><br><span class="line"></span><br><span class="line"># 安装rgw后，将集群状态调整为健康的</span><br><span class="line">ceph-deploy rgw create node1</span><br><span class="line"></span><br><span class="line">sudo ceph osd pool ls</span><br><span class="line">sudo ceph osd pool set .rgw.root size 1</span><br><span class="line">sudo ceph osd pool ls</span><br><span class="line">sudo ceph osd pool set default.rgw.control size 1</span><br><span class="line">sudo ceph osd pool ls</span><br><span class="line">sudo ceph osd pool set default.rgw.meta size 1</span><br><span class="line">sudo ceph osd pool ls</span><br><span class="line">sudo ceph osd pool set default.rgw.log size 1</span><br><span class="line">sudo ceph osd pool ls</span><br><span class="line"></span><br><span class="line">sudo ceph -s</span><br><span class="line"></span><br><span class="line">echo &quot;hello rgw.&quot; &gt; testfile.txt</span><br><span class="line">sudo ceph osd pool create mytest 8 8</span><br><span class="line">sudo ceph osd pool set mytest size 1</span><br><span class="line">sudo rados put test-object-1 testfile.txt --pool=mytest</span><br><span class="line">sudo rados -p mytest ls</span><br><span class="line">sudo ceph osd map mytest test-object-1</span><br><span class="line">sudo rados rm test-object-1 --pool=mytest</span><br><span class="line">sudo ceph osd pool rm mytest</span><br></pre></td></tr></table></figure>
+<h2 id="5-配置ceph集群环境使其符合kubernetes环境的要求"><a href="#5-配置ceph集群环境使其符合kubernetes环境的要求" class="headerlink" title="5. 配置ceph集群环境使其符合kubernetes环境的要求"></a>5. 配置ceph集群环境使其符合kubernetes环境的要求</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"># For ceph rbd</span><br><span class="line">ceph osd pool create kube 8 8</span><br><span class="line">ceph osd pool set kube size 1</span><br><span class="line"></span><br><span class="line">## for ceph-admin-secret</span><br><span class="line">ceph auth get-key client.admin | base64</span><br><span class="line"></span><br><span class="line">## for ceph-user-secret</span><br><span class="line">ceph auth add client.kube mon &apos;allow r&apos; osd &apos;allow rwx pool=kube&apos;</span><br><span class="line">ceph auth get-key client.kube | base64</span><br><span class="line"></span><br><span class="line"># For ceph fs</span><br><span class="line">ceph osd pool create cephfs_data 8 8</span><br><span class="line">ceph osd pool set cephfs_data size 1</span><br><span class="line">ceph osd pool create cephfs_metadata 8 8</span><br><span class="line">ceph osd pool set cephfs_metadata size 1</span><br><span class="line">ceph fs new fs cephfs_metadata cephfs_data</span><br><span class="line">ceph osd pool application enable kube fs</span><br></pre></td></tr></table></figure>
+<h1 id="四、参考资料"><a href="#四、参考资料" class="headerlink" title="四、参考资料"></a>四、参考资料</h1><h2 id="1-官方文档资料（可以带领用户快速掌握从搭建到基本使用）"><a href="#1-官方文档资料（可以带领用户快速掌握从搭建到基本使用）" class="headerlink" title="1. 官方文档资料（可以带领用户快速掌握从搭建到基本使用）"></a>1. 官方文档资料（可以带领用户快速掌握从搭建到基本使用）</h2><p><a href="https://docs.ceph.com/docs/luminous/start/" target="_blank" rel="noopener">https://docs.ceph.com/docs/luminous/start/</a><br><a href="https://docs.ceph.com/docs/luminous/start/quick-ceph-deploy/" target="_blank" rel="noopener">https://docs.ceph.com/docs/luminous/start/quick-ceph-deploy/</a><br><a href="https://docs.ceph.com/docs/master/start/quick-ceph-deploy/" target="_blank" rel="noopener">https://docs.ceph.com/docs/master/start/quick-ceph-deploy/</a><br><a href="https://docs.ceph.com/docs/luminous/start/quick-rbd/" target="_blank" rel="noopener">https://docs.ceph.com/docs/luminous/start/quick-rbd/</a><br><a href="https://docs.ceph.com/docs/luminous/start/quick-cephfs/" target="_blank" rel="noopener">https://docs.ceph.com/docs/luminous/start/quick-cephfs/</a><br><a href="https://docs.ceph.com/docs/luminous/start/quick-rgw/" target="_blank" rel="noopener">https://docs.ceph.com/docs/luminous/start/quick-rgw/</a></p>
+<h2 id="2-网络上经典的错误排查资料"><a href="#2-网络上经典的错误排查资料" class="headerlink" title="2. 网络上经典的错误排查资料"></a>2. 网络上经典的错误排查资料</h2><p><a href="https://my.oschina.net/xiaozhublog/blog/664560" target="_blank" rel="noopener">https://my.oschina.net/xiaozhublog/blog/664560</a><br><a href="https://blog.51cto.com/wangzhijian/2159701" target="_blank" rel="noopener">https://blog.51cto.com/wangzhijian/2159701</a></p>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Ceph/">Ceph</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Docker/">Docker</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Kubernetes/">Kubernetes</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Storage/">Storage</a></li></ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/容器云技术/">容器云技术</a>
+	</div>
+
+
+      
+      <div class="clearfix"></div>
+    </div>
+      
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
   
     <article id="post-kubeadm_kubernetes_cluster_000" class="article article-type-post" itemscope="" itemprop="blogPost">
   
@@ -802,80 +877,6 @@
       
 	<div class="article-tag tagcloud">
 		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Docker/">Docker</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Kubernetes/">Kubernetes</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Monitoring/">Monitoring</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Prometheus/">Prometheus</a></li></ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/categories/容器云技术/">容器云技术</a>
-	</div>
-
-
-      
-      <div class="clearfix"></div>
-    </div>
-      
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-  
-    <article id="post-p2p_distribute_images_000" class="article article-type-post" itemscope="" itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2019/05/27/p2p_distribute_images_000/" class="article-date">
-  	<time datetime="2019-05-27T04:35:44.000Z" itemprop="datePublished">2019-05-27</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/05/27/p2p_distribute_images_000/">
-        使用Dragonfly实现P2P分发镜像
-        
-      </a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="一、Dragonfly概述"><a href="#一、Dragonfly概述" class="headerlink" title="一、Dragonfly概述"></a>一、Dragonfly概述</h1><h2 id="1-简介"><a href="#1-简介" class="headerlink" title="1. 简介"></a>1. 简介</h2><p>Dragonfly 是一款基于 P2P 的智能镜像和文件分发工具。它旨在提高文件传输的效率和速率，最大限度地利用网络带宽，尤其是在分发大量数据时，例如应用分发、缓存分发、日志分发和镜像分发。<br>尽管容器技术大部分时候简化了运维工作，但是它也带来了一些挑战：例如镜像分发的效率问题，尤其是必须在多个主机上复制镜像分发时。Dragonfly 在这种场景下能够完美支持 Docker ，相比原生方式，它能将容器镜像的分发速度提高了 57 倍，并让 Registry 网络出口流量降低 99.5%。使用它可以让容器镜像的分发变得简单而经济。</p>
-<h2 id="2-官方文档地址"><a href="#2-官方文档地址" class="headerlink" title="2. 官方文档地址"></a>2. 官方文档地址</h2><p><a href="https://d7y.io/en-us/" target="_blank" rel="noopener">https://d7y.io/en-us/</a></p>
-<h2 id="3-GitHub地址"><a href="#3-GitHub地址" class="headerlink" title="3. GitHub地址"></a>3. GitHub地址</h2><p><a href="https://github.com/dragonflyoss/Dragonfly/tree/v0.3.0" target="_blank" rel="noopener">https://github.com/dragonflyoss/Dragonfly/tree/v0.3.0</a></p>
-<h2 id="4-注意事项"><a href="#4-注意事项" class="headerlink" title="4. 注意事项"></a>4. 注意事项</h2><p>目前Dragonfly的最新版本是v0.3.0，暂不支持对镜像仓库中的对私有镜像的认证。比如使用Harbor这种镜像仓库，把某个project的权限设置为私有权限，那么该project下的镜像是无法直接通过Dragonfly实现镜像的分发的。想通过Dragonfly实现镜像的分发，最简单的办法是必须把镜像对应的project的权限设置为公有权限。还有一种办法是为docker daemon设置http全局代理，但是必须使用0.0.1版本，最新的v0.3.0版本不支持这种方式。不过很遗憾，经测试该方式不好用。官方的Issues链接如下：<br><a href="https://github.com/dragonflyoss/Dragonfly/issues/138" target="_blank" rel="noopener">https://github.com/dragonflyoss/Dragonfly/issues/138</a></p>
-<p>为docker daemon配置全局代理，方法如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">mkdir -p /etc/systemd/system/docker.service.d</span><br><span class="line">vi /etc/systemd/system/docker.service.d/http-proxy.conf</span><br><span class="line"></span><br><span class="line">[Service]</span><br><span class="line">Environment=&quot;HTTP_PROXY=http://127.0.0.1:65001&quot;</span><br><span class="line"></span><br><span class="line">systemctl daemon-reload</span><br><span class="line">systemctl restart docker.service</span><br><span class="line">systemctl show --property=Environment docker.service</span><br></pre></td></tr></table></figure></p>
-<p>为docker daemon配置全局代理，参考链接如下：<br><a href="https://docs.docker.com/config/daemon/systemd/#httphttps-proxy" target="_blank" rel="noopener">https://docs.docker.com/config/daemon/systemd/#httphttps-proxy</a></p>
-<h1 id="二、环境的相关信息"><a href="#二、环境的相关信息" class="headerlink" title="二、环境的相关信息"></a>二、环境的相关信息</h1><h2 id="1-版本信息"><a href="#1-版本信息" class="headerlink" title="1. 版本信息"></a>1. 版本信息</h2><p>Docker Engine Community 18.09.5<br>Harbor 0.5.0<br>Dragonfly v0.3.0</p>
-<h2 id="2-服务器信息"><a href="#2-服务器信息" class="headerlink" title="2. 服务器信息"></a>2. 服务器信息</h2><p>172.16.170.134 <-> supernode<br>172.16.170.135 <-> dfclient<br>172.16.170.136 <-> dfclient</-></-></-></p>
-<h1 id="三、实验过程记录"><a href="#三、实验过程记录" class="headerlink" title="三、实验过程记录"></a>三、实验过程记录</h1><h2 id="1-在172-16-170-134上安装supernode，如下所示："><a href="#1-在172-16-170-134上安装supernode，如下所示：" class="headerlink" title="1. 在172.16.170.134上安装supernode，如下所示："></a>1. 在172.16.170.134上安装supernode，如下所示：</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker run -d --name supernode --restart=always -p 8001:8001 -p 8002:8002 \</span><br><span class="line">    dragonflyoss/supernode:0.3.0 -Dsupernode.advertiseIp=172.16.170.134</span><br></pre></td></tr></table></figure>
-<h2 id="2-分别在172-16-170-135和172-16-170-136上安装dfclient，如下所示："><a href="#2-分别在172-16-170-135和172-16-170-136上安装dfclient，如下所示：" class="headerlink" title="2. 分别在172.16.170.135和172.16.170.136上安装dfclient，如下所示："></a>2. 分别在172.16.170.135和172.16.170.136上安装dfclient，如下所示：</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">cat &lt;&lt;EOD &gt; /etc/dragonfly/dfget.yml</span><br><span class="line">nodes:</span><br><span class="line">    - 172.16.170.134</span><br><span class="line">EOD</span><br><span class="line"></span><br><span class="line">cat &lt;&lt;EOD &gt; /etc/docker/daemon.json</span><br><span class="line">&#123;</span><br><span class="line">  &quot;registry-mirrors&quot;: [&quot;http://127.0.0.1:65001&quot;],</span><br><span class="line">  &quot;insecure-registries&quot;: [&quot;10.0.55.126&quot;]</span><br><span class="line">&#125;</span><br><span class="line">EOD</span><br><span class="line"></span><br><span class="line">systemctl daemon-reload</span><br><span class="line">systemctl restart docker.service</span><br><span class="line"></span><br><span class="line">docker run -d --name dfclient --restart=always -p 65001:65001 \</span><br><span class="line">    -v /etc/dragonfly:/etc/dragonfly \</span><br><span class="line">    dragonflyoss/dfclient:v0.3.0 --registry http://10.0.55.126</span><br></pre></td></tr></table></figure>
-<h2 id="3-分别在172-16-170-135和172-16-170-136上安装拉取一个镜像，如下所示："><a href="#3-分别在172-16-170-135和172-16-170-136上安装拉取一个镜像，如下所示：" class="headerlink" title="3. 分别在172.16.170.135和172.16.170.136上安装拉取一个镜像，如下所示："></a>3. 分别在172.16.170.135和172.16.170.136上安装拉取一个镜像，如下所示：</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"># docker pull base/alpine:3.8</span><br><span class="line">3.8: Pulling from base/alpine</span><br><span class="line">16f532fbdc2a: Already exists</span><br><span class="line">Digest: sha256:78903b603e9fe76129d1a59ec94bc1ad47769b98e57e8f0c0a57760b12615960</span><br><span class="line">Status: Downloaded newer image for base/alpine:3.8</span><br><span class="line"></span><br><span class="line"># docker pull base/alpine:3.8</span><br><span class="line">3.8: Pulling from base/alpine</span><br><span class="line">Digest: sha256:78903b603e9fe76129d1a59ec94bc1ad47769b98e57e8f0c0a57760b12615960</span><br><span class="line">Status: Image is up to date for base/alpine:3.8</span><br></pre></td></tr></table></figure>
-<h1 id="四、参考资料"><a href="#四、参考资料" class="headerlink" title="四、参考资料"></a>四、参考资料</h1><p><a href="https://github.com/dragonflyoss/Dragonfly/tree/v0.0.1" target="_blank" rel="noopener">https://github.com/dragonflyoss/Dragonfly/tree/v0.0.1</a><br><a href="https://github.com/dragonflyoss/Dragonfly/issues/138" target="_blank" rel="noopener">https://github.com/dragonflyoss/Dragonfly/issues/138</a><br><a href="http://dockone.io/article/4646" target="_blank" rel="noopener">http://dockone.io/article/4646</a><br><a href="https://mp.weixin.qq.com/s/95mX8cDox5bmgQ2xGHLPqQ" target="_blank" rel="noopener">https://mp.weixin.qq.com/s/95mX8cDox5bmgQ2xGHLPqQ</a><br><a href="https://www.cnblogs.com/atuotuo/p/7298673.html" target="_blank" rel="noopener">https://www.cnblogs.com/atuotuo/p/7298673.html</a><br><a href="https://docs.docker.com/config/daemon/systemd/" target="_blank" rel="noopener">https://docs.docker.com/config/daemon/systemd/</a><br><a href="http://likakuli.com/post/2018/09/13/dragonfly/" target="_blank" rel="noopener">http://likakuli.com/post/2018/09/13/dragonfly/</a></p>
-
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Docker/">Docker</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Dragonfly/">Dragonfly</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Kubernetes/">Kubernetes</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/P2P/">P2P</a></li></ul>
 	</div>
 
       
