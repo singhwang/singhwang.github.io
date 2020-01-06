@@ -102,7 +102,7 @@
 				
 				<section class="switch-part switch-part2">
 					<div class="widget tagcloud" id="js-tagcloud">
-						<a href="/tags/Calico/" style="font-size: 11.25px;">Calico</a> <a href="/tags/Ceph/" style="font-size: 12.5px;">Ceph</a> <a href="/tags/Common/" style="font-size: 10px;">Common</a> <a href="/tags/DNS/" style="font-size: 10px;">DNS</a> <a href="/tags/Docker/" style="font-size: 20px;">Docker</a> <a href="/tags/Dragonfly/" style="font-size: 10px;">Dragonfly</a> <a href="/tags/Elasticsearch/" style="font-size: 10px;">Elasticsearch</a> <a href="/tags/Fluentd/" style="font-size: 11.25px;">Fluentd</a> <a href="/tags/GlusterFS/" style="font-size: 13.75px;">GlusterFS</a> <a href="/tags/HAProxy/" style="font-size: 10px;">HAProxy</a> <a href="/tags/Highly-Available/" style="font-size: 10px;">Highly Available</a> <a href="/tags/Ingress/" style="font-size: 10px;">Ingress</a> <a href="/tags/Kubeadm/" style="font-size: 11.25px;">Kubeadm</a> <a href="/tags/Kubernetes/" style="font-size: 18.75px;">Kubernetes</a> <a href="/tags/Label/" style="font-size: 10px;">Label</a> <a href="/tags/Logging/" style="font-size: 12.5px;">Logging</a> <a href="/tags/Monitoring/" style="font-size: 13.75px;">Monitoring</a> <a href="/tags/Network/" style="font-size: 15px;">Network</a> <a href="/tags/Open-Falcon/" style="font-size: 10px;">Open Falcon</a> <a href="/tags/P2P/" style="font-size: 10px;">P2P</a> <a href="/tags/Prometheus/" style="font-size: 11.25px;">Prometheus</a> <a href="/tags/Setup/" style="font-size: 13.75px;">Setup</a> <a href="/tags/Smartping/" style="font-size: 10px;">Smartping</a> <a href="/tags/Source-Build/" style="font-size: 10px;">Source Build</a> <a href="/tags/Storage/" style="font-size: 16.25px;">Storage</a> <a href="/tags/TimeZone/" style="font-size: 10px;">TimeZone</a> <a href="/tags/Trouble-Shooting/" style="font-size: 17.5px;">Trouble Shooting</a>
+						<a href="/tags/Calico/" style="font-size: 11.25px;">Calico</a> <a href="/tags/Ceph/" style="font-size: 12.5px;">Ceph</a> <a href="/tags/Common/" style="font-size: 10px;">Common</a> <a href="/tags/DNS/" style="font-size: 10px;">DNS</a> <a href="/tags/Docker/" style="font-size: 20px;">Docker</a> <a href="/tags/Dragonfly/" style="font-size: 10px;">Dragonfly</a> <a href="/tags/Elasticsearch/" style="font-size: 10px;">Elasticsearch</a> <a href="/tags/Fluentd/" style="font-size: 11.25px;">Fluentd</a> <a href="/tags/GlusterFS/" style="font-size: 13.75px;">GlusterFS</a> <a href="/tags/HAProxy/" style="font-size: 10px;">HAProxy</a> <a href="/tags/Highly-Available/" style="font-size: 10px;">Highly Available</a> <a href="/tags/Ingress/" style="font-size: 10px;">Ingress</a> <a href="/tags/Kubeadm/" style="font-size: 11.25px;">Kubeadm</a> <a href="/tags/Kubernetes/" style="font-size: 18.75px;">Kubernetes</a> <a href="/tags/Label/" style="font-size: 10px;">Label</a> <a href="/tags/Logging/" style="font-size: 12.5px;">Logging</a> <a href="/tags/Monitoring/" style="font-size: 13.75px;">Monitoring</a> <a href="/tags/Network/" style="font-size: 15px;">Network</a> <a href="/tags/Open-Falcon/" style="font-size: 10px;">Open Falcon</a> <a href="/tags/P2P/" style="font-size: 10px;">P2P</a> <a href="/tags/Prometheus/" style="font-size: 11.25px;">Prometheus</a> <a href="/tags/Setup/" style="font-size: 15px;">Setup</a> <a href="/tags/Smartping/" style="font-size: 10px;">Smartping</a> <a href="/tags/Source-Build/" style="font-size: 10px;">Source Build</a> <a href="/tags/Storage/" style="font-size: 16.25px;">Storage</a> <a href="/tags/TimeZone/" style="font-size: 10px;">TimeZone</a> <a href="/tags/Trouble-Shooting/" style="font-size: 17.5px;">Trouble Shooting</a>
 					</div>
 				</section>
 				
@@ -151,6 +151,71 @@
 	</div>
 </nav>
       <div class="body-wrap">
+  
+    <article id="post-kubernetes_glusterfs_002" class="article article-type-post" itemscope="" itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2019/05/27/kubernetes_glusterfs_002/" class="article-date">
+  	<time datetime="2019-05-27T04:33:51.000Z" itemprop="datePublished">2019-05-27</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/05/27/kubernetes_glusterfs_002/">
+        使用Gluster工具管理GlusterFS集群
+        
+      </a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="一、配置和验证GlusterFS-Cluster"><a href="#一、配置和验证GlusterFS-Cluster" class="headerlink" title="一、配置和验证GlusterFS Cluster"></a>一、配置和验证GlusterFS Cluster</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"># 添加节点到glusterfs cluster</span><br><span class="line">[root@server07 ~]# gluster peer probe server08</span><br><span class="line">peer probe: success.</span><br><span class="line"></span><br><span class="line">[root@server07 ~]# gluster peer probe server09 </span><br><span class="line">peer probe: success.</span><br><span class="line"></span><br><span class="line"># 查看glusterfs cluster的状态 </span><br><span class="line">[root@server07 ~]# gluster peer status </span><br><span class="line">Number of Peers: 2</span><br><span class="line"></span><br><span class="line">Hostname: server08</span><br><span class="line">Uuid: 8530c074-760f-4d03-a5a7-f1b3ccaa5cfd </span><br><span class="line">State: Peer in Cluster (Connected)</span><br><span class="line">Hostname: server09</span><br><span class="line"></span><br><span class="line">Uuid: 41a4b6df-bcb3-4650-8a21-54afc1e27cbe </span><br><span class="line">State: Peer in Cluster (Connected)</span><br></pre></td></tr></table></figure>
+<h1 id="二、在GlusterFS-Cluster上操作和使用Volume"><a href="#二、在GlusterFS-Cluster上操作和使用Volume" class="headerlink" title="二、在GlusterFS Cluster上操作和使用Volume"></a>二、在GlusterFS Cluster上操作和使用Volume</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br></pre></td><td class="code"><pre><span class="line"># 查看volume的列表</span><br><span class="line">[root@server07 ~]# gluster volume info </span><br><span class="line">No volumes present</span><br><span class="line"></span><br><span class="line"># 创建volume对应的存储目录(集群的所有主机上都要创建) </span><br><span class="line">mkdir -p /opt/gluster/data</span><br><span class="line"></span><br><span class="line"># 创建volume </span><br><span class="line">[root@server07 ~]# gluster volume create k8s-volume transport tcp server07:/opt/gluster/data server08:/opt/gluster/data server09:/opt/gluster/data force</span><br><span class="line">volume create: k8s-volume: success: please start the volume to access data</span><br><span class="line"></span><br><span class="line">[root@server07 ~]# gluster volume info k8s-volume</span><br><span class="line"></span><br><span class="line">Volume Name: k8s-volume</span><br><span class="line">Type: Distribute</span><br><span class="line">Volume ID: e4974285-1304-4ea7-b60f-ebe8375dba86</span><br><span class="line">Status: Created</span><br><span class="line">Snapshot Count: 0</span><br><span class="line">Number of Bricks: 3</span><br><span class="line">Transport-type: tcp</span><br><span class="line">Bricks:</span><br><span class="line">Brick1: server07:/opt/gluster/data</span><br><span class="line">Brick2: server08:/opt/gluster/data</span><br><span class="line">Brick3: server09:/opt/gluster/data</span><br><span class="line">Options Reconfigured:</span><br><span class="line">transport.address-family: inet </span><br><span class="line">nfs.disable: on</span><br><span class="line"></span><br><span class="line"># 启动volume</span><br><span class="line">[root@server07 ~]# gluster volume start k8s-volume </span><br><span class="line">volume start: k8s-volume: success</span><br><span class="line"></span><br><span class="line"># 查看volume的信息</span><br><span class="line">[root@server07 ~]# gluster volume info k8s-volume</span><br><span class="line"></span><br><span class="line">Volume Name: k8s-volume</span><br><span class="line">Type: Distribute</span><br><span class="line">Volume ID: e4974285-1304-4ea7-b60f-ebe8375dba86</span><br><span class="line">Status: Started</span><br><span class="line">Snapshot Count: 0</span><br><span class="line">Number of Bricks: 3</span><br><span class="line">Transport-type: tcp</span><br><span class="line">Bricks: </span><br><span class="line">Brick1: server07:/opt/gluster/data</span><br><span class="line">Brick2: server08:/opt/gluster/data</span><br><span class="line">Brick3: server09:/opt/gluster/data</span><br><span class="line">Options Reconfigured:</span><br><span class="line">transport.address-family: inet</span><br><span class="line">nfs.disable: on</span><br><span class="line"></span><br><span class="line"># 验证数据卷的挂载和数据写入</span><br><span class="line">[root@server07 ~]# mount -t glusterfs server07:k8s-volume /mnt</span><br><span class="line">[root@server07 ~]# ls -la /mnt</span><br><span class="line">drwxr-xr-x. 3 root root 4096 4月 9 23:36 .</span><br><span class="line">dr-xr-xr-x. 17 root root 224 4月 9 21:59 ..</span><br><span class="line">[root@server07 ~]# echo &quot;hello glusterfs kubernetes.&quot; &gt; /mnt/readme.md</span><br><span class="line">[root@server07 ~]# ls -la /mnt</span><br><span class="line">drwxr-xr-x. 3 root root 4096 4月 10 05:36 .</span><br><span class="line">dr-xr-xr-x. 17 root root 224 4月 9 21:59 ..</span><br><span class="line">-rw-r--r--. 1 root root 28 4月 10 05:36 readme.md</span><br><span class="line"></span><br><span class="line">[root@server07 ~]# cat /mnt/readme.md</span><br><span class="line">hello glusterfs kubernetes.</span><br><span class="line"></span><br><span class="line">[root@server07 ~]# df -h</span><br><span class="line">文件系统 容量 已用 可用 已用% 挂载点</span><br><span class="line">/dev/mapper/cl-root 8.0G 1.1G 7.0G 14% /</span><br><span class="line">devtmpfs 478M 0 478M 0% /dev</span><br><span class="line">tmpfs 489M 0 489M 0% /dev/shm</span><br><span class="line">tmpfs 489M 6.8M 482M 2% /run</span><br><span class="line">tmpfs 489M 0 489M 0% /sys/fs/cgroup</span><br><span class="line">/dev/sda1 1014M 139M 876M 14% /boot</span><br><span class="line">tmpfs 98M 0 98M 0% /run/user/0</span><br><span class="line">server07:k8s-volume 24G 3.2G 21G 14% /mnt</span><br><span class="line">[root@server07 ~]# umount server07:k8s-volume</span><br><span class="line">[root@server07 ~]# ls -la /mnt/</span><br><span class="line">drwxr-xr-x. 2 root root 6 11月 5 2016 .</span><br><span class="line">dr-xr-xr-x. 17 root root 224 4月 9 21:59 ..</span><br><span class="line"></span><br><span class="line"># 查看volume的信息</span><br><span class="line">[root@server07 ~]# gluster volume info k8s-volume</span><br><span class="line"></span><br><span class="line">Volume Name: k8s-volume</span><br><span class="line">Type: Distribute</span><br><span class="line">Volume ID: e4974285-1304-4ea7-b60f-ebe8375dba86</span><br><span class="line">Status: Started</span><br><span class="line">Snapshot Count: 0</span><br><span class="line">Number of Bricks: 3</span><br><span class="line">Transport-type: tcp</span><br><span class="line">Bricks: </span><br><span class="line">Brick1: server07:/opt/gluster/data</span><br><span class="line">Brick2: server08:/opt/gluster/data</span><br><span class="line">Brick3: server09:/opt/gluster/data</span><br><span class="line">Options Reconfigured:</span><br><span class="line">transport.address-family: inet</span><br><span class="line">nfs.disable: on</span><br><span class="line"></span><br><span class="line"># 停止volume</span><br><span class="line">[root@server07 ~]# gluster volume stop k8s-volume</span><br><span class="line">Stopping volume will make its data inaccessible. Do you want to continue? (y/n) y</span><br><span class="line">volume stop: k8s-volume: success</span><br><span class="line"></span><br><span class="line"># 查看volume的信息</span><br><span class="line">[root@server07 ~]# gluster volume info k8s-volume</span><br><span class="line"></span><br><span class="line">Volume Name: k8s-volume</span><br><span class="line">Type: Distribute</span><br><span class="line">Volume ID: e4974285-1304-4ea7-b60f-ebe8375dba86</span><br><span class="line">Status: Stopped</span><br><span class="line">Snapshot Count: 0</span><br><span class="line">Number of Bricks: 3</span><br><span class="line">Transport-type: tcp</span><br><span class="line">Bricks: </span><br><span class="line">Brick1: server07:/opt/gluster/data</span><br><span class="line">Brick2: server08:/opt/gluster/data</span><br><span class="line">Brick3: server09:/opt/gluster/data</span><br><span class="line">Options Reconfigured:</span><br><span class="line">transport.address-family: inet</span><br><span class="line">nfs.disable: on</span><br><span class="line"></span><br><span class="line"># 删除volume</span><br><span class="line">[root@server07 ~]# gluster volume delete k8s-volume</span><br><span class="line">Deleting volume will erase all information about the volume. Do you want to continue? (y/n) y</span><br><span class="line">volume delete: k8s-volume: success</span><br><span class="line"></span><br><span class="line"># 查看volume的信息</span><br><span class="line">[root@server07 ~]# gluster volume info k8s-volume</span><br><span class="line">Volume k8s-volume does not exist</span><br></pre></td></tr></table></figure>
+<h1 id="三、如何重置GlusterFS-Cluster中的所有Node"><a href="#三、如何重置GlusterFS-Cluster中的所有Node" class="headerlink" title="三、如何重置GlusterFS Cluster中的所有Node"></a>三、如何重置GlusterFS Cluster中的所有Node</h1><p>假设集群中只有一个volume，它叫k8s-volume，下面对集群进行重置:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"># 重置glusterfs</span><br><span class="line">gluster volume list</span><br><span class="line">gluster volume stop k8s-volume </span><br><span class="line">gluster volume delete k8s-volume </span><br><span class="line">gluster volume list</span><br><span class="line">gluster peer status</span><br><span class="line">gluster peer help</span><br><span class="line">gluster peer detach server08</span><br><span class="line">gluster peer detach server09</span><br><span class="line">gluster peer status</span><br></pre></td></tr></table></figure></p>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Docker/">Docker</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/GlusterFS/">GlusterFS</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Kubernetes/">Kubernetes</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Storage/">Storage</a></li></ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/容器云技术/">容器云技术</a>
+	</div>
+
+
+      
+      <div class="clearfix"></div>
+    </div>
+      
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
   
     <article id="post-kubernetes_glusterfs_001" class="article article-type-post" itemscope="" itemprop="blogPost">
   
@@ -785,72 +850,6 @@
 
 
   
-    <article id="post-docker_haproxy" class="article article-type-post" itemscope="" itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2019/05/27/docker_haproxy/" class="article-date">
-  	<time datetime="2019-05-27T04:32:04.000Z" itemprop="datePublished">2019-05-27</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/05/27/docker_haproxy/">
-        Docker HAProxy使用示例
-        
-      </a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="1-准备Docker-HAProxy基础环境："><a href="#1-准备Docker-HAProxy基础环境：" class="headerlink" title="1. 准备Docker HAProxy基础环境："></a>1. 准备Docker HAProxy基础环境：</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">docker pull haproxy:1.6.5</span><br><span class="line">mkdir haproxy</span><br><span class="line">cd haproxy</span><br></pre></td></tr></table></figure>
-<h2 id="2-编写HAProxy的配置文件："><a href="#2-编写HAProxy的配置文件：" class="headerlink" title="2. 编写HAProxy的配置文件："></a>2. 编写HAProxy的配置文件：</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line">cat &lt;&lt;EOF &gt; haproxy.cfg</span><br><span class="line">global</span><br><span class="line">    log 127.0.0.1 local0 # 日志输出配置，所有日志都记录在本机，通过local0输出</span><br><span class="line">    maxconn 4096 # 最大连接数</span><br><span class="line">    tune.ssl.default-dh-param 2048</span><br><span class="line">    chroot /usr/local/sbin # 改变当前工作目录</span><br><span class="line">    daemon # 以后台形式运行HAProxy</span><br><span class="line">    nbproc 4 # 启动4个HAProxy实例</span><br><span class="line">    pidfile /usr/local/sbin/haproxy.pid # pid文件位置</span><br><span class="line">defaults</span><br><span class="line">    log 127.0.0.1 local3 # 日志文件的输出定向</span><br><span class="line">    mode http # &#123; tcp|http|health &#125; 设定启动实例的协议类型</span><br><span class="line">    option dontlognull # 保证HAProxy不记录上级负载均衡发送过来的用于检测状态没有数据的心跳包</span><br><span class="line">    option redispatch # 当serverId对应的服务器挂掉后，强制定向到其他健康的服务器</span><br><span class="line">    retries 2 # 重试两次连接失败就认为服务器不可用，主要通过后面的check检查</span><br><span class="line">    maxconn 2000 # 最大连接数</span><br><span class="line">    balance roundrobin # 负载均衡算法，roundrobin表示轮询，source表示按照IP</span><br><span class="line">    timeout connect 5000ms # 连接超时时间</span><br><span class="line">    timeout client 50000ms # 客户端连接超时时间</span><br><span class="line">    timeout server 50000ms # 服务器端连接超时时间</span><br><span class="line">    errorfile 400 /usr/local/etc/haproxy/errors/400.http</span><br><span class="line">    errorfile 403 /usr/local/etc/haproxy/errors/403.http</span><br><span class="line">    errorfile 408 /usr/local/etc/haproxy/errors/408.http</span><br><span class="line">    errorfile 500 /usr/local/etc/haproxy/errors/500.http</span><br><span class="line">    errorfile 502 /usr/local/etc/haproxy/errors/502.http</span><br><span class="line">    errorfile 503 /usr/local/etc/haproxy/errors/503.http</span><br><span class="line">    errorfile 504 /usr/local/etc/haproxy/errors/504.http</span><br><span class="line">    balance source</span><br><span class="line"></span><br><span class="line">frontend http_frontend</span><br><span class="line">        bind *:80</span><br><span class="line">        mode http</span><br><span class="line"></span><br><span class="line">        default_backend server_harbor_backend</span><br><span class="line"></span><br><span class="line">backend server_backend</span><br><span class="line">        mode http</span><br><span class="line">        ...</span><br><span class="line">        server s1 192.168.86.128:31451</span><br><span class="line">        server s2 192.168.86.129:31451</span><br><span class="line">        server s3 192.168.86.130:31451</span><br><span class="line">        ...</span><br><span class="line"></span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
-<p>注意事项：宿主机的80端口未被占用；根据需要配置server_backend中的使用标记（…）圈上的部分。</p>
-<h2 id="3-使用Docker镜像启动HAProxy容器："><a href="#3-使用Docker镜像启动HAProxy容器：" class="headerlink" title="3. 使用Docker镜像启动HAProxy容器："></a>3. 使用Docker镜像启动HAProxy容器：</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -d -p 80:80 --name haproxy -v `pwd`/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg haproxy:1.6.5</span><br></pre></td></tr></table></figure>
-
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Docker/">Docker</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/HAProxy/">HAProxy</a></li></ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/categories/容器云技术/">容器云技术</a>
-	</div>
-
-
-      
-      <div class="clearfix"></div>
-    </div>
-      
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-  
   
     <nav id="page-nav">
       <a class="extend prev" rel="prev" href="/page/2/">&laquo; Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/4/">Next &raquo;</a>
@@ -861,7 +860,7 @@
   <div class="outer">
     <div id="footer-info">
       <div class="footer-left">
-        &copy; 2019 Singh Wang
+        &copy; 2020 Singh Wang
       </div>
         <div class="footer-right">
           <a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/smackgg/hexo-theme-smackdown" target="_blank">Smackdown</a>

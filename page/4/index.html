@@ -102,7 +102,7 @@
 				
 				<section class="switch-part switch-part2">
 					<div class="widget tagcloud" id="js-tagcloud">
-						<a href="/tags/Calico/" style="font-size: 11.25px;">Calico</a> <a href="/tags/Ceph/" style="font-size: 12.5px;">Ceph</a> <a href="/tags/Common/" style="font-size: 10px;">Common</a> <a href="/tags/DNS/" style="font-size: 10px;">DNS</a> <a href="/tags/Docker/" style="font-size: 20px;">Docker</a> <a href="/tags/Dragonfly/" style="font-size: 10px;">Dragonfly</a> <a href="/tags/Elasticsearch/" style="font-size: 10px;">Elasticsearch</a> <a href="/tags/Fluentd/" style="font-size: 11.25px;">Fluentd</a> <a href="/tags/GlusterFS/" style="font-size: 13.75px;">GlusterFS</a> <a href="/tags/HAProxy/" style="font-size: 10px;">HAProxy</a> <a href="/tags/Highly-Available/" style="font-size: 10px;">Highly Available</a> <a href="/tags/Ingress/" style="font-size: 10px;">Ingress</a> <a href="/tags/Kubeadm/" style="font-size: 11.25px;">Kubeadm</a> <a href="/tags/Kubernetes/" style="font-size: 18.75px;">Kubernetes</a> <a href="/tags/Label/" style="font-size: 10px;">Label</a> <a href="/tags/Logging/" style="font-size: 12.5px;">Logging</a> <a href="/tags/Monitoring/" style="font-size: 13.75px;">Monitoring</a> <a href="/tags/Network/" style="font-size: 15px;">Network</a> <a href="/tags/Open-Falcon/" style="font-size: 10px;">Open Falcon</a> <a href="/tags/P2P/" style="font-size: 10px;">P2P</a> <a href="/tags/Prometheus/" style="font-size: 11.25px;">Prometheus</a> <a href="/tags/Setup/" style="font-size: 13.75px;">Setup</a> <a href="/tags/Smartping/" style="font-size: 10px;">Smartping</a> <a href="/tags/Source-Build/" style="font-size: 10px;">Source Build</a> <a href="/tags/Storage/" style="font-size: 16.25px;">Storage</a> <a href="/tags/TimeZone/" style="font-size: 10px;">TimeZone</a> <a href="/tags/Trouble-Shooting/" style="font-size: 17.5px;">Trouble Shooting</a>
+						<a href="/tags/Calico/" style="font-size: 11.25px;">Calico</a> <a href="/tags/Ceph/" style="font-size: 12.5px;">Ceph</a> <a href="/tags/Common/" style="font-size: 10px;">Common</a> <a href="/tags/DNS/" style="font-size: 10px;">DNS</a> <a href="/tags/Docker/" style="font-size: 20px;">Docker</a> <a href="/tags/Dragonfly/" style="font-size: 10px;">Dragonfly</a> <a href="/tags/Elasticsearch/" style="font-size: 10px;">Elasticsearch</a> <a href="/tags/Fluentd/" style="font-size: 11.25px;">Fluentd</a> <a href="/tags/GlusterFS/" style="font-size: 13.75px;">GlusterFS</a> <a href="/tags/HAProxy/" style="font-size: 10px;">HAProxy</a> <a href="/tags/Highly-Available/" style="font-size: 10px;">Highly Available</a> <a href="/tags/Ingress/" style="font-size: 10px;">Ingress</a> <a href="/tags/Kubeadm/" style="font-size: 11.25px;">Kubeadm</a> <a href="/tags/Kubernetes/" style="font-size: 18.75px;">Kubernetes</a> <a href="/tags/Label/" style="font-size: 10px;">Label</a> <a href="/tags/Logging/" style="font-size: 12.5px;">Logging</a> <a href="/tags/Monitoring/" style="font-size: 13.75px;">Monitoring</a> <a href="/tags/Network/" style="font-size: 15px;">Network</a> <a href="/tags/Open-Falcon/" style="font-size: 10px;">Open Falcon</a> <a href="/tags/P2P/" style="font-size: 10px;">P2P</a> <a href="/tags/Prometheus/" style="font-size: 11.25px;">Prometheus</a> <a href="/tags/Setup/" style="font-size: 15px;">Setup</a> <a href="/tags/Smartping/" style="font-size: 10px;">Smartping</a> <a href="/tags/Source-Build/" style="font-size: 10px;">Source Build</a> <a href="/tags/Storage/" style="font-size: 16.25px;">Storage</a> <a href="/tags/TimeZone/" style="font-size: 10px;">TimeZone</a> <a href="/tags/Trouble-Shooting/" style="font-size: 17.5px;">Trouble Shooting</a>
 					</div>
 				</section>
 				
@@ -151,6 +151,72 @@
 	</div>
 </nav>
       <div class="body-wrap">
+  
+    <article id="post-docker_haproxy" class="article article-type-post" itemscope="" itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2019/05/27/docker_haproxy/" class="article-date">
+  	<time datetime="2019-05-27T04:32:04.000Z" itemprop="datePublished">2019-05-27</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/05/27/docker_haproxy/">
+        Docker HAProxy使用示例
+        
+      </a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="1-准备Docker-HAProxy基础环境："><a href="#1-准备Docker-HAProxy基础环境：" class="headerlink" title="1. 准备Docker HAProxy基础环境："></a>1. 准备Docker HAProxy基础环境：</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">docker pull haproxy:1.6.5</span><br><span class="line">mkdir haproxy</span><br><span class="line">cd haproxy</span><br></pre></td></tr></table></figure>
+<h2 id="2-编写HAProxy的配置文件："><a href="#2-编写HAProxy的配置文件：" class="headerlink" title="2. 编写HAProxy的配置文件："></a>2. 编写HAProxy的配置文件：</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line">cat &lt;&lt;EOF &gt; haproxy.cfg</span><br><span class="line">global</span><br><span class="line">    log 127.0.0.1 local0 # 日志输出配置，所有日志都记录在本机，通过local0输出</span><br><span class="line">    maxconn 4096 # 最大连接数</span><br><span class="line">    tune.ssl.default-dh-param 2048</span><br><span class="line">    chroot /usr/local/sbin # 改变当前工作目录</span><br><span class="line">    daemon # 以后台形式运行HAProxy</span><br><span class="line">    nbproc 4 # 启动4个HAProxy实例</span><br><span class="line">    pidfile /usr/local/sbin/haproxy.pid # pid文件位置</span><br><span class="line">defaults</span><br><span class="line">    log 127.0.0.1 local3 # 日志文件的输出定向</span><br><span class="line">    mode http # &#123; tcp|http|health &#125; 设定启动实例的协议类型</span><br><span class="line">    option dontlognull # 保证HAProxy不记录上级负载均衡发送过来的用于检测状态没有数据的心跳包</span><br><span class="line">    option redispatch # 当serverId对应的服务器挂掉后，强制定向到其他健康的服务器</span><br><span class="line">    retries 2 # 重试两次连接失败就认为服务器不可用，主要通过后面的check检查</span><br><span class="line">    maxconn 2000 # 最大连接数</span><br><span class="line">    balance roundrobin # 负载均衡算法，roundrobin表示轮询，source表示按照IP</span><br><span class="line">    timeout connect 5000ms # 连接超时时间</span><br><span class="line">    timeout client 50000ms # 客户端连接超时时间</span><br><span class="line">    timeout server 50000ms # 服务器端连接超时时间</span><br><span class="line">    errorfile 400 /usr/local/etc/haproxy/errors/400.http</span><br><span class="line">    errorfile 403 /usr/local/etc/haproxy/errors/403.http</span><br><span class="line">    errorfile 408 /usr/local/etc/haproxy/errors/408.http</span><br><span class="line">    errorfile 500 /usr/local/etc/haproxy/errors/500.http</span><br><span class="line">    errorfile 502 /usr/local/etc/haproxy/errors/502.http</span><br><span class="line">    errorfile 503 /usr/local/etc/haproxy/errors/503.http</span><br><span class="line">    errorfile 504 /usr/local/etc/haproxy/errors/504.http</span><br><span class="line">    balance source</span><br><span class="line"></span><br><span class="line">frontend http_frontend</span><br><span class="line">        bind *:80</span><br><span class="line">        mode http</span><br><span class="line"></span><br><span class="line">        default_backend server_harbor_backend</span><br><span class="line"></span><br><span class="line">backend server_backend</span><br><span class="line">        mode http</span><br><span class="line">        ...</span><br><span class="line">        server s1 192.168.86.128:31451</span><br><span class="line">        server s2 192.168.86.129:31451</span><br><span class="line">        server s3 192.168.86.130:31451</span><br><span class="line">        ...</span><br><span class="line"></span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+<p>注意事项：宿主机的80端口未被占用；根据需要配置server_backend中的使用标记（…）圈上的部分。</p>
+<h2 id="3-使用Docker镜像启动HAProxy容器："><a href="#3-使用Docker镜像启动HAProxy容器：" class="headerlink" title="3. 使用Docker镜像启动HAProxy容器："></a>3. 使用Docker镜像启动HAProxy容器：</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -d -p 80:80 --name haproxy -v `pwd`/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg haproxy:1.6.5</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Docker/">Docker</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/HAProxy/">HAProxy</a></li></ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/容器云技术/">容器云技术</a>
+	</div>
+
+
+      
+      <div class="clearfix"></div>
+    </div>
+      
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
   
     <article id="post-dns_query" class="article article-type-post" itemscope="" itemprop="blogPost">
   
@@ -514,7 +580,7 @@
   <div class="outer">
     <div id="footer-info">
       <div class="footer-left">
-        &copy; 2019 Singh Wang
+        &copy; 2020 Singh Wang
       </div>
         <div class="footer-right">
           <a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/smackgg/hexo-theme-smackdown" target="_blank">Smackdown</a>
