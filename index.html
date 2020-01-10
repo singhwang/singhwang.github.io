@@ -246,7 +246,8 @@
     <div class="article-entry" itemprop="articleBody">
       
         <h1 id="一、实现方式介绍"><a href="#一、实现方式介绍" class="headerlink" title="一、实现方式介绍"></a>一、实现方式介绍</h1><h2 id="1-控制平面的所有组件都采用二进制方式部署，交由systemd统一管理；"><a href="#1-控制平面的所有组件都采用二进制方式部署，交由systemd统一管理；" class="headerlink" title="1. 控制平面的所有组件都采用二进制方式部署，交由systemd统一管理；"></a>1. 控制平面的所有组件都采用二进制方式部署，交由systemd统一管理；</h2><p>控制平面包括：etcd、kube-apiserver、kube-controller-manager和kube-scheduler。</p>
-<h2 id="2-网络插件依然采用Addon方式部署，交由kubernetes统一管理。"><a href="#2-网络插件依然采用Addon方式部署，交由kubernetes统一管理。" class="headerlink" title="2. 网络插件依然采用Addon方式部署，交由kubernetes统一管理。"></a>2. 网络插件依然采用Addon方式部署，交由kubernetes统一管理。</h2><p>网络插件包括：calico-node及其相关的组件。</p>
+<h2 id="2-工作节点上的所有组件都采用二进制方式部署，交由systemd统一管理；"><a href="#2-工作节点上的所有组件都采用二进制方式部署，交由systemd统一管理；" class="headerlink" title="2. 工作节点上的所有组件都采用二进制方式部署，交由systemd统一管理；"></a>2. 工作节点上的所有组件都采用二进制方式部署，交由systemd统一管理；</h2><p>工作节点上的组件包括：docker、kubelet和kube-proxy。</p>
+<h2 id="3-网络插件依然采用Addon方式部署，交由kubernetes统一管理。"><a href="#3-网络插件依然采用Addon方式部署，交由kubernetes统一管理。" class="headerlink" title="3. 网络插件依然采用Addon方式部署，交由kubernetes统一管理。"></a>3. 网络插件依然采用Addon方式部署，交由kubernetes统一管理。</h2><p>网络插件包括：calico-node及其相关的组件和coredns。</p>
 <h1 id="二、实验环境版本信息"><a href="#二、实验环境版本信息" class="headerlink" title="二、实验环境版本信息"></a>二、实验环境版本信息</h1><h2 id="1-操作系统的版本信息"><a href="#1-操作系统的版本信息" class="headerlink" title="1. 操作系统的版本信息"></a>1. 操作系统的版本信息</h2><p>CentOS Linux release 7.6.1810 (Core)</p>
 <h2 id="2-各组件的版本信息"><a href="#2-各组件的版本信息" class="headerlink" title="2. 各组件的版本信息"></a>2. 各组件的版本信息</h2><p>etcd v3.4.3<br>kube-apiserver v1.17.0<br>kube-controller-manager v1.17.0<br>kube-scheduler v1.17.0<br>kubectl v1.17.0</p>
 <p>docker 18.09.9<br>kubelet v1.17.0<br>calico v3.11.1</p>
