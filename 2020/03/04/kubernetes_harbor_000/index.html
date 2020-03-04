@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+  <title>Kubernetes Harbor 的安装、配置和使用 | Singh Wang</title>
+
+  <!-- keywords -->
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="一、实验环境版本信息1. 操作系统的版本信息CentOS Linux release 7.6.1810 (Core) 2. 各组件的版本信息kubernetes cluster v1.17.0，推荐使用kubeadm v1.17.0 进行试验etcd v3.4.3kube-apiserver v1.17.0kube-controller-manager v1.17.0kube-scheduler">
+<meta name="keywords" content="Docker,Kubernetes,Setup,Harbor">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Kubernetes Harbor 的安装、配置和使用">
+<meta property="og:url" content="http://yoursite.com/2020/03/04/kubernetes_harbor_000/index.html">
+<meta property="og:site_name" content="Singh Wang">
+<meta property="og:description" content="一、实验环境版本信息1. 操作系统的版本信息CentOS Linux release 7.6.1810 (Core) 2. 各组件的版本信息kubernetes cluster v1.17.0，推荐使用kubeadm v1.17.0 进行试验etcd v3.4.3kube-apiserver v1.17.0kube-controller-manager v1.17.0kube-scheduler">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="http://yoursite.com/2020/03/04/kubernetes_harbor_000/login_01.png">
+<meta property="og:image" content="http://yoursite.com/2020/03/04/kubernetes_harbor_000/login_02.png">
+<meta property="og:image" content="http://yoursite.com/2020/03/04/kubernetes_harbor_000/project_01.png">
+<meta property="og:image" content="http://yoursite.com/2020/03/04/kubernetes_harbor_000/project_02.png">
+<meta property="og:image" content="http://yoursite.com/2020/03/04/kubernetes_harbor_000/image_01.png">
+<meta property="og:image" content="http://yoursite.com/2020/03/04/kubernetes_harbor_000/log_01.png">
+<meta property="og:updated_time" content="2020-03-04T10:50:32.923Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Kubernetes Harbor 的安装、配置和使用">
+<meta name="twitter:description" content="一、实验环境版本信息1. 操作系统的版本信息CentOS Linux release 7.6.1810 (Core) 2. 各组件的版本信息kubernetes cluster v1.17.0，推荐使用kubeadm v1.17.0 进行试验etcd v3.4.3kube-apiserver v1.17.0kube-controller-manager v1.17.0kube-scheduler">
+<meta name="twitter:image" content="http://yoursite.com/2020/03/04/kubernetes_harbor_000/login_01.png">
+  
+    <link rel="alternative" href="/atom.xml" title="Singh Wang" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="http://7xkj1z.com1.z0.glb.clouddn.com/head.jpg">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+  
+
+  <script src="//cdn.bootcss.com/require.js/2.3.2/require.min.js"></script>
+  <script src="//cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>
+
+  
+</head></html>
+<body>
+  <div id="container">
+    <div id="particles-js"></div>
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="https://avatars0.githubusercontent.com/u/17465385?s=400&amp;u=cea56ed1710ec6ebab160c1ce1e068317e05b025&amp;v=4" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">Singh Wang</a></h1>
+		</hgroup>
+
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>菜单</li>
+						<li>标签</li>
+						
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/archives">所有文章</a></li>
+				        
+							<li><a href="/categories/容器云技术/">容器云技术</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="https://github.com/singhwang" title="github">github</a>
+					        
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/Calico/" style="font-size: 11.11px;">Calico</a> <a href="/tags/Ceph/" style="font-size: 12.22px;">Ceph</a> <a href="/tags/Common/" style="font-size: 10px;">Common</a> <a href="/tags/DNS/" style="font-size: 10px;">DNS</a> <a href="/tags/Dashboard/" style="font-size: 11.11px;">Dashboard</a> <a href="/tags/Docker/" style="font-size: 20px;">Docker</a> <a href="/tags/Dragonfly/" style="font-size: 10px;">Dragonfly</a> <a href="/tags/Elasticsearch/" style="font-size: 10px;">Elasticsearch</a> <a href="/tags/Fluentd/" style="font-size: 11.11px;">Fluentd</a> <a href="/tags/GlusterFS/" style="font-size: 13.33px;">GlusterFS</a> <a href="/tags/HAProxy/" style="font-size: 10px;">HAProxy</a> <a href="/tags/Harbor/" style="font-size: 10px;">Harbor</a> <a href="/tags/Highly-Available/" style="font-size: 10px;">Highly Available</a> <a href="/tags/Ingress/" style="font-size: 10px;">Ingress</a> <a href="/tags/Kubeadm/" style="font-size: 11.11px;">Kubeadm</a> <a href="/tags/Kubernetes/" style="font-size: 18.89px;">Kubernetes</a> <a href="/tags/Label/" style="font-size: 10px;">Label</a> <a href="/tags/Logging/" style="font-size: 12.22px;">Logging</a> <a href="/tags/Monitoring/" style="font-size: 13.33px;">Monitoring</a> <a href="/tags/Network/" style="font-size: 14.44px;">Network</a> <a href="/tags/Open-Falcon/" style="font-size: 10px;">Open Falcon</a> <a href="/tags/P2P/" style="font-size: 10px;">P2P</a> <a href="/tags/Prometheus/" style="font-size: 11.11px;">Prometheus</a> <a href="/tags/Setup/" style="font-size: 17.78px;">Setup</a> <a href="/tags/Smartping/" style="font-size: 10px;">Smartping</a> <a href="/tags/Source-Build/" style="font-size: 10px;">Source Build</a> <a href="/tags/Storage/" style="font-size: 15.56px;">Storage</a> <a href="/tags/TimeZone/" style="font-size: 10px;">TimeZone</a> <a href="/tags/Trouble-Shooting/" style="font-size: 16.67px;">Trouble Shooting</a>
+					</div>
+				</section>
+				
+				
+				
+
+				
+			</div>
+		</div>
+	</header>				
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">Singh Wang</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				<img lazy-src="https://avatars0.githubusercontent.com/u/17465385?s=400&amp;u=cea56ed1710ec6ebab160c1ce1e068317e05b025&amp;v=4" class="js-avatar">
+			</div>
+			<hgroup>
+			  <h1 class="header-author">Singh Wang</h1>
+			</hgroup>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/archives">所有文章</a></li>
+		        
+					<li><a href="/categories/容器云技术/">容器云技术</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/singhwang" title="github">github</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+      <div class="body-wrap"><article id="post-kubernetes_harbor_000" class="article article-type-post" itemscope="" itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2020/03/04/kubernetes_harbor_000/" class="article-date">
+  	<time datetime="2020-03-04T08:53:40.160Z" itemprop="datePublished">2020-03-04</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Kubernetes Harbor 的安装、配置和使用
+      
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Docker/">Docker</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Harbor/">Harbor</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Kubernetes/">Kubernetes</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Setup/">Setup</a></li></ul>
+	</div>
+
+        
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/容器云技术/">容器云技术</a>
+	</div>
+
+
+        
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="一、实验环境版本信息"><a href="#一、实验环境版本信息" class="headerlink" title="一、实验环境版本信息"></a>一、实验环境版本信息</h1><h2 id="1-操作系统的版本信息"><a href="#1-操作系统的版本信息" class="headerlink" title="1. 操作系统的版本信息"></a>1. 操作系统的版本信息</h2><p>CentOS Linux release 7.6.1810 (Core)</p>
+<h2 id="2-各组件的版本信息"><a href="#2-各组件的版本信息" class="headerlink" title="2. 各组件的版本信息"></a>2. 各组件的版本信息</h2><h3 id="kubernetes-cluster-v1-17-0，推荐使用kubeadm-v1-17-0-进行试验"><a href="#kubernetes-cluster-v1-17-0，推荐使用kubeadm-v1-17-0-进行试验" class="headerlink" title="kubernetes cluster v1.17.0，推荐使用kubeadm v1.17.0 进行试验"></a>kubernetes cluster v1.17.0，推荐使用kubeadm v1.17.0 进行试验</h3><p>etcd v3.4.3<br>kube-apiserver v1.17.0<br>kube-controller-manager v1.17.0<br>kube-scheduler v1.17.0<br>kubectl v1.17.0<br>helm v3.1.0</p>
+<p>docker 18.09.9<br>kubelet v1.17.0<br>calico v3.11.1</p>
+<h3 id="kubernetes-harbor，使用容器化的方式部署"><a href="#kubernetes-harbor，使用容器化的方式部署" class="headerlink" title="kubernetes harbor，使用容器化的方式部署"></a>kubernetes harbor，使用容器化的方式部署</h3><p>kubernetes harbor v1.10.1</p>
+<h1 id="二、在-Node-节点上准备Docker镜像"><a href="#二、在-Node-节点上准备Docker镜像" class="headerlink" title="二、在 Node 节点上准备Docker镜像"></a>二、在 Node 节点上准备Docker镜像</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">docker pull goharbor/clair-adapter-photon:v1.0.1-v1.10.1</span><br><span class="line">docker pull goharbor/clair-photon:v2.1.1-v1.10.1</span><br><span class="line">docker pull goharbor/notary-server-photon:v0.6.1-v1.10.1</span><br><span class="line">docker pull goharbor/harbor-core:v1.10.1</span><br><span class="line">docker pull goharbor/harbor-portal:v1.10.1</span><br><span class="line">docker pull goharbor/chartmuseum-photon:v0.9.0-v1.10.1</span><br><span class="line">docker pull goharbor/redis-photon:v1.10.1</span><br><span class="line">docker pull goharbor/notary-signer-photon:v0.6.1-v1.10.1</span><br><span class="line">docker pull goharbor/harbor-registryctl:v1.10.1</span><br><span class="line">docker pull goharbor/registry-photon:v2.7.1-patch-2819-2553-v1.10.1</span><br><span class="line">docker pull goharbor/harbor-jobservice:v1.10.1</span><br><span class="line">docker pull goharbor/harbor-db:v1.10.1</span><br></pre></td></tr></table></figure>
+<h1 id="三、安装和配置-Kubernetes-Harbor"><a href="#三、安装和配置-Kubernetes-Harbor" class="headerlink" title="三、安装和配置 Kubernetes Harbor"></a>三、安装和配置 Kubernetes Harbor</h1><h2 id="1-安装-Helm-3-包管理工具"><a href="#1-安装-Helm-3-包管理工具" class="headerlink" title="1. 安装 Helm 3 包管理工具"></a>1. 安装 Helm 3 包管理工具</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"># curl -o helm-v3.1.0-linux-amd64.tar.gz https://get.helm.sh/helm-v3.1.0-linux-amd64.tar.gz</span><br><span class="line"># tar -zxvf helm-v3.1.0-linux-amd64.tar.gz</span><br><span class="line"># cd linux-amd64/</span><br><span class="line"># cp helm /usr/local/bin/</span><br><span class="line"></span><br><span class="line"># helm version</span><br><span class="line">version.BuildInfo&#123;Version:&quot;v3.1.0&quot;, GitCommit:&quot;b29d20baf09943e134c2fa5e1e1cab3bf93315fa&quot;, GitTreeState:&quot;clean&quot;, GoVersion:&quot;go1.13.7&quot;&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="2-在-Kubernetes-集群中加入动态存储供应的支持，并配置相关的-StorageClass-对象"><a href="#2-在-Kubernetes-集群中加入动态存储供应的支持，并配置相关的-StorageClass-对象" class="headerlink" title="2. 在 Kubernetes 集群中加入动态存储供应的支持，并配置相关的 StorageClass 对象"></a>2. 在 Kubernetes 集群中加入动态存储供应的支持，并配置相关的 StorageClass 对象</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">## 本文以安装了NFS Client Provisioner为例，下面是我环境中的相关资源对象展示，请依据实际环境进行配置。我环境中的 StorageClass 对象叫 managed-nfs-storage </span><br><span class="line"># kubectl get pod -n storage -o wide</span><br><span class="line">NAME                                      READY   STATUS    RESTARTS   AGE   IP               NODE     NOMINATED NODE   READINESS GATES</span><br><span class="line">nfs-client-provisioner-6c45d64447-hrjhq   1/1     Running   2          21h   10.211.196.155   node01   &lt;none&gt;           &lt;none&gt;</span><br><span class="line"></span><br><span class="line"># kubectl get storageclass managed-nfs-storage -o yaml</span><br><span class="line">apiVersion: storage.k8s.io/v1</span><br><span class="line">kind: StorageClass</span><br><span class="line">metadata:</span><br><span class="line">  creationTimestamp: &quot;2020-03-03T12:10:27Z&quot;</span><br><span class="line">  name: managed-nfs-storage</span><br><span class="line">  resourceVersion: &quot;27152&quot;</span><br><span class="line">  selfLink: /apis/storage.k8s.io/v1/storageclasses/managed-nfs-storage</span><br><span class="line">  uid: 05c23ff9-5f9a-4a6b-89dd-ed99013cc344</span><br><span class="line">mountOptions:</span><br><span class="line">- vers=4</span><br><span class="line">parameters:</span><br><span class="line">  archiveOnDelete: &quot;false&quot;</span><br><span class="line">provisioner: fuseim.pri/ifs</span><br><span class="line">reclaimPolicy: Delete</span><br><span class="line">volumeBindingMode: Immediate</span><br><span class="line"></span><br><span class="line"># kubectl get storageclass -o wide</span><br><span class="line">NAME                  PROVISIONER      RECLAIMPOLICY   VOLUMEBINDINGMODE   ALLOWVOLUMEEXPANSION   AGE</span><br><span class="line">managed-nfs-storage   fuseim.pri/ifs   Delete          Immediate           false                  21h</span><br></pre></td></tr></table></figure>
+<h2 id="3-使用-Helm-3-安装-Kubernetes-Harbor"><a href="#3-使用-Helm-3-安装-Kubernetes-Harbor" class="headerlink" title="3. 使用 Helm 3 安装 Kubernetes Harbor"></a>3. 使用 Helm 3 安装 Kubernetes Harbor</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br></pre></td><td class="code"><pre><span class="line"># git clone https://github.com/goharbor/harbor-helm.git</span><br><span class="line"># cd harbor-helm/</span><br><span class="line"># git checkout -b v1.3.1.tag v1.3.1</span><br><span class="line"># git diff values.yaml</span><br><span class="line">diff --git a/values.yaml b/values.yaml</span><br><span class="line">index b201d98..fdc5593 100644</span><br><span class="line">--- a/values.yaml</span><br><span class="line">+++ b/values.yaml</span><br><span class="line">@@ -26,8 +26,8 @@ expose:</span><br><span class="line">     commonName: &quot;&quot;</span><br><span class="line">   ingress:</span><br><span class="line">     hosts:</span><br><span class="line">-      core: core.harbor.domain</span><br><span class="line">-      notary: notary.harbor.domain</span><br><span class="line">+      core: core.harbor.singhwang.com</span><br><span class="line">+      notary: notary.harbor.singhwang.com</span><br><span class="line">     # set to the type of ingress controller if it has specific requirements.</span><br><span class="line">     # leave as `default` for most ingress controllers.</span><br><span class="line">     # set to `gce` if using the GCE ingress controller</span><br><span class="line">@@ -98,7 +98,7 @@ expose:</span><br><span class="line"> # the IP address of k8s node</span><br><span class="line"> #</span><br><span class="line"> # If Harbor is deployed behind the proxy, set it as the URL of proxy</span><br><span class="line">-externalURL: https://core.harbor.domain</span><br><span class="line">+externalURL: https://core.harbor.singhwang.com</span><br><span class="line"></span><br><span class="line"> # The persistence is enabled by default and a default StorageClass</span><br><span class="line"> # is needed in the k8s cluster to provision volumes dynamicly.</span><br><span class="line">@@ -120,19 +120,19 @@ persistence:</span><br><span class="line">       # Specify the &quot;storageClass&quot; used to provision the volume. Or the default</span><br><span class="line">       # StorageClass will be used(the default).</span><br><span class="line">       # Set it to &quot;-&quot; to disable dynamic provisioning</span><br><span class="line">-      storageClass: &quot;&quot;</span><br><span class="line">+      storageClass: &quot;managed-nfs-storage&quot;</span><br><span class="line">       subPath: &quot;&quot;</span><br><span class="line">       accessMode: ReadWriteOnce</span><br><span class="line">       size: 5Gi</span><br><span class="line">     chartmuseum:</span><br><span class="line">       existingClaim: &quot;&quot;</span><br><span class="line">-      storageClass: &quot;&quot;</span><br><span class="line">+      storageClass: &quot;managed-nfs-storage&quot;</span><br><span class="line">       subPath: &quot;&quot;</span><br><span class="line">       accessMode: ReadWriteOnce</span><br><span class="line">       size: 5Gi</span><br><span class="line">     jobservice:</span><br><span class="line">       existingClaim: &quot;&quot;</span><br><span class="line">-      storageClass: &quot;&quot;</span><br><span class="line">+      storageClass: &quot;managed-nfs-storage&quot;</span><br><span class="line">       subPath: &quot;&quot;</span><br><span class="line">       accessMode: ReadWriteOnce</span><br><span class="line">       size: 1Gi</span><br><span class="line">@@ -140,7 +140,7 @@ persistence:</span><br><span class="line">     # be ignored</span><br><span class="line">     database:</span><br><span class="line">       existingClaim: &quot;&quot;</span><br><span class="line">-      storageClass: &quot;&quot;</span><br><span class="line">+      storageClass: &quot;managed-nfs-storage&quot;</span><br><span class="line">       subPath: &quot;&quot;</span><br><span class="line">       accessMode: ReadWriteOnce</span><br><span class="line">       size: 1Gi</span><br><span class="line">@@ -148,7 +148,7 @@ persistence:</span><br><span class="line">     # be ignored</span><br><span class="line">     redis:</span><br><span class="line">       existingClaim: &quot;&quot;</span><br><span class="line">-      storageClass: &quot;&quot;</span><br><span class="line">+      storageClass: &quot;managed-nfs-storage&quot;</span><br><span class="line">       subPath: &quot;&quot;</span><br><span class="line">       accessMode: ReadWriteOnce</span><br><span class="line">       size: 1Gi</span><br><span class="line">@@ -250,7 +250,7 @@ updateStrategy:</span><br><span class="line"> logLevel: info</span><br><span class="line"></span><br><span class="line"> # The initial password of Harbor admin. Change it from portal after launching Harbor</span><br><span class="line">-harborAdminPassword: &quot;Harbor12345&quot;</span><br><span class="line">+harborAdminPassword: &quot;190708&quot;</span><br><span class="line"> # The secret key used for encryption. Must be a string of 16 chars.</span><br><span class="line"> secretKey: &quot;not-a-secure-key&quot;</span><br><span class="line">## 按照上述git对比出来的变化进行修改，storageClass 字段的请依据自己的环境进行配置，比如我环境里的叫 managed-nfs-storage</span><br><span class="line"></span><br><span class="line"># helm install harbor harbor-helm --namespace registry</span><br><span class="line"># helm list -n registry</span><br><span class="line">NAME  	NAMESPACE	REVISION	UPDATED                                	STATUS  	CHART       	APP VERSION</span><br><span class="line">harbor	registry 	1       	2020-03-04 11:05:18.297145404 +0800 CST	deployed	harbor-1.3.1	1.10.1</span><br><span class="line"></span><br><span class="line"># kubectl get pod -n registry -o wide</span><br><span class="line">NAME                                           READY   STATUS    RESTARTS   AGE    IP               NODE     NOMINATED NODE   READINESS GATES</span><br><span class="line">harbor-harbor-chartmuseum-6cc998b954-b65jc     1/1     Running   2          6h7m   10.211.140.95    node02   &lt;none&gt;           &lt;none&gt;</span><br><span class="line">harbor-harbor-clair-654dcfd8bf-tk98w           2/2     Running   10         6h7m   10.211.196.153   node01   &lt;none&gt;           &lt;none&gt;</span><br><span class="line">harbor-harbor-core-85b965488d-tp7jv            1/1     Running   4          6h7m   10.211.196.156   node01   &lt;none&gt;           &lt;none&gt;</span><br><span class="line">harbor-harbor-database-0                       1/1     Running   2          6h7m   10.211.140.94    node02   &lt;none&gt;           &lt;none&gt;</span><br><span class="line">harbor-harbor-jobservice-5f489d87b9-sl57q      1/1     Running   2          6h7m   10.211.140.89    node02   &lt;none&gt;           &lt;none&gt;</span><br><span class="line">harbor-harbor-notary-server-795ccb7bb6-ngfml   1/1     Running   7          6h7m   10.211.196.152   node01   &lt;none&gt;           &lt;none&gt;</span><br><span class="line">harbor-harbor-notary-signer-7595696bf9-kvkk7   1/1     Running   8          6h7m   10.211.140.87    node02   &lt;none&gt;           &lt;none&gt;</span><br><span class="line">harbor-harbor-portal-5cbc6d5897-gm2rc          1/1     Running   2          6h7m   10.211.196.154   node01   &lt;none&gt;           &lt;none&gt;</span><br><span class="line">harbor-harbor-redis-0                          1/1     Running   2          6h7m   10.211.140.93    node02   &lt;none&gt;           &lt;none&gt;</span><br><span class="line">harbor-harbor-registry-75c4f4cc9b-8h72h        2/2     Running   4          6h7m   10.211.140.88    node02   &lt;none&gt;           &lt;none&gt;</span><br></pre></td></tr></table></figure>
+<h1 id="四、使用说明"><a href="#四、使用说明" class="headerlink" title="四、使用说明"></a>四、使用说明</h1><ol>
+<li><p>获取 ingress 资源对象中的 HOSTS 和 ADDRESS 在访问端做好 hosts 映射，条件允许的话，也可以配置为网络中的 DNS 记录</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># kubectl get ingress -n registry -o wide</span><br><span class="line">NAME                    HOSTS                                                   ADDRESS                           PORTS     AGE</span><br><span class="line">harbor-harbor-ingress   core.harbor.singhwang.com,notary.harbor.singhwang.com   192.168.112.129,192.168.112.130   80, 443   7h7m</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>访问 Kubernetes Harbor 服务并登陆 <a href="https://core.harbor.singhwang.com" target="_blank" rel="noopener">https://core.harbor.singhwang.com</a><br><img src="/2020/03/04/kubernetes_harbor_000/login_01.png" alt="login_01"><br><img src="/2020/03/04/kubernetes_harbor_000/login_02.png" alt="login_02"></p>
+</li>
+<li><p>在 Kubernetes Harbor 中创建项目<br><img src="/2020/03/04/kubernetes_harbor_000/project_01.png" alt="project_01"><br><img src="/2020/03/04/kubernetes_harbor_000/project_02.png" alt="project_02"></p>
+</li>
+<li><p>需要使用镜像仓库的Node节点上完成证书的配置</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">## 创建证书目录</span><br><span class="line"># mkdir -p /etc/docker/certs.d/core.harbor.singhwang.com/</span><br><span class="line"></span><br><span class="line">## 获取证书内容</span><br><span class="line"># kubectl get secrets harbor-harbor-ingress -n registry -o jsonpath=&quot;&#123;.data.ca\.crt&#125;&quot; | base64 --decode</span><br><span class="line"></span><br><span class="line">## 根据证书内容生成证书文件</span><br><span class="line">cat &lt;&lt;EOF &gt; /etc/docker/certs.d/core.harbor.singhwang.com/ca.crt</span><br><span class="line">。。。这里替换为证书内容。。。</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>在命令行窗口中推送镜像到项目下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"># docker login core.harbor.singhwang.com</span><br><span class="line">Username: admin</span><br><span class="line">Password:</span><br><span class="line">WARNING! Your password will be stored unencrypted in /root/.docker/config.json.</span><br><span class="line">Configure a credential helper to remove this warning. See</span><br><span class="line">https://docs.docker.com/engine/reference/commandline/login/#credentials-store</span><br><span class="line"></span><br><span class="line">Login Succeeded</span><br><span class="line"></span><br><span class="line"># docker tag nginx:1.7.9 core.harbor.singhwang.com/demo/nginx:1.7.9</span><br><span class="line"></span><br><span class="line"># docker push core.harbor.singhwang.com/demo/nginx:1.7.9</span><br><span class="line">The push refers to repository [core.harbor.singhwang.com/demo/nginx]</span><br><span class="line">5f70bf18a086: Pushed</span><br><span class="line">4b26ab29a475: Pushed</span><br><span class="line">ccb1d68e3fb7: Pushed</span><br><span class="line">e387107e2065: Pushed</span><br><span class="line">63bf84221cce: Pushed</span><br><span class="line">e02dce553481: Pushed</span><br><span class="line">dea2e4984e29: Pushed</span><br><span class="line">1.7.9: digest: sha256:b1f5935eb2e9e2ae89c0b3e2e148c19068d91ca502e857052f14db230443e4c2 size: 3012</span><br><span class="line"></span><br><span class="line"># docker logout core.harbor.singhwang.com</span><br><span class="line">Removing login credentials for core.harbor.singhwang.com</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>在 Kubernetes Harbor 中查看推送上去的镜像和推送日志<br><img src="/2020/03/04/kubernetes_harbor_000/image_01.png" alt="image_01"><br><img src="/2020/03/04/kubernetes_harbor_000/log_01.png" alt="log_01"></p>
+</li>
+</ol>
+<h1 id="五、参考资料"><a href="#五、参考资料" class="headerlink" title="五、参考资料"></a>五、参考资料</h1><p><a href="https://github.com/goharbor/harbor-helm/tree/v1.3.1" target="_blank" rel="noopener">https://github.com/goharbor/harbor-helm/tree/v1.3.1</a><br><a href="https://www.cnblogs.com/longgor/p/11203820.html" target="_blank" rel="noopener">https://www.cnblogs.com/longgor/p/11203820.html</a></p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2020/02/17/kubernetes_dashboard_001/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">通过 Ingress HTTPS 的方式暴露 Kubernetes Dashboard 服务</div>
+      <strong class="article-nav-caption">&gt;</strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+
+
+
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+      <div class="footer-left">
+        &copy; 2020 Singh Wang
+      </div>
+        <div class="footer-right">
+          <a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/smackgg/hexo-theme-smackdown" target="_blank">Smackdown</a>
+        </div>
+    </div>
+  </div>
+</footer>
+    </div>
+    
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: true,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false
+	}
+</script>
+<script src="/js/main.js"></script>
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js"></script>
+
+
+  </div>
+</body>
+</html>
