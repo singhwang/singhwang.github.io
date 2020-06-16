@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+  <title>CentOS 7 HAProxy 使用示例 | Singh Wang</title>
+
+  <!-- keywords -->
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="1. 使用yum安装HAProxy12yum makecache fastyum install -y haproxy 2. 借助rsyslog配置HAProxy输出日志到文件123456789# 编辑/etc/rsyslog.conf# 启用在udp 514端口接收日志消息$ModLoad imudp$UDPServerRun 514# 以下内容追加到配置文件最后# Save haproxy l">
+<meta name="keywords" content="Docker,HAProxy">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CentOS 7 HAProxy 使用示例">
+<meta property="og:url" content="http://yoursite.com/2020/06/16/haproxy_examples/index.html">
+<meta property="og:site_name" content="Singh Wang">
+<meta property="og:description" content="1. 使用yum安装HAProxy12yum makecache fastyum install -y haproxy 2. 借助rsyslog配置HAProxy输出日志到文件123456789# 编辑/etc/rsyslog.conf# 启用在udp 514端口接收日志消息$ModLoad imudp$UDPServerRun 514# 以下内容追加到配置文件最后# Save haproxy l">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2020-06-16T07:04:39.905Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="CentOS 7 HAProxy 使用示例">
+<meta name="twitter:description" content="1. 使用yum安装HAProxy12yum makecache fastyum install -y haproxy 2. 借助rsyslog配置HAProxy输出日志到文件123456789# 编辑/etc/rsyslog.conf# 启用在udp 514端口接收日志消息$ModLoad imudp$UDPServerRun 514# 以下内容追加到配置文件最后# Save haproxy l">
+  
+    <link rel="alternative" href="/atom.xml" title="Singh Wang" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="http://7xkj1z.com1.z0.glb.clouddn.com/head.jpg">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+  
+
+  <script src="//cdn.bootcss.com/require.js/2.3.2/require.min.js"></script>
+  <script src="//cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>
+
+  
+</head></html>
+<body>
+  <div id="container">
+    <div id="particles-js"></div>
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="https://avatars0.githubusercontent.com/u/17465385?s=400&amp;u=cea56ed1710ec6ebab160c1ce1e068317e05b025&amp;v=4" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">Singh Wang</a></h1>
+		</hgroup>
+
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>菜单</li>
+						<li>标签</li>
+						
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/archives">所有文章</a></li>
+				        
+							<li><a href="/categories/容器云技术/">容器云技术</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="https://github.com/singhwang" title="github">github</a>
+					        
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/Calico/" style="font-size: 11.11px;">Calico</a> <a href="/tags/Ceph/" style="font-size: 12.22px;">Ceph</a> <a href="/tags/Common/" style="font-size: 10px;">Common</a> <a href="/tags/DNS/" style="font-size: 10px;">DNS</a> <a href="/tags/Dashboard/" style="font-size: 11.11px;">Dashboard</a> <a href="/tags/Docker/" style="font-size: 20px;">Docker</a> <a href="/tags/Dragonfly/" style="font-size: 10px;">Dragonfly</a> <a href="/tags/Elasticsearch/" style="font-size: 10px;">Elasticsearch</a> <a href="/tags/Fluentd/" style="font-size: 11.11px;">Fluentd</a> <a href="/tags/GlusterFS/" style="font-size: 13.33px;">GlusterFS</a> <a href="/tags/HAProxy/" style="font-size: 11.11px;">HAProxy</a> <a href="/tags/Harbor/" style="font-size: 10px;">Harbor</a> <a href="/tags/Highly-Available/" style="font-size: 12.22px;">Highly Available</a> <a href="/tags/Ingress/" style="font-size: 10px;">Ingress</a> <a href="/tags/Kubeadm/" style="font-size: 12.22px;">Kubeadm</a> <a href="/tags/Kubernetes/" style="font-size: 18.89px;">Kubernetes</a> <a href="/tags/Label/" style="font-size: 10px;">Label</a> <a href="/tags/Logging/" style="font-size: 12.22px;">Logging</a> <a href="/tags/Monitoring/" style="font-size: 13.33px;">Monitoring</a> <a href="/tags/Network/" style="font-size: 14.44px;">Network</a> <a href="/tags/Nginx/" style="font-size: 10px;">Nginx</a> <a href="/tags/Open-Falcon/" style="font-size: 10px;">Open Falcon</a> <a href="/tags/P2P/" style="font-size: 10px;">P2P</a> <a href="/tags/Prometheus/" style="font-size: 11.11px;">Prometheus</a> <a href="/tags/Setup/" style="font-size: 17.78px;">Setup</a> <a href="/tags/Smartping/" style="font-size: 10px;">Smartping</a> <a href="/tags/Source-Build/" style="font-size: 10px;">Source Build</a> <a href="/tags/Storage/" style="font-size: 15.56px;">Storage</a> <a href="/tags/TimeZone/" style="font-size: 10px;">TimeZone</a> <a href="/tags/Trouble-Shooting/" style="font-size: 16.67px;">Trouble Shooting</a>
+					</div>
+				</section>
+				
+				
+				
+
+				
+			</div>
+		</div>
+	</header>				
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">Singh Wang</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				<img lazy-src="https://avatars0.githubusercontent.com/u/17465385?s=400&amp;u=cea56ed1710ec6ebab160c1ce1e068317e05b025&amp;v=4" class="js-avatar">
+			</div>
+			<hgroup>
+			  <h1 class="header-author">Singh Wang</h1>
+			</hgroup>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/archives">所有文章</a></li>
+		        
+					<li><a href="/categories/容器云技术/">容器云技术</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/singhwang" title="github">github</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+      <div class="body-wrap"><article id="post-haproxy_examples" class="article article-type-post" itemscope="" itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2020/06/16/haproxy_examples/" class="article-date">
+  	<time datetime="2020-06-16T06:38:57.441Z" itemprop="datePublished">2020-06-16</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      CentOS 7 HAProxy 使用示例
+      
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Docker/">Docker</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/HAProxy/">HAProxy</a></li></ul>
+	</div>
+
+        
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/容器云技术/">容器云技术</a>
+	</div>
+
+
+        
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="1-使用yum安装HAProxy"><a href="#1-使用yum安装HAProxy" class="headerlink" title="1. 使用yum安装HAProxy"></a>1. 使用yum安装HAProxy</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">yum makecache fast</span><br><span class="line">yum install -y haproxy</span><br></pre></td></tr></table></figure>
+<h2 id="2-借助rsyslog配置HAProxy输出日志到文件"><a href="#2-借助rsyslog配置HAProxy输出日志到文件" class="headerlink" title="2. 借助rsyslog配置HAProxy输出日志到文件"></a>2. 借助rsyslog配置HAProxy输出日志到文件</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"># 编辑/etc/rsyslog.conf</span><br><span class="line"># 启用在udp 514端口接收日志消息</span><br><span class="line">$ModLoad imudp</span><br><span class="line">$UDPServerRun 514</span><br><span class="line"></span><br><span class="line"># 以下内容追加到配置文件最后</span><br><span class="line"></span><br><span class="line"># Save haproxy log to haproxy.log</span><br><span class="line">local0.*                                                /var/log/haproxy.log</span><br></pre></td></tr></table></figure>
+<h2 id="3-配置HAProxy，这里仅提供一个四层TCP代理的示例，实际中请根据需要修改"><a href="#3-配置HAProxy，这里仅提供一个四层TCP代理的示例，实际中请根据需要修改" class="headerlink" title="3. 配置HAProxy，这里仅提供一个四层TCP代理的示例，实际中请根据需要修改"></a>3. 配置HAProxy，这里仅提供一个四层TCP代理的示例，实际中请根据需要修改</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"># 备份/etc/haproxy/haproxy.cfg</span><br><span class="line">cp /etc/haproxy/haproxy.cfg /etc/haproxy/haproxy.cfg.bak</span><br><span class="line"></span><br><span class="line"># 编辑/etc/haproxy/haproxy.cfg</span><br><span class="line">global</span><br><span class="line">  log 127.0.0.1 local0 debug</span><br><span class="line">  maxconn 50000</span><br><span class="line">  uid 99</span><br><span class="line">  gid 99</span><br><span class="line">  #daemon</span><br><span class="line">  nbproc 1</span><br><span class="line">  pidfile haproxy.pid</span><br><span class="line"></span><br><span class="line">defaults</span><br><span class="line">  mode tcp</span><br><span class="line">  log global</span><br><span class="line">  maxconn 50000</span><br><span class="line">  retries 3</span><br><span class="line">  timeout connect 10s</span><br><span class="line">  timeout client 60m</span><br><span class="line">  timeout server 60m</span><br><span class="line"></span><br><span class="line">listen stats</span><br><span class="line">  mode http</span><br><span class="line">  bind 0.0.0.0:9090</span><br><span class="line">  log  global</span><br><span class="line">  stats refresh 30s</span><br><span class="line">  stats uri     /haproxy-status</span><br><span class="line">  stats realm   Haproxy\ Statistics</span><br><span class="line">  stats auth    admin:12345678</span><br><span class="line">  stats hide-version</span><br><span class="line">  stats admin if TRUE</span><br><span class="line"></span><br><span class="line">frontend remote-tools-xxx-frontend</span><br><span class="line">   mode tcp</span><br><span class="line">   bind :43745</span><br><span class="line">   default_backend remote-tools-xxx-backend</span><br><span class="line"></span><br><span class="line">backend remote-tools-xxx-backend</span><br><span class="line">    mode tcp</span><br><span class="line">    balance roundrobin</span><br><span class="line">    server node01 x.x.x.x:43745 weight 3 minconn 100 maxconn 50000 check inter 5000 rise 2 fall 5</span><br></pre></td></tr></table></figure>
+<h2 id="4-启动HAProxy"><a href="#4-启动HAProxy" class="headerlink" title="4. 启动HAProxy"></a>4. 启动HAProxy</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">systemctl start haproxy.service</span><br><span class="line">systemctl status haproxy.service</span><br></pre></td></tr></table></figure>
+<h2 id="5-参考资料"><a href="#5-参考资料" class="headerlink" title="5. 参考资料"></a>5. 参考资料</h2><p><a href="https://blog.51cto.com/yanconggod/2062213" target="_blank" rel="noopener">https://blog.51cto.com/yanconggod/2062213</a></p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020/06/16/nginx_examples/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">&lt;</strong>
+      <div class="article-nav-title">
+        
+          CentOS 7 Nginx 使用示例
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/03/15/binary_kubernetes_ha_cluster_000/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">使用二进制文件安装高可用Kubernetes v1.17.0集群（Stacked Control Plane Nodes For Baremetal）</div>
+      <strong class="article-nav-caption">&gt;</strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+
+
+
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+      <div class="footer-left">
+        &copy; 2020 Singh Wang
+      </div>
+        <div class="footer-right">
+          <a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/smackgg/hexo-theme-smackdown" target="_blank">Smackdown</a>
+        </div>
+    </div>
+  </div>
+</footer>
+    </div>
+    
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: true,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false
+	}
+</script>
+<script src="/js/main.js"></script>
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js"></script>
+
+
+  </div>
+</body>
+</html>
