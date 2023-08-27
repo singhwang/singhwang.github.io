@@ -152,6 +152,68 @@
 </nav>
       <div class="body-wrap">
   
+    <article id="post-kubernetes_glusterfs_003" class="article article-type-post" itemscope="" itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2019/05/27/kubernetes_glusterfs_003/" class="article-date">
+  	<time datetime="2019-05-27T04:33:57.000Z" itemprop="datePublished">2019-05-27</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/05/27/kubernetes_glusterfs_003/">
+        使用Heketi工具管理GlusterFS集群
+        
+      </a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="使用Heketi管理GlusterFS-Cluster"><a href="#使用Heketi管理GlusterFS-Cluster" class="headerlink" title="使用Heketi管理GlusterFS Cluster"></a>使用Heketi管理GlusterFS Cluster</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br></pre></td><td class="code"><pre><span class="line"># 创建集群</span><br><span class="line">[root@server07 ~]# heketi-cli --server http://192.168.86.135:8080 --user admin --secret 12345678 --json=true cluster create &#123;&quot;id&quot;:&quot;0f0e5d914e3d9a17bef670dd6e295512&quot;,&quot;nodes&quot;:[],&quot;volumes&quot;:[]&#125;</span><br><span class="line"></span><br><span class="line"># 查看集群</span><br><span class="line">[root@server07 ~]# heketi-cli --server http://192.168.86.135:8080 --user admin --secret 12345678 --json=true cluster list &#123;&quot;clusters&quot;:[&quot;0f0e5d914e3d9a17bef670dd6e295512&quot;]&#125;</span><br><span class="line"></span><br><span class="line"># 添加节点</span><br><span class="line">[root@server07 ~]# heketi-cli --server http://192.168.86.135:8080 --user admin --secret 12345678 --json=true node add --cluster=0f0e5d914e3d9a17bef670dd6e295512 --management-host-name=192.168.86.135 --storage-host-name=192.168.86.135 --zone=1</span><br><span class="line">&#123;&quot;zone&quot;:1,&quot;hostnames&quot;:&#123;&quot;manage&quot;:[&quot;192.168.86.135&quot;],&quot;storage&quot;:[&quot;192.168.86.135&quot;]&#125;,&quot;cluster&quot;:&quot;0f0e5d914e3d9a17bef670dd6e295512&quot;,&quot;i</span><br><span class="line"></span><br><span class="line">[root@server07 ~]# heketi-cli --server http://192.168.86.135:8080 --user admin --secret 12345678 --json=true node add --cluster=0f0e5d914e3d9a17bef670dd6e295512 --management-host-name=192.168.86.136 --storage-host-name=192.168.86.136 --zone=1</span><br><span class="line">&#123;&quot;zone&quot;:1,&quot;hostnames&quot;:&#123;&quot;manage&quot;:[&quot;192.168.86.136&quot;],&quot;storage&quot;:[&quot;192.168.86.136&quot;]&#125;,&quot;cluster&quot;:&quot;0f0e5d914e3d9a17bef670dd6e295512&quot;,&quot;i</span><br><span class="line"></span><br><span class="line">[root@server07 ~]# heketi-cli --server http://192.168.86.135:8080 --user admin --secret 12345678 --json=true node add --cluster=0f0e5d914e3d9a17bef670dd6e295512 --management-host-name=192.168.86.137 --storage-host-name=192.168.86.137 --zone=1</span><br><span class="line">&#123;&quot;zone&quot;:1,&quot;hostnames&quot;:&#123;&quot;manage&quot;:[&quot;192.168.86.137&quot;],&quot;storage&quot;:[&quot;192.168.86.137&quot;]&#125;,&quot;cluster&quot;:&quot;0f0e5d914e3d9a17bef670dd6e295512&quot;,&quot;i</span><br><span class="line"></span><br><span class="line"># 查看节点</span><br><span class="line">[root@server07 ~]# heketi-cli --server http://192.168.86.135:8080 --user admin --secret 12345678 --json=true node list Id:a2c00d537210d42d68679bfa240db8b5 Cluster:0f0e5d914e3d9a17bef670dd6e295512</span><br><span class="line">Id:a73f8bdd464f02a4c7e0dd30c4ed5afa Cluster:0f0e5d914e3d9a17bef670dd6e295512</span><br><span class="line">Id:aba2f2cfe93c0f3e4164aa05b8d6ddb2 Cluster:0f0e5d914e3d9a17bef670dd6e295512</span><br><span class="line"></span><br><span class="line"># 给节点添加设备(裸硬盘)</span><br><span class="line">[root@server07 ~]# heketi-cli --server http://192.168.86.135:8080 --user admin --secret 12345678 --json=true device add --name=/dev/sdb --node=a2c00d537210d42d68679bfa240db8b5</span><br><span class="line">Device added successfully</span><br><span class="line">[root@server07 ~]# heketi-cli --server http://192.168.86.135:8080 --user admin --secret 12345678 --json=true device add --name=/dev/sdb --node=a73f8bdd464f02a4c7e0dd30c4ed5afa</span><br><span class="line">Device added successfully</span><br><span class="line">[root@server07 ~]# heketi-cli --server http://192.168.86.135:8080 --user admin --secret 12345678 --json=true device add --name=/dev/sdb --node=aba2f2cfe93c0f3e4164aa05b8d6ddb2</span><br><span class="line">Device added successfully</span><br><span class="line"></span><br><span class="line"># 创建volume</span><br><span class="line">[root@server07 ~]# heketi-cli --server http://192.168.86.135:8080 --user admin --secret 12345678 volume create --size=10 --replica=2 </span><br><span class="line">Name: vol_d1fd574462c162f42fb61ef55c3e4e6e</span><br><span class="line">Size: 10</span><br><span class="line">Volume Id: d1fd574462c162f42fb61ef55c3e4e6e</span><br><span class="line">Cluster Id: 0f0e5d914e3d9a17bef670dd6e295512</span><br><span class="line">Mount: 192.168.86.135:vol_d1fd574462c162f42fb61ef55c3e4e6e</span><br><span class="line">Mount Options: backup-volfile-servers=192.168.86.136,192.168.86.137</span><br><span class="line">Durability Type: replicate</span><br><span class="line">Distributed+Replica: 2</span><br><span class="line"></span><br><span class="line"># 查看volume</span><br><span class="line">[root@server07 ~]# heketi-cli --server http://192.168.86.135:8080 --user admin --secret 12345678 volume list Id:d1fd574462c162f42fb61ef55c3e4e6e Cluster:0f0e5d914e3d9a17bef670dd6e295512 Name:vol_d1fd574462c162f42fb61ef55c3e4e6e</span><br><span class="line"># 删除volume</span><br><span class="line">[root@server07 ~]# heketi-cli --server http://192.168.86.135:8080 --user admin --secret 12345678 volume delete d1fd574462c162f42fb61ef55c3e4e6e</span><br><span class="line">Volume d1fd574462c162f42fb61ef55c3e4e6e deleted</span><br><span class="line"></span><br><span class="line"># 使用topology.json初始化GlusterFS Cluster</span><br><span class="line">cat &lt;&lt;EOF &gt; /etc/heketi/topology.json</span><br><span class="line">&#123;</span><br><span class="line">  &quot;clusters&quot;: [</span><br><span class="line">    &#123;</span><br><span class="line">      &quot;nodes&quot;: [</span><br><span class="line">        &#123;</span><br><span class="line">          &quot;node&quot;: &#123;</span><br><span class="line">            &quot;hostnames&quot;: &#123;</span><br><span class="line">              &quot;manage&quot;: [</span><br><span class="line">                &quot;server07&quot;</span><br><span class="line">              ],</span><br><span class="line">              &quot;storage&quot;: [</span><br><span class="line">                &quot;172.16.170.134&quot;</span><br><span class="line">              ]</span><br><span class="line">            &#125;,</span><br><span class="line">            &quot;zone&quot;: 1</span><br><span class="line">          &#125;,</span><br><span class="line">          &quot;devices&quot;: [</span><br><span class="line">            &quot;/dev/sdb&quot;</span><br><span class="line">          ]</span><br><span class="line">        &#125;,</span><br><span class="line">        &#123;</span><br><span class="line">          &quot;node&quot;: &#123;</span><br><span class="line">            &quot;hostnames&quot;: &#123;</span><br><span class="line">              &quot;manage&quot;: [</span><br><span class="line">                &quot;server08&quot;</span><br><span class="line">              ],</span><br><span class="line">              &quot;storage&quot;: [</span><br><span class="line">                &quot;172.16.170.135&quot;</span><br><span class="line">              ]</span><br><span class="line">            &#125;,</span><br><span class="line">            &quot;zone&quot;: 1</span><br><span class="line">          &#125;,</span><br><span class="line">          &quot;devices&quot;: [</span><br><span class="line">            &quot;/dev/sdb&quot;</span><br><span class="line">          ]</span><br><span class="line">        &#125;,</span><br><span class="line">        &#123;</span><br><span class="line">          &quot;node&quot;: &#123;</span><br><span class="line">            &quot;hostnames&quot;: &#123;</span><br><span class="line">              &quot;manage&quot;: [</span><br><span class="line">                &quot;server09&quot;</span><br><span class="line">              ],</span><br><span class="line">              &quot;storage&quot;: [</span><br><span class="line">                &quot;172.16.170.136&quot;</span><br><span class="line">              ]</span><br><span class="line">            &#125;,</span><br><span class="line">            &quot;zone&quot;: 1</span><br><span class="line">          &#125;,</span><br><span class="line">          &quot;devices&quot;: [</span><br><span class="line">            &quot;/dev/sdb&quot;</span><br><span class="line">          ]</span><br><span class="line">        &#125;</span><br><span class="line">      ]</span><br><span class="line">    &#125;</span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br><span class="line">EOF</span><br><span class="line"></span><br><span class="line">heketi-cli --user admin --secret 12345678 topology load --json=/etc/heketi/topology.json</span><br><span class="line">Creating cluster ... ID: 4e01ca44d2e6f0077ee3abe9c6783183</span><br><span class="line">	Allowing file volumes on cluster.</span><br><span class="line">	Allowing block volumes on cluster.</span><br><span class="line">	Creating node server07 ... ID: 2e8b83add06cde8713d56ecb7d424033</span><br><span class="line">		Adding device /dev/sdb ... OK</span><br><span class="line">	Creating node server08 ... ID: 56a23b0579e7f79511843e046e69008f</span><br><span class="line">		Adding device /dev/sdb ... OK</span><br><span class="line">	Creating node server09 ... ID: 9fb13189ba78ef302046fe4414f633bf</span><br><span class="line">		Adding device /dev/sdb ... OK</span><br><span class="line"></span><br><span class="line">heketi-cli --user admin --secret 12345678 topology info</span><br><span class="line"></span><br><span class="line">Cluster Id: 4e01ca44d2e6f0077ee3abe9c6783183</span><br><span class="line"></span><br><span class="line">    File:  true</span><br><span class="line">    Block: true</span><br><span class="line"></span><br><span class="line">    Volumes:</span><br><span class="line"></span><br><span class="line">    Nodes:</span><br><span class="line"></span><br><span class="line">	Node Id: 2e8b83add06cde8713d56ecb7d424033</span><br><span class="line">	State: online</span><br><span class="line">	Cluster Id: 4e01ca44d2e6f0077ee3abe9c6783183</span><br><span class="line">	Zone: 1</span><br><span class="line">	Management Hostnames: server07</span><br><span class="line">	Storage Hostnames: 172.16.170.134</span><br><span class="line">	Devices:</span><br><span class="line">		Id:4995671aaef70cb1f640d0f411e94d2f   Name:/dev/sdb            State:online    Size (GiB):19      Used (GiB):0       Free (GiB):19</span><br><span class="line">			Bricks:</span><br><span class="line"></span><br><span class="line">	Node Id: 56a23b0579e7f79511843e046e69008f</span><br><span class="line">	State: online</span><br><span class="line">	Cluster Id: 4e01ca44d2e6f0077ee3abe9c6783183</span><br><span class="line">	Zone: 1</span><br><span class="line">	Management Hostnames: server08</span><br><span class="line">	Storage Hostnames: 172.16.170.135</span><br><span class="line">	Devices:</span><br><span class="line">		Id:c4a56208419516d4fbc437d9dc3b265e   Name:/dev/sdb            State:online    Size (GiB):19      Used (GiB):0       Free (GiB):19</span><br><span class="line">			Bricks:</span><br><span class="line"></span><br><span class="line">	Node Id: 9fb13189ba78ef302046fe4414f633bf</span><br><span class="line">	State: online</span><br><span class="line">	Cluster Id: 4e01ca44d2e6f0077ee3abe9c6783183</span><br><span class="line">	Zone: 1</span><br><span class="line">	Management Hostnames: server09</span><br><span class="line">	Storage Hostnames: 172.16.170.136</span><br><span class="line">	Devices:</span><br><span class="line">		Id:be2a9558f0634233be72f0c55d051898   Name:/dev/sdb            State:online    Size (GiB):19      Used (GiB):0       Free (GiB):19</span><br><span class="line">			Bricks:</span><br></pre></td></tr></table></figure>
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Docker/">Docker</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/GlusterFS/">GlusterFS</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Kubernetes/">Kubernetes</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Storage/">Storage</a></li></ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/容器云技术/">容器云技术</a>
+	</div>
+
+
+      
+      <div class="clearfix"></div>
+    </div>
+      
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+  
     <article id="post-kubernetes_glusterfs_001" class="article article-type-post" itemscope="" itemprop="blogPost">
   
     <div class="article-meta">
@@ -785,72 +847,6 @@
 
 
   
-    <article id="post-docker_haproxy" class="article article-type-post" itemscope="" itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2019/05/27/docker_haproxy/" class="article-date">
-  	<time datetime="2019-05-27T04:32:04.000Z" itemprop="datePublished">2019-05-27</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/05/27/docker_haproxy/">
-        Docker HAProxy使用示例
-        
-      </a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="1-准备Docker-HAProxy基础环境："><a href="#1-准备Docker-HAProxy基础环境：" class="headerlink" title="1. 准备Docker HAProxy基础环境："></a>1. 准备Docker HAProxy基础环境：</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">docker pull haproxy:1.6.5</span><br><span class="line">mkdir haproxy</span><br><span class="line">cd haproxy</span><br></pre></td></tr></table></figure>
-<h2 id="2-编写HAProxy的配置文件："><a href="#2-编写HAProxy的配置文件：" class="headerlink" title="2. 编写HAProxy的配置文件："></a>2. 编写HAProxy的配置文件：</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line">cat &lt;&lt;EOF &gt; haproxy.cfg</span><br><span class="line">global</span><br><span class="line">    log 127.0.0.1 local0 # 日志输出配置，所有日志都记录在本机，通过local0输出</span><br><span class="line">    maxconn 4096 # 最大连接数</span><br><span class="line">    tune.ssl.default-dh-param 2048</span><br><span class="line">    chroot /usr/local/sbin # 改变当前工作目录</span><br><span class="line">    daemon # 以后台形式运行HAProxy</span><br><span class="line">    nbproc 4 # 启动4个HAProxy实例</span><br><span class="line">    pidfile /usr/local/sbin/haproxy.pid # pid文件位置</span><br><span class="line">defaults</span><br><span class="line">    log 127.0.0.1 local3 # 日志文件的输出定向</span><br><span class="line">    mode http # &#123; tcp|http|health &#125; 设定启动实例的协议类型</span><br><span class="line">    option dontlognull # 保证HAProxy不记录上级负载均衡发送过来的用于检测状态没有数据的心跳包</span><br><span class="line">    option redispatch # 当serverId对应的服务器挂掉后，强制定向到其他健康的服务器</span><br><span class="line">    retries 2 # 重试两次连接失败就认为服务器不可用，主要通过后面的check检查</span><br><span class="line">    maxconn 2000 # 最大连接数</span><br><span class="line">    balance roundrobin # 负载均衡算法，roundrobin表示轮询，source表示按照IP</span><br><span class="line">    timeout connect 5000ms # 连接超时时间</span><br><span class="line">    timeout client 50000ms # 客户端连接超时时间</span><br><span class="line">    timeout server 50000ms # 服务器端连接超时时间</span><br><span class="line">    errorfile 400 /usr/local/etc/haproxy/errors/400.http</span><br><span class="line">    errorfile 403 /usr/local/etc/haproxy/errors/403.http</span><br><span class="line">    errorfile 408 /usr/local/etc/haproxy/errors/408.http</span><br><span class="line">    errorfile 500 /usr/local/etc/haproxy/errors/500.http</span><br><span class="line">    errorfile 502 /usr/local/etc/haproxy/errors/502.http</span><br><span class="line">    errorfile 503 /usr/local/etc/haproxy/errors/503.http</span><br><span class="line">    errorfile 504 /usr/local/etc/haproxy/errors/504.http</span><br><span class="line">    balance source</span><br><span class="line"></span><br><span class="line">frontend http_frontend</span><br><span class="line">        bind *:80</span><br><span class="line">        mode http</span><br><span class="line"></span><br><span class="line">        default_backend server_harbor_backend</span><br><span class="line"></span><br><span class="line">backend server_backend</span><br><span class="line">        mode http</span><br><span class="line">        ...</span><br><span class="line">        server s1 192.168.86.128:31451</span><br><span class="line">        server s2 192.168.86.129:31451</span><br><span class="line">        server s3 192.168.86.130:31451</span><br><span class="line">        ...</span><br><span class="line"></span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
-<p>注意事项：宿主机的80端口未被占用；根据需要配置server_backend中的使用标记（…）圈上的部分。</p>
-<h2 id="3-使用Docker镜像启动HAProxy容器："><a href="#3-使用Docker镜像启动HAProxy容器：" class="headerlink" title="3. 使用Docker镜像启动HAProxy容器："></a>3. 使用Docker镜像启动HAProxy容器：</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -d -p 80:80 --name haproxy -v `pwd`/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg haproxy:1.6.5</span><br></pre></td></tr></table></figure>
-
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Docker/">Docker</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/HAProxy/">HAProxy</a></li></ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/categories/容器云技术/">容器云技术</a>
-	</div>
-
-
-      
-      <div class="clearfix"></div>
-    </div>
-      
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-  
   
     <nav id="page-nav">
       <a class="extend prev" rel="prev" href="/page/3/">&laquo; Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/5/">Next &raquo;</a>
@@ -861,7 +857,7 @@
   <div class="outer">
     <div id="footer-info">
       <div class="footer-left">
-        &copy; 2020 Singh Wang
+        &copy; 2023 Singh Wang
       </div>
         <div class="footer-right">
           <a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/smackgg/hexo-theme-smackdown" target="_blank">Smackdown</a>
